@@ -1,0 +1,36 @@
+<!-- cart.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Cart</title>
+  <style>
+    body { font-family: Arial; padding: 2rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #ddd; padding: 1rem; text-align: center; }
+    button { background: #28a745; color: white; padding: 0.5rem 1rem; border: none; cursor: pointer; margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>Your Shopping Cart</h1>
+
+  <table>
+    <tr>
+      <th>Product</th>
+      <th>Variant</th>
+      <th>Quantity</th>
+      <th>Price</th>
+    </tr>
+    <tr>
+      <td>Red Summer Dress</td>
+      <td>Medium</td>
+      <td>1</td>
+      <td>$39.99</td>
+    </tr>
+  </table>
+
+  <h3>Total: $39.99</h3>
+
+  <button onclick="location.href='checkout.html'">Checkout</button>
+</body>
+</html>

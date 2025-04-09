@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iyonic Fashion - Jeanses Collection</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+
+  <!-- 🛍️ Header -->
+  <header class="bg-pink-600 text-white px-4 py-3 flex justify-between items-center">
+    <h1 class="text-xl font-bold">Iyonic Fashion</h1>
+    <div class="flex items-center space-x-2 sm:space-x-4">
+      <a href="dashboard.html" id="dashboard-btn" class="bg-yellow-500 text-xs sm:text-sm px-3 py-1 rounded hidden">Dashboard</a>
+      <button id="logout-btn" class="bg-red-500 text-xs sm:text-sm px-3 py-1 rounded hidden">Logout</button>
+      <a href="login.html" id="login-btn" class="bg-white text-pink-600 text-xs sm:text-sm px-3 py-1 rounded">Login</a>
+      <a href="signup.html" id="signup-btn" class="bg-white text-pink-600 text-xs sm:text-sm px-3 py-1 rounded">Signup</a>
+    </div>
+  </header>
+
+  <!-- 🔍 Search Bar -->
+  <div class="w-full text-center py-6 bg-white shadow">
+    <input 
+      type="text"
+      id="search-input"
+      placeholder="Search for Jeanses..."
+      class="w-2/3 sm:w-1/2 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-pink-400"
+      oninput="searchProducts()"
+    />
+  </div>
+  <div class="bg-gray-100 py-4 px-6">
+    <nav class="flex text-sm font-medium">
+      <a href="index.html" class="text-blue-600 hover:text-blue-800">Home</a>
+    </nav>
+  </div>
+  
+  <!-- 🛒 Product Grid -->
+  <div id="product-grid" class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 gap-6">
+    
+    <!-- Product 1 -->
+    <div class="product-item bg-white shadow rounded-lg overflow-hidden text-center" data-name="Problem Solved Stretch Lace Up Bootcut Jeans - Medium Wash">
+      <a href="details.html?product_id=7000">
+        <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/10-23-24_S2_31_D231453026_MediumWash_CXB_RL_16-21-47_16581_SL.jpg?v=1729892197&width=600&height=900&crop=center" alt="Jeans 1" class="w-full h-auto hover:opacity-90 transition duration-200">
+      </a>
+      <div class="p-4">
+        <h3 class="font-semibold text-lg">Problem Solved Stretch Lace Up Bootcut Jeans - Medium Wash</h3>
+        <p class="mt-2 text-pink-600 font-bold text-sm">
+          $39.99 <span class="line-through text-gray-400 ml-2">$49.99</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="product-item bg-white shadow rounded-lg overflow-hidden text-center" data-name="Switching Gears Stretch Split Hem Bootcut Jeans - Light Wash">
+      <a href="details.html?product_id=7001">
+        <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/10-14-24_S2_16_FN8130HSSAAT_LightWash_ZSR_CXB_RL_14-23-21_42293_EH.jpg?v=1729017992&width=600&height=900&crop=center" alt="Jeans 2" class="w-full h-auto hover:opacity-90 transition duration-200">
+      </a>
+      <div class="p-4">
+        <h3 class="font-semibold text-lg">Switching Gears Stretch Split Hem Bootcut Jeans - Light Wash</h3>
+        <p class="mt-2 text-pink-600 font-bold text-sm">$29.99</p>
+      </div>
+    </div>
+
+        <!-- Product 4 -->
+        <div class="product-item bg-white shadow rounded-lg overflow-hidden text-center" data-name="Better Perspective Embellished Baggy Jeans - Light Wash">
+          <a href="details.html?product_id=7002">
+            <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/10-01-24_S2_18_FN1219ISTN_LightWash_CXB_RL_14-02-59_41864_SG.jpg?v=1727908991&width=600&height=900&crop=center" alt="Jeans 4" class="w-full h-auto hover:opacity-90 transition duration-200">
+          </a>
+          <div class="p-4">
+            <h3 class="font-semibold text-lg">Better Perspective Embellished Baggy Jeans - Light Wash</h3>
+            <p class="mt-2 text-pink-600 font-bold text-sm">$25.99</p>
+          </div>
+        </div>
+  
+            <!-- Product 5 -->
+      <div class="product-item bg-white shadow rounded-lg overflow-hidden text-center" data-name="Certifiable Stretch Ripped Flare Jeans - Black Wash">
+          <a href="details.html?product_id=7003">
+            <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/01-17-25_S2_14_FN9010_BlackWash_CXB_RL_15-34-34_46438_PXF.jpg?v=1737487870&width=600&height=900&crop=center" alt="jeans 5" class="w-full h-auto hover:opacity-90 transition duration-200">
+          </a>
+          <div class="p-4">
+            <h3 class="font-semibold text-lg">Certifiable Stretch Ripped Flare Jeans - Black Wash</h3>
+            <p class="mt-2 text-pink-600 font-bold text-sm">$70.99</p>
+          </div>
+        </div>
+    <!-- Product 3 -->
+    <div class="product-item bg-white shadow rounded-lg overflow-hidden text-center" data-name="Club Classic Stretch Lace Skinny Jeans - Black">
+      <a href="details.html?product_id=7004">
+        <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/09-25-24_S2_17_24NZF9892_Black_CXB_RL_15-20-13_41625_PXF.jpg?v=1742227710&width=600&height=900&crop=center" alt="Jeans 3" class="w-full h-auto hover:opacity-90 transition duration-200">
+      </a>
+      <div class="p-4">
+        <h3 class="font-semibold text-lg">Club Classic Stretch Lace Skinny Jeans - Black</h3>
+        <p class="mt-2 text-pink-600 font-bold text-sm">
+          $59.99 <span class="line-through text-gray-400 ml-2">$79.99</span>
+        </p>
+      </div>
+      
+    </div>
+
+  </div>
+
+  <script> 
+  document.addEventListener("DOMContentLoaded", function () {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+
+    const loginBtn = document.getElementById("login-btn");
+    const signupBtn = document.getElementById("signup-btn");
+    const logoutBtn = document.getElementById("logout-btn");
+    const dashboardBtn = document.getElementById("dashboard-btn");
+
+    if (isLoggedIn === "true") {
+        // Hide login and signup
+        loginBtn.style.display = "none";
+        signupBtn.style.display = "none";
+
+        // Show logout and dashboard
+        logoutBtn.style.display = "block";
+        dashboardBtn.style.display = "block";
+    } else {
+        // Show login and signup
+        loginBtn.style.display = "block";
+        signupBtn.style.display = "block";
+
+        // Hide logout and dashboard
+        logoutBtn.style.display = "none";
+        dashboardBtn.style.display = "none";
+    }
+
+    // Logout functionality
+    logoutBtn.addEventListener("click", function () {
+        localStorage.removeItem("isLoggedIn"); // Clear login state
+        location.reload(); // Refresh page to update UI
+    });
+  });
+
+  // Search functionality
+  function searchProducts() {
+    const searchInput = document.getElementById('search-input').value.toLowerCase();
+    const productItems = document.querySelectorAll('.product-item');
+
+    productItems.forEach(item => {
+      const productName = item.getAttribute('data-name').toLowerCase();
+      if (productName.includes(searchInput)) {
+        item.style.display = 'block'; // Show product
+      } else {
+        item.style.display = 'none'; // Hide product
+      }
+    });
+  }
+  </script>
+</body>
+</html>

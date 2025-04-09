@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iyonic Fashion - Dresses Collection</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+
+  <!-- 🛍️ Header -->
+  <header class="bg-pink-600 text-white px-4 py-3 flex justify-between items-center">
+    <h1 class="text-xl font-bold">Iyonic Fashion</h1>
+    <div class="flex items-center space-x-2 sm:space-x-4">
+      <a href="dashboard.html" id="dashboard-btn" class="bg-yellow-500 text-xs sm:text-sm px-3 py-1 rounded hidden">Dashboard</a>
+      <button id="logout-btn" class="bg-red-500 text-xs sm:text-sm px-3 py-1 rounded hidden">Logout</button>
+      <a href="login.html" id="login-btn" class="bg-white text-pink-600 text-xs sm:text-sm px-3 py-1 rounded">Login</a>
+      <a href="signup.html" id="signup-btn" class="bg-white text-pink-600 text-xs sm:text-sm px-3 py-1 rounded">Signup</a>
+    </div>
+  </header>
+
+  <!-- 🔍 Search Bar -->
+  <div class="w-full text-center py-6 bg-white shadow">
+    <input 
+      type="text"
+      id="search-input"
+      placeholder="Search for dresses..."
+      class="w-2/3 sm:w-1/2 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-pink-400"
+      oninput="searchProducts()"
+    />
+  </div>
+  <div class="bg-gray-100 py-4 px-6">
+    <nav class="flex text-sm font-medium">
+      <a href="index.html" class="text-blue-600 hover:text-blue-800">Home</a>
+    </nav>
+  </div>
+  
+  <!-- 🛒 Product Grid -->
+  <div id="product-grid" class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 gap-6">
+    
+    <!-- Product 1 -->
+    <div class="product-item bg-white shadow rounded-lg overflow-hidden text-center" data-name="Simplistic Linen Tube Top - Black">
+      <a href="details.html?product_id=2000">
+        <img src="https://cdn.shopify.com/s/files/1/0293/9277/products/03-06-23Studio2_ID_RL_13-33-12_5_DZ23A601FN_Black_3489_DG.jpg?v=1678228994&width=600&height=900&crop=center" alt="Dress 1" class="w-full h-auto hover:opacity-90 transition duration-200">
+      </a>
+      <div class="p-4">
+        <h3 class="font-semibold text-lg">Simplistic Linen Tube Top - Black</h3>
+        <p class="mt-2 text-pink-600 font-bold text-sm">
+          $15.99 <span class="line-through text-gray-400 ml-2">$9.99</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="product-item bg-white shadow rounded-lg overflow-hidden text-center" data-name="ACDC No Bull Rhinestone Tube Top - White">
+      <a href="details.html?product_id=2001">
+        <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/04-04-25_S2_17_PRYAC040RCHER_White_CXB_RL_15-14-26_19310_SG.jpg?v=1744062241&width=600&height=900&crop=center" alt="Dress 2" class="w-full h-auto hover:opacity-90 transition duration-200">
+      </a>
+      <div class="p-4">
+        <h3 class="font-semibold text-lg">ACDC No Bull Rhinestone Tube Top - White</h3>
+        <p class="mt-2 text-pink-600 font-bold text-sm">$12.99</p>
+      </div>
+    </div>
+
+        <!-- Product 4 -->
+        <div class="product-item bg-white shadow rounded-lg overflow-hidden text-center" data-name="Biggie Smalls '94 Washed Oversized Tee - Olive">
+          <a href="details.html?product_id=2002">
+            <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/03-31-25_S6_34_BSL144104_Olive_KF_MC_14-21-09_54262_PXF.jpg?v=1743556159&width=600&height=900&crop=center">
+          </a>
+          <div class="p-4">
+            <h3 class="font-semibold text-lg">Biggie Smalls '94 Washed Oversized Tee - Olive</h3>
+            <p class="mt-2 text-pink-600 font-bold text-sm">$15.99</p>
+          </div>
+        </div>
+  
+            <!-- Product 5 -->
+      <div class="product-item bg-white shadow rounded-lg overflow-hidden text-center" data-name="Vacay Vibe Striped Crochet Polo - Multi Color">
+          <a href="details.html?product_id=2003">
+            <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/12-18-24_S2_17_T10375_MultiColor_CXB_RL_14-22-13_26497_CM.jpg?v=1734713142&width=600&height=900&crop=center" alt="Dress 5" class="w-full h-auto hover:opacity-90 transition duration-200">
+          </a>
+          <div class="p-4">
+            <h3 class="font-semibold text-lg">Vacay Vibe Striped Crochet Polo - Multi Color</h3>
+            <p class="mt-2 text-pink-600 font-bold text-sm">$10.99</p>
+          </div>
+        </div>
+    <!-- Product 3 -->
+    <div class="product-item bg-white shadow rounded-lg overflow-hidden text-center" data-name="Heart Of Roses Ed Hardy Zip Front Hoodie - Heather Grey">
+      <a href="details.html?product_id=2004">
+        <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/09-21-23Studio2_CC_RL_15-00-28_30_EHW180012_HeatherGrey_60379_MR.jpg?v=1696024693&width=600&height=900&crop=center">
+      </a>
+      <div class="p-4">
+        <h3 class="font-semibold text-lg">Heart Of Roses Ed Hardy Zip Front Hoodie - Heather Grey</h3>
+        <p class="mt-2 text-pink-600 font-bold text-sm">
+          $29.99 <span class="line-through text-gray-400 ml-2">$19.99</span>
+        </p>
+      </div>
+      
+    </div>
+
+  </div>
+
+  <script> 
+  document.addEventListener("DOMContentLoaded", function () {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+
+    const loginBtn = document.getElementById("login-btn");
+    const signupBtn = document.getElementById("signup-btn");
+    const logoutBtn = document.getElementById("logout-btn");
+    const dashboardBtn = document.getElementById("dashboard-btn");
+
+    if (isLoggedIn === "true") {
+        // Hide login and signup
+        loginBtn.style.display = "none";
+        signupBtn.style.display = "none";
+
+        // Show logout and dashboard
+        logoutBtn.style.display = "block";
+        dashboardBtn.style.display = "block";
+    } else {
+        // Show login and signup
+        loginBtn.style.display = "block";
+        signupBtn.style.display = "block";
+
+        // Hide logout and dashboard
+        logoutBtn.style.display = "none";
+        dashboardBtn.style.display = "none";
+    }
+
+    // Logout functionality
+    logoutBtn.addEventListener("click", function () {
+        localStorage.removeItem("isLoggedIn"); // Clear login state
+        location.reload(); // Refresh page to update UI
+    });
+  });
+
+  // Search functionality
+  function searchProducts() {
+    const searchInput = document.getElementById('search-input').value.toLowerCase();
+    const productItems = document.querySelectorAll('.product-item');
+
+    productItems.forEach(item => {
+      const productName = item.getAttribute('data-name').toLowerCase();
+      if (productName.includes(searchInput)) {
+        item.style.display = 'block'; // Show product
+      } else {
+        item.style.display = 'none'; // Hide product
+      }
+    });
+  }
+  </script>
+</body>
+</html>

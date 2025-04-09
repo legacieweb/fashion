@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+  nav {
+    background-color: #ffffff;
+    padding: 10px;
+    text-align: center;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Keep items in one line */
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile */
+}
+
+nav button {
+    background: none;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    flex: 0 0 auto; /* Prevent buttons from shrinking */
+}
+
+nav::-webkit-scrollbar {
+    height: 5px; /* Small scrollbar */
+}
+
+nav::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+nav::-webkit-scrollbar-track {
+    background: #555;
+}
+        nav button:hover {
+            text-decoration: underline;
+        }
+        /* Hero section styling */
+        .hero {
+            background: url('https://source.unsplash.com/1600x900/?fashion,clothing') center/cover no-repeat;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        .custom-shape {
+    clip-path: polygon(25% 0%, 100% 0%, 100% 75%, 75% 100%, 0% 100%, 0% 25%);
+}
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+.animate-float {
+    animation: float 4s ease-in-out infinite;
+}
+
+    </style>
+</head>
+<body class="bg-gray-100">
+
+            <!-- 🛍️ Header -->
+            <header class="bg-pink-600 text-white p-2 flex justify-between items-center">
+                <h1 class="text-lg sm:text-xl font-bold">Iyonic Fashion</h1>
+                <div class="flex items-center space-x-2 sm:space-x-4">
+                    <a href="dashboard.html" id="dashboard-btn" class="bg-yellow-500 text-xs sm:text-sm px-3 py-1 rounded hidden">Dashboard</a>
+                    <button id="logout-btn" class="bg-red-500 text-xs sm:text-sm px-3 py-1 rounded hidden">Logout</button>
+                    <a href="login.html" id="login-btn" class="bg-white text-pink-600 text-xs sm:text-sm px-3 py-1 rounded">Login</a>
+                    <a href="signup.html" id="signup-btn" class="bg-white text-pink-600 text-xs sm:text-sm px-3 py-1 rounded">Signup</a>
+                </div>
+            </header>
+
+    <!-- Navbar (No Sticky) -->
+    <nav>
+        <a href="tops.html" class="block px-4 py-2  subcategory">Tops</a>
+        <a href="matchingsets.html" class="block px-4 py-2  subcategory">Matching Sets</a>
+        <a href="dress.html" class="block px-4 py-2  subcategory">Dresses</a>
+        <a href="bottoms.html" class="block px-4 py-2  subcategory">Bottoms</a>
+        <a href="jeans.html" class="block px-4 py-2  subcategory">Jeans</a>
+        <a href="jacket.html" class="block px-4 py-2  subcategory">Jackets</a>
+        <a href="graphics.html" class="block px-4 py-2  subcategory">Graphics</a>
+        <a href="sweaters.html" class="block px-4 py-2  subcategory">Sweaters</a>
+        <a href="jumpsuites.html" class="block px-4 py-2  subcategory">Jumpsuits</a>
+        <a href="rompers.html" class="block px-4 py-2  subcategory">Rompers</a>
+        <a href="skirts.html" class="block px-4 py-2  subcategory">Skirts</a>
+        <a href="sweamwear.html" class="block px-4 py-2  subcategory">Swimwear</a>
+        <a href="activewear.html" class="block px-4 py-2  subcategory">Activewear</a>
+        <a href="lougewear.html" class="block px-4 py-2  subcategory">Loungewear</a>
+        <a href="hoodies.html" class="block px-4 py-2  subcategory">Hoodies</a>
+        <a href="scrubs.html" class="block px-4 py-2  subcategory">Scrubs</a>
+    </nav>
+      
+<!-- Include Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
+
+<!-- Hero Section -->
+<section class="relative w-full h-[500px]">
+    <div class="swiper mySwiper w-full h-full">
+        <div class="swiper-wrapper">
+
+            <!-- Slide 1: Trending Design -->
+            <div class="swiper-slide relative">
+                <img src="https://www.theoutnet.com/cms/ycm/resource/blob/2197958/607842fe395a19a0bed63d7da1219030/picture-key-trends-hero-new-new-data.jpg/w1500_q80.jpg" 
+                     alt="Trending Designs" class="w-full h-full object-cover">
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-center bg-black bg-opacity-50 text-white p-6">
+                    <h2 class="text-3xl font-bold mb-4">Trending Designs</h2>
+                    <p class="mb-4">Discover the latest fashion trends that everyone is talking about!</p>
+                    <a href="shop.html" class="bg-pink-500 text-white px-6 py-3 rounded-full hover:bg-pink-700 transition">Shop Now</a>
+                </div>
+            </div>
+
+            <!-- Slide 2: Top Selling -->
+            <div class="swiper-slide relative">
+                <img src="https://www.telegraph.co.uk/content/dam/fashion/2020/10/27/Fashion_online_trans_NvBQzQNjv4BqqVzuuqpFlyLIwiB6NTmJwfSVWeZ_vEN7c6bHu2jJnT8.jpg?imwidth=1280" 
+                     alt="Top Selling" class="w-full h-full object-cover">
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-center bg-black bg-opacity-50 text-white p-6">
+                    <h2 class="text-3xl font-bold mb-4">Top Selling</h2>
+                    <p class="mb-4">Check out our bestsellers loved by thousands of fashion lovers!</p>
+                    <a href="shop.html" class="bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition">Explore Now</a>
+                </div>
+            </div>
+
+            <!-- Slide 3: New Arrivals -->
+            <div class="swiper-slide relative">
+                <img src="https://stylecaster.com/wp-content/uploads/2022/08/bestinternationalfashionbrands.png?w=960&h=540&crop=1" 
+                     alt="New Arrivals" class="w-full h-full object-cover">
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-center bg-black bg-opacity-50 text-white p-6">
+                    <h2 class="text-3xl font-bold mb-4">New Arrivals</h2>
+                    <p class="mb-4">Freshly arrived! Get your hands on the latest styles before they sell out.</p>
+                    <a href="shop.html" class="bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-700 transition">Shop Now</a>
+                </div>
+            </div>
+
+            <!-- Slide 4: Limited Edition -->
+            <div class="swiper-slide relative">
+                <img src="https://www.waitfashion.com/wp-content/uploads/2022/05/gavor-cop-600x454.png" 
+                     alt="Limited Edition" class="w-full h-full object-cover">
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-center bg-black bg-opacity-50 text-white p-6">
+                    <h2 class="text-3xl font-bold mb-4">Limited Edition</h2>
+                    <p class="mb-4">Exclusive designs you won't find anywhere else. Get yours now!</p>
+                    <a href="shop.html" class="bg-yellow-500 text-white px-6 py-3 rounded-full hover:bg-yellow-700 transition">Buy Now</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Pagination -->
+        <div class="swiper-pagination"></div>
+
+        <!-- Navigation Buttons -->
+        <div class="swiper-button-next text-white"></div>
+        <div class="swiper-button-prev text-white"></div>
+    </div>
+</section>
+
+<section class="px-6 sm:px-12 py-16 bg-gray-100">
+    <div class="text-center mb-10">
+        <h2 class="text-4xl sm:text-5xl font-bold text-gray-900">Featured Collections</h2>
+        <p class="text-lg sm:text-xl mt-2 text-gray-600">Explore our handpicked collections for every occasion.</p>
+    </div>
+
+    <!-- Collections Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-6 gap-6">
+        
+        <!-- Dresses -->
+        <div class="relative group overflow-hidden rounded-2xl shadow-lg">
+            <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/02-07-25_S9_1_D8095_Black_TK_SS_09-34-06_3673_MH_PXF.jpg?v=1739821654"
+                 class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+            <div class="absolute bottom-0 w-full bg-white text-center py-4">
+                <a href="#" class="text-black font-bold text-lg">Concert Outfits</a>
+            </div>
+        </div>
+
+        <!-- Jackets -->
+        <div class="relative group overflow-hidden rounded-2xl shadow-lg">
+            <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/06-16-23LUXE_KT_IM_15-18-40_37_GW23C6018_Mauve_6136_JB_JB.jpg?v=1687896977&width=600&height=900&crop=center"
+                 class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+            <div class="absolute bottom-0 w-full bg-white text-center py-4">
+                <a href="#" class="text-black font-bold text-lg">Prom Dresses</a>
+            </div>
+        </div>
+
+        <!-- Mini Bags -->
+        <div class="relative group overflow-hidden rounded-2xl shadow-lg">
+            <img src="https://cdn.shopify.com/s/files/1/0293/9277/products/04-19-23Studio2_KJ_RL_14-22-39_34_M4781_Black_10898_ES.jpg?v=1682109844&width=600&height=900&crop=center"
+                 class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+            <div class="absolute bottom-0 w-full bg-white text-center py-4">
+                <a href="#" class="text-black font-bold text-lg">Date Night Outfits</a>
+            </div>
+        </div>
+
+        <!-- Hair Accessories -->
+        <div class="relative group overflow-hidden rounded-2xl shadow-lg">
+            <img src="https://cdn.shopify.com/s/files/1/0293/9277/products/01-27-23Studio2_KJ_RL_11-14-02_4_ZJ1493N_Black_P_0916_DG.jpg?v=1734378391&width=600&height=900&crop=center"
+                 class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+            <div class="absolute bottom-0 w-full bg-white text-center py-4">
+                <a href="#" class="text-black font-bold text-lg">Sexy Rompers</a>
+            </div>
+        </div>
+
+        <!-- Tops -->
+        <div class="relative group overflow-hidden rounded-2xl shadow-lg">
+            <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/12-06-23Studio1_TK_SS_10-18-45_12_JF303705_Brown_21053_PXF.jpg?v=1702589103&width=600&height=900&crop=center"
+                 class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+            <div class="absolute bottom-0 w-full bg-white text-center py-4">
+                <a href="#" class="text-black font-bold text-lg">Sleepwear</a>
+            </div>
+        </div>
+
+        <!-- Bottoms -->
+        <div class="relative group overflow-hidden rounded-2xl shadow-lg">
+            <img src="https://cdn.shopify.com/s/files/1/0293/9277/products/RideOrDieLaceTeddyStockingSet-White_MER.jpg?v=1704846801&width=600&height=900&crop=center"
+                 class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+            <div class="absolute bottom-0 w-full bg-white text-center py-4">
+                <a href="#" class="text-black font-bold text-lg">Lingerie</a>
+            </div>
+        </div>
+
+      
+</section>
+
+
+
+<section class="relative flex flex-col sm:flex-row items-center bg-gradient-to-r from-gray-100 to-white p-10 sm:p-16 rounded-lg shadow-xl overflow-hidden">
+    <!-- Text Content -->
+    <div class="text-center sm:text-left max-w-xl z-10">
+        <h3 class="text-4xl sm:text-5xl font-bold text-gray-800">Stylish Hats</h3>
+        <p class="mt-4 text-lg sm:text-xl text-gray-700">
+            Top off your look with our collection of trendy hats. From casual caps to elegant fedoras, 
+            find the perfect accessory to elevate your style.
+        </p>
+
+        <a href="hats.html" class="mt-6 inline-block bg-pink-500 text-white px-6 py-3 text-lg font-bold rounded-full shadow-lg 
+                         transition-transform duration-300 transform hover:scale-110 hover:bg-pink-700">
+            Shop Hats
+        </a>
+    </div>
+
+    <!-- Image Section -->
+    <div class="relative w-full sm:w-1/2 mt-8 sm:mt-0">
+        <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/08-23-24_S4_44_IHT72491_DarkBrown_P_HY_MC_14-29-43_57689_PXF.jpg?v=1724696363&width=600&height=900&crop=center"
+             class="w-79 max-w-sm sm:max-w-md mx-auto rounded-xl shadow-lg transition-all duration-500 hover:scale-105">
+    </div>
+</section>
+
+
+
+
+<section class="relative bg-gradient-to-r from-pink-100 to-white p-10 sm:p-16 rounded-lg shadow-xl overflow-hidden">
+    <div class="flex flex-col sm:flex-row items-center">
+        
+        <!-- Image Side -->
+        <div class="relative w-full sm:w-1/2 flex justify-center">
+            <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/08-28-23Studio8_CC_AC_11-51-47_20_BAGAPRIL2206_Gold_10136_MP.jpg?v=1717806474&width=600&height=900&crop=center"
+                 class="w-72 sm:w-96 rounded-lg shadow-lg transform transition-all duration-500 hover:scale-110">
+        </div>
+
+        <!-- Text Content -->
+        <div class="text-center sm:text-left max-w-xl mt-8 sm:mt-0">
+            <h3 class="text-4xl sm:text-5xl font-bold text-gray-800">Elevate Your Style</h3>
+            <p class="mt-4 text-lg sm:text-xl text-gray-700">
+                Timeless shoulder bags that redefine elegance & functionality.  
+                Carry your confidence wherever you go!
+            </p>
+
+            <a href="shoulderbag.html" class="mt-6 inline-block bg-black text-white px-6 py-3 text-lg font-bold rounded-full shadow-lg 
+                             transition-transform duration-300 transform hover:scale-110 hover:bg-gray-800">
+                Shop Shoulder Bags
+            </a>
+        </div>
+
+    </div>
+</section>
+
+<section class="px-6 sm:px-12 py-16 bg-gray-100">
+    <div class="text-center mb-10">
+        <h2 class="text-4xl sm:text-5xl font-bold text-gray-900">Swimwear Collection</h2>
+        <p class="text-lg sm:text-xl mt-2 text-gray-600">Dive into our stunning swimwear collection, perfect for every beach and poolside occasion.</p>
+    </div>
+
+    <!-- Swimwear Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-6 gap-6">
+        
+        <!-- One-Piece -->
+        <div class="relative group overflow-hidden rounded-2xl shadow-lg">
+            <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/02-23-24_S9_10_ZD81816_Leopard_KJ_AA_11-24-56_0201_SG.jpg?v=1709059443&width=600&height=900&crop=center"
+                 class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+            <div class="absolute bottom-0 w-full bg-white text-center py-4">
+                <a href="#" class="text-black font-bold text-lg">One-Piece Swimwear</a>
+            </div>
+        </div>
+
+        <!-- Bikinis -->
+        <div class="relative group overflow-hidden rounded-2xl shadow-lg">
+            <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/03-06-24_S9_11_Y861_Purple_P_RA_IM_11-26-07_0358_PXF.jpg?v=1710267027&width=600&height=900&crop=center"
+                 class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+            <div class="absolute bottom-0 w-full bg-white text-center py-4">
+                <a href="#" class="text-black font-bold text-lg">Bikini sets</a>
+            </div>
+        </div>
+
+        <!-- Cover-Ups -->
+        <div class="relative group overflow-hidden rounded-2xl shadow-lg">
+            <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/06-11-24_S3_24_ZDSRCV006_Taupe_RA_JS_11-02-19_21468_MH_PXF.jpg?v=1718384217&width=600&height=900&crop=center"
+                 class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+            <div class="absolute bottom-0 w-full bg-white text-center py-4">
+                <a href="#" class="text-black font-bold text-lg">Swim Cover-Ups</a>
+            </div>
+        </div>
+
+        <!-- High-Waisted -->
+        <div class="relative group overflow-hidden rounded-2xl shadow-lg">
+            <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/03-17-25_S1_5_4175_Blue_ZSR_TK_IM_10-55-00_2818_EH.jpg?v=1742255900&width=600&height=900&crop=center"
+                 class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+            <div class="absolute bottom-0 w-full bg-white text-center py-4">
+                <a href="#" class="text-black font-bold text-lg">Beach Club</a>
+            </div>
+        </div>
+
+        <!-- Tankinis -->
+        <div class="relative group overflow-hidden rounded-2xl shadow-lg">
+            <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/05-03-24_S3_13_ZDSR24264_Green_P_KS_HP_10-59-09_0955_PXF.jpg?v=1715097419&width=600&height=900&crop=center"
+                 class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+            <div class="absolute bottom-0 w-full bg-white text-center py-4">
+                <a href="#" class="text-black font-bold text-lg">Three-Piece Swim Sets</a>
+            </div>
+        </div>
+
+        <!-- Accessories -->
+        <div class="relative group overflow-hidden rounded-2xl shadow-lg">
+            <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/02-25-25_swim_set_3_7_4167_Whitecombo_CZ_PC_12-01-45_0552_PXF.jpg?v=1741287449&width=600&height=900&crop=center"
+                 class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+            <div class="absolute bottom-0 w-full bg-white text-center py-4">
+                <a href="#" class="text-black font-bold text-lg">Femme & Flirty Swimwear</a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section class="relative flex flex-col sm:flex-row items-center bg-gradient-to-r from-gray-100 to-white p-10 sm:p-16 rounded-lg shadow-xl overflow-hidden">
+    <!-- Text Content -->
+    <div class="text-center sm:text-left max-w-xl z-10">
+        <h3 class="text-4xl sm:text-5xl font-bold text-gray-800">Step Up Your Style</h3>
+        <p class="mt-4 text-lg sm:text-xl text-gray-700">
+            Discover our versatile collection of jeans. From skinny to wide-leg styles, 
+            find the perfect fit for every occasion and elevate your casual wardrobe.
+        </p>
+
+        <a href="jeans.html" class="mt-6 inline-block bg-pink-500 text-white px-6 py-3 text-lg font-bold rounded-full shadow-lg 
+                         transition-transform duration-300 transform hover:scale-110 hover:bg-pink-700">
+            Shop Jeans
+        </a>
+    </div>
+
+    <!-- Image Section -->
+    <div class="relative w-full sm:w-1/2 mt-8 sm:mt-0">
+        <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/10-23-24_S2_31_D231453026_MediumWash_CXB_RL_16-21-47_16581_SL.jpg?v=1729892197&width=600&height=900&crop=center"
+             class="w-79 max-w-sm sm:max-w-md mx-auto rounded-xl shadow-lg transition-all duration-500 hover:scale-105">
+    </div>
+</section>
+
+<section class="relative bg-gradient-to-r from-pink-100 to-white p-10 sm:p-16 rounded-lg shadow-xl overflow-hidden">
+    <div class="flex flex-col sm:flex-row items-center">
+        
+        <!-- Image Side -->
+        <div class="relative w-full sm:w-1/2 flex justify-center">
+            <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/04-20-23Studio5_RA_PC_11-12-42_15_73625TA_Black_18034_EH.jpg?v=1682358143&width=600&height=900&crop=center"
+                 class="w-72 sm:w-96 rounded-lg shadow-lg transform transition-all duration-500 hover:scale-110">
+        </div>
+
+        <!-- Text Content -->
+        <div class="text-center sm:text-left max-w-xl mt-8 sm:mt-0">
+            <h3 class="text-4xl sm:text-5xl font-bold text-gray-800">All-Day Outfits</h3>
+            <p class="mt-4 text-lg sm:text-xl text-gray-700">
+                Stay stylish and comfortable from morning to night with our versatile all-day outfits. 
+                Perfect for work, casual outings, or evening plans.
+            </p>
+
+            <a href="#" class="mt-6 inline-block bg-black text-white px-6 py-3 text-lg font-bold rounded-full shadow-lg 
+                             transition-transform duration-300 transform hover:scale-110 hover:bg-gray-800">
+                Shop All-Day Outfits
+            </a>
+        </div>
+
+    </div>
+</section>
+
+  <!-- 🛒 Product Grid -->
+  <div id="product-grid" class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 gap-6">
+    
+    <!-- Product 1 -->
+    <div class="product-item bg-white shadow rounded-lg overflow-hidden text-center" data-name="Gabriella Ruched Mini Dress - Orange">
+      <a href="details.html?product_id=1">
+        <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/05-23-23Studio2_KJ_RL_13-55-35_45_PD74125SFN_Orange_28970_JB.jpg?v=1685117986&width=600&height=900&crop=center" alt="Dress 1" class="w-full h-auto hover:opacity-90 transition duration-200">
+      </a>
+      <div class="p-4">
+        <h3 class="font-semibold text-lg">Gabriella Ruched Mini Dress - Orange</h3>
+        <p class="mt-2 text-pink-600 font-bold text-sm">
+          $39.99 <span class="line-through text-gray-400 ml-2">$49.99</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="product-item bg-white shadow rounded-lg overflow-hidden text-center" data-name="Floral Midi Dress">
+      <a href="details.html?product_id=2">
+        <img src="https://cdn.shopify.com/s/files/1/0293/9277/products/04-11-23Studio1_TA_AC_10-32-17_9_D13453_Black_33173_SG.jpg?v=1681507034&width=600&height=900&crop=center" alt="Dress 2" class="w-full h-auto hover:opacity-90 transition duration-200">
+      </a>
+      <div class="p-4">
+        <h3 class="font-semibold text-lg">Floral Midi Dress</h3>
+        <p class="mt-2 text-pink-600 font-bold text-sm">$29.99</p>
+      </div>
+    </div>
+    <!-- Product 4 -->
+    <div class="product-item bg-white shadow rounded-lg overflow-hidden text-center" data-name="Julia Flocked Mini Dress - Black">
+        <a href="details.html?product_id=4">
+          <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/07-21-23Studio2_KJ_RL_12-11-17_7_10584D_Black_P_16042_JB.jpg?v=1690308117&width=600&height=900&crop=center" alt="Dress 4" class="w-full h-auto hover:opacity-90 transition duration-200">
+        </a>
+        <div class="p-4">
+          <h3 class="font-semibold text-lg">Julia Flocked Mini Dress - Black</h3>
+          <p class="mt-2 text-pink-600 font-bold text-sm">$25.99</p>
+        </div>
+      </div>
+
+          <!-- Product 5 -->
+    <div class="product-item bg-white shadow rounded-lg overflow-hidden text-center" data-name="Ruffles and Roses Mini Dress - Black">
+        <a href="details.html?product_id=5">
+          <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/06-09-23Studio3_HY_IM_14-17-56_43_GW22C1647_Black_17566_DQ_DQ.jpg?v=1686867080&width=600&height=900&crop=center" alt="Dress 5" class="w-full h-auto hover:opacity-90 transition duration-200">
+        </a>
+        <div class="p-4">
+          <h3 class="font-semibold text-lg">Ruffles and Roses Mini Dress - Black</h3>
+          <p class="mt-2 text-pink-600 font-bold text-sm">$70.99</p>
+        </div>
+      </div>
+
+      
+    <!-- Product 3 -->
+    <div class="product-item bg-white shadow rounded-lg overflow-hidden text-center" data-name="Classic Black Dress">
+      <a href="details.html?product_id=3">
+        <img src="https://cdn.shopify.com/s/files/1/0293/9277/files/04-25-23Studio2_KJ_RL_14-48-02_27_SBD357_Pinkcombo_19249_DQ.jpg?v=1682716612&width=600&height=900&crop=center" alt="Dress 3" class="w-full h-auto hover:opacity-90 transition duration-200">
+      </a>
+      <div class="p-4">
+        <h3 class="font-semibold text-lg">Classic Black Dress</h3>
+        <p class="mt-2 text-pink-600 font-bold text-sm">
+          $59.99 <span class="line-through text-gray-400 ml-2">$79.99</span>
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+
+<section class="bg-gray-50 py-12 px-6">
+    <div class="text-center mb-10">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Our Featured Labels</h2>
+      <p class="text-lg text-gray-600 mt-2">Shop the finest brands and exclusive collections from top fashion labels around the world.</p>
+    </div>
+  
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 items-center">
+      <!-- Brand 1 -->
+      <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Zara_Logo.svg/800px-Zara_Logo.svg.png" alt="Zara" class="w-full h-16 object-contain mx-auto">
+      </div>
+  
+      <!-- Brand 2 -->
+      <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition">
+        <img src="https://1000logos.net/wp-content/uploads/2021/11/Nike-Logo-500x281.png" alt="Nike" class="w-full h-16 object-contain mx-auto">
+      </div>
+  
+      <!-- Brand 3 -->
+      <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition">
+        <img src="https://images.seeklogo.com/logo-png/6/1/gucci-logo-png_seeklogo-64069.png" alt="Gucci" class="w-full h-16 object-contain mx-auto">
+      </div>
+  
+      <!-- Brand 4 -->
+      <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition">
+        <img src="https://1000logos.net/wp-content/uploads/2016/10/Adidas-Logo-500x281.png" alt="Adidas" class="w-full h-16 object-contain mx-auto">
+      </div>
+  
+      <!-- Brand 5 -->
+      <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition">
+        <img src="https://1000logos.net/wp-content/uploads/2021/11/Calvin-Klein-logo-500x281.png" alt="Calvin Klein" class="w-full h-16 object-contain mx-auto">
+      </div>
+  
+      <!-- Brand 6 -->
+      <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition">
+        <img src="https://1000logos.net/wp-content/uploads/2016/11/Chanel-logo-500x281.png" alt="Chanel" class="w-full h-16 object-contain mx-auto">
+      </div>
+    </div>
+  </section>
+  
+
+<footer class="bg-gray-900 text-white py-10">
+    <div class="container mx-auto px-6 sm:px-12 grid grid-cols-1 sm:grid-cols-3 gap-10">
+        
+        <!-- About Section -->
+        <div>
+            <h3 class="text-2xl font-bold">Iyonic Fashion</h3>
+            <p class="mt-4 text-gray-400">
+                Discover the latest trends in fashion and express your unique style with confidence.
+            </p>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+            <h3 class="text-xl font-bold">Quick Links</h3>
+            <ul class="mt-4 space-y-2">
+                <li><a href="#" class="text-gray-400 hover:text-white transition">Home</a></li>
+                <li><a href="#" class="text-gray-400 hover:text-white transition">Shop</a></li>
+                <li><a href="#" class="text-gray-400 hover:text-white transition">Spring Sale</a></li>
+                <li><a href="#" class="text-gray-400 hover:text-white transition">Contact</a></li>
+            </ul>
+        </div>
+
+        <!-- Newsletter & Socials -->
+        <div>
+            <h3 class="text-xl font-bold">Stay Connected</h3>
+            <p class="mt-4 text-gray-400">Subscribe for the latest updates and exclusive deals.</p>
+            
+            <!-- Newsletter Subscription -->
+            <div class="mt-4 flex items-center bg-gray-800 rounded-lg overflow-hidden">
+                <input type="email" placeholder="Your email" class="bg-transparent text-white px-4 py-2 w-full focus:outline-none">
+                <button class="bg-pink-500 px-4 py-2 font-bold">Subscribe</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Copyright -->
+    <div class="mt-10 text-center text-gray-500 border-t border-gray-700 pt-4">
+        &copy; 2025 Iyonic Fashion. All rights reserved.
+    </div>
+</footer>
+
+<!-- Include Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+<!-- Initialize Swiper -->
+<script>
+    var swiper = new Swiper(".mySwiper", {
+        loop: true,
+        autoplay: { delay: 3000, disableOnInteraction: false },
+        pagination: { el: ".swiper-pagination", clickable: true },
+        navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const isLoggedIn = localStorage.getItem("isLoggedIn");
+
+        const loginBtn = document.getElementById("login-btn");
+        const signupBtn = document.getElementById("signup-btn");
+        const logoutBtn = document.getElementById("logout-btn");
+        const dashboardBtn = document.getElementById("dashboard-btn");
+
+        if (isLoggedIn === "true") {
+            // Hide login and signup
+            loginBtn.style.display = "none";
+            signupBtn.style.display = "none";
+
+            // Show logout and dashboard
+            logoutBtn.style.display = "block";
+            dashboardBtn.style.display = "block";
+        } else {
+            // Show login and signup
+            loginBtn.style.display = "block";
+            signupBtn.style.display = "block";
+
+            // Hide logout and dashboard
+            logoutBtn.style.display = "none";
+            dashboardBtn.style.display = "none";
+        }
+
+        // Logout functionality
+        logoutBtn.addEventListener("click", function () {
+            localStorage.removeItem("isLoggedIn"); // Clear login state
+            location.reload(); // Refresh page to update UI
+        });
+    });
+</script>
+
+</body>
+</html>

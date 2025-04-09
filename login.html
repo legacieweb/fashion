@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Iyonic Fashion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex justify-center items-center h-screen">
+
+    <div class="bg-white p-8 rounded-lg shadow-md w-96">
+        <h2 class="text-2xl font-bold text-center mb-6">Login to Your Account</h2>
+
+        <form id="login-form">
+            <label class="block mb-2">Email</label>
+            <input type="email" id="email" required class="w-full p-2 border rounded mb-4">
+
+            <label class="block mb-2">Password</label>
+            <input type="password" id="password" required class="w-full p-2 border rounded mb-4">
+
+            <button type="submit" class="w-full bg-pink-600 text-white py-2 rounded">Login</button>
+        </form>
+
+        <p class="mt-4 text-center">
+            <a href="#" id="forgot-password-link" class="text-pink-600">Forgot Password?</a>
+        </p>
+
+        <div id="forgot-password-section" class="hidden mt-6">
+            <h3 class="text-xl font-bold text-center mb-4">Reset Password</h3>
+
+            <input type="email" id="reset-email" placeholder="Enter your email" class="w-full p-2 border rounded mb-2">
+            <button id="send-otp-btn" class="w-full bg-blue-600 text-white py-2 rounded">Send OTP</button>
+
+            <input type="text" id="otp-code" placeholder="Enter OTP" class="w-full p-2 border rounded mb-2 hidden">
+            <input type="password" id="new-password" placeholder="New Password" class="w-full p-2 border rounded mb-2 hidden">
+            <button id="reset-password-btn" class="w-full bg-green-600 text-white py-2 rounded hidden">Reset Password</button>
+        </div>
+
+        <p class="mt-4 text-center">Don't have an account? <a href="signup.html" class="text-pink-600">Sign Up</a></p>
+    </div>
+
+    <script>
+        document.getElementById("login-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            try {
+                const res = await fetch("http://localhost:5000/api/auth/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    // Store login data
+                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("user", JSON.stringify(data.user));
+                    localStorage.setItem("isLoggedIn", "true");
+
+                    alert("Login successful!");
+                    window.location.href = "index.html"; // Redirect to homepage
+                } else {
+                    alert(data.message || "Login failed!");
+                }
+            } catch (error) {
+                console.error("Login error:", error);
+                alert("Server error. Please try again later.");
+            }
+        });
+
+        // Forgot Password Functionality
+        document.getElementById("forgot-password-link").addEventListener("click", function() {
+            document.getElementById("forgot-password-section").classList.toggle("hidden");
+        });
+
+        document.getElementById("send-otp-btn").addEventListener("click", async function() {
+            const email = document.getElementById("reset-email").value;
+            
+            try {
+                const res = await fetch("http://localhost:5000/api/auth/forgot-password", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    alert("OTP sent to your email!");
+
+                    // Show OTP and new password fields
+                    document.getElementById("otp-code").classList.remove("hidden");
+                    document.getElementById("new-password").classList.remove("hidden");
+                    document.getElementById("reset-password-btn").classList.remove("hidden");
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error("Error sending OTP:", error);
+                alert("Failed to send OTP. Please try again.");
+            }
+        });
+
+        document.getElementById("reset-password-btn").addEventListener("click", async function() {
+            const email = document.getElementById("reset-email").value;
+            const otp = document.getElementById("otp-code").value;
+            const newPassword = document.getElementById("new-password").value;
+
+            try {
+                const res = await fetch("http://localhost:5000/api/auth/reset-password", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, otp, newPassword })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    alert("Password reset successful! Login with your new password.");
+                    window.location.reload();
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error("Password reset error:", error);
+                alert("Failed to reset password. Please try again.");
+            }
+        });
+
+        // Check Login Status on Page Load
+        document.addEventListener("DOMContentLoaded", function () {
+            const isLoggedIn = localStorage.getItem("isLoggedIn");
+            if (isLoggedIn === "true") {
+                window.location.href = "/index"; // Redirect if already logged in
+            }
+        });
+    </script>
+
+</body>
+</html>
