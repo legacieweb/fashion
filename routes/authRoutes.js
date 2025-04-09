@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
 
-const User = require('../models/user');
+const User = require('../models/User');
 
 // Signup
 router.post('/signup', async (req, res) => {
