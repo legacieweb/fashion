@@ -103,7 +103,7 @@ function logout() {
   window.location.href = "login.html";
 }
 
-const socket = io("http://localhost:5000");
+const socket = io("https://fashion-vmml.onrender.com");
 socket.emit("join", { isAdmin: true });
 
 const unreadUserMap = new Map();
@@ -154,7 +154,7 @@ dropdownBtn.addEventListener("click", () => {
 // 📦 Fetch Orders
 async function fetchOrders() {
   try {
-    const res = await fetch("http://localhost:5000/api/orders", {
+    const res = await fetch("https://fashion-vmml.onrender.com/api/orders", {
       headers: { Authorization: "Bearer " + token }
     });
     const data = await res.json();
@@ -200,7 +200,7 @@ async function fetchOrders() {
         const orderId = e.target.dataset.orderId;
         const msg = document.getElementById(msgId);
         try {
-          const res = await fetch(`http://localhost:5000/api/orders/${orderId}/status`, {
+          const res = await fetch(`https://fashion-vmml.onrender.com/api/orders/${orderId}/status`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -225,7 +225,7 @@ async function fetchOrders() {
 
 // 📨 Load users for chat
 async function loadMessageUsers() {
-  const res = await fetch("http://localhost:5000/api/messages/users");
+  const res = await fetch("https://fashion-vmml.onrender.com/api/messages/users");
   const data = await res.json();
 
   dropdownList.innerHTML = "";
@@ -253,7 +253,7 @@ async function loadMessageUsers() {
 // 💬 Load chat messages
 async function loadChat(userId) {
   chatBox.innerHTML = "<p class='text-gray-500'>Loading...</p>";
-  const res = await fetch(`http://localhost:5000/api/messages/${userId}`);
+  const res = await fetch(`https://fashion-vmml.onrender.com/api/messages/${userId}`);
   const data = await res.json();
   chatBox.innerHTML = "";
   data.messages.forEach(msg => {
