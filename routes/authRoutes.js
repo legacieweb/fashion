@@ -1,120 +1,55 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { v4: uuidv4 } = require('uuid');
-const nodemailer = require('nodemailer');
+const {
+  signup,
+  login,
+  sendResetCode,
+  resetPassword
+} = require('../controllers/authController');
 
 const User = require('../models/User');
+const sendEmail = require('../utils/sendEmail'); // ✅ Import email utility
 
-// Signup
-router.post('/signup', async (req, res) => {
-    const { name, email, password } = req.body;
+// 🔐 Standard Auth Routes
+router.post('/signup', signup);
+router.post('/login', login);
+router.post('/send-reset-code', sendResetCode);
+router.post('/reset-password', resetPassword);
 
-    if (!name || !email || !password) {
-        return res.status(400).json({ message: 'All fields are required' });
+// 🔐 Change Password with Email Notification
+router.put('/change-password', async (req, res) => {
+  try {
+    const { userId, currentPassword, newPassword } = req.body;
+    if (!userId || !currentPassword || !newPassword) {
+      return res.status(400).json({ message: 'All fields are required' });
     }
 
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) return res.status(401).json({ message: 'Current password is incorrect' });
+
+    user.password = newPassword;
+    await user.save();
+
+    // ✅ Send confirmation email
     try {
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: 'User already exists' });
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const user = new User({ name, email, password: hashedPassword });
-        await user.save();
-
-        const token = jwt.sign({ userId: user._id }, 'secretKey', { expiresIn: '1h' });
-
-        res.status(201).json({ message: 'User created', token, user });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+      await sendEmail({
+        to: user.email,
+        subject: 'Your Password Was Changed',
+        text: `Hi ${user.name || 'User'},\n\nYour password has been successfully updated.\n\nIf this wasn't you, please contact support immediately.\n\n- Iyonic Fashion Team`
+      });
+    } catch (emailErr) {
+      console.error(`⚠️ Failed to send password change email to ${user.email}:`, emailErr.message);
     }
-});
-// LOGIN
-router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
 
-    try {
-        const user = await User.findOne({ email });
-        if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+    res.json({ message: 'Password updated successfully' });
 
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
-
-        const token = jwt.sign({ userId: user._id }, 'secretKey', { expiresIn: '1h' });
-
-        res.json({ message: 'Login successful', token, user });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
-    }
-});
-
-
-// Forgot Password
-router.post('/forgot-password', async (req, res) => {
-    const { email } = req.body;
-
-    try {
-        const user = await User.findOne({ email });
-        if (!user) return res.status(404).json({ message: 'User not found' });
-
-        const otp = uuidv4().slice(0, 6);
-        user.otp = otp;
-        user.otpExpiration = Date.now() + 15 * 60 * 1000;
-        await user.save();
-
-        // Update these with your actual credentials
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: 'your-email@gmail.com',
-                pass: 'your-email-password',
-            },
-        });
-
-        const mailOptions = {
-            from: 'your-email@gmail.com',
-            to: email,
-            subject: 'Password Reset OTP',
-            text: `Your OTP for password reset is: ${otp}`,
-        };
-
-        transporter.sendMail(mailOptions, (err, info) => {
-            if (err) return res.status(500).json({ message: 'Error sending OTP' });
-            res.json({ message: 'OTP sent to your email!' });
-        });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
-    }
-});
-
-// Reset Password
-router.post('/reset-password', async (req, res) => {
-    const { email, otp, newPassword } = req.body;
-
-    try {
-        const user = await User.findOne({ email });
-        if (!user || user.otp !== otp || Date.now() > user.otpExpiration) {
-            return res.status(400).json({ message: 'Invalid or expired OTP' });
-        }
-
-        user.password = await bcrypt.hash(newPassword, 10);
-        user.otp = null;
-        user.otpExpiration = null;
-        await user.save();
-
-        res.json({ message: 'Password reset successful' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
-    }
+  } catch (err) {
+    console.error('❌ Change password error:', err.message);
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
 module.exports = router;

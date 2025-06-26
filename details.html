@@ -214,6 +214,54 @@
         padding: 1rem;
       }
     }
+
+    .modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 90%;
+  width: 300px;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+}
+
+.modal-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  background-color: #ff6f61;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-actions button:hover {
+  background-color: #e4574f;
+}
+
   </style>
 </head>
 <body>
@@ -273,12 +321,25 @@
       <div class="stars">★★★★☆ (4.5/5)</div>
       <p class="price" id="productPrice">$39.99</p>
       <p id="productDesc">A stunning Gabriella Ruched Mini Dress - Orange, perfect for casual and semi-formal occasions. Made with breathable cotton blend and designed to turn heads!</p>
-    
-    
-      <div class="btn-group">
-        <button onclick="location.href='cart.html'">Buy Now</button>
-        <button>Add to Cart</button>
-      </div>
+<div class="btn-group">
+  <button onclick="handleAction('checkout')">Buy Now</button>
+  <button onclick="handleAction('cart')">Add to Cart</button>
+</div>
+
+
+
+<!-- Login Required Modal -->
+<div id="loginModal" style="display: none; position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); justify-content: center;
+  align-items: center; z-index: 1000;">
+  <div style="background: white; padding: 2rem; border-radius: 10px; max-width: 300px; text-align: center;">
+    <h3>Login Required</h3>
+    <p>You need to login to continue.</p>
+    <button onclick="redirectToLogin()" style="margin-top: 1rem; background: #f06292; color: white;
+      border: none; padding: 0.5rem 1.5rem; border-radius: 5px; cursor: pointer;">Login</button>
+  </div>
+</div>
+
     
       <!-- Size Guide Button -->
       <button id="sizeGuideBtn" onclick="toggleSizeGuide()">Size Guide</button>
@@ -331,7 +392,27 @@
         </table>
       </div>
     </div>
-    
+<!-- Size Selection Modal -->
+<div id="sizeModal" class="modal" style="display: none; position: fixed; z-index: 999; inset: 0; background-color: rgba(0,0,0,0.6); align-items: center; justify-content: center;">
+  <div style="background: #fff; padding: 2rem; border-radius: 8px; width: 300px; text-align: center; position: relative;">
+    <h3>Select a Size</h3>
+    <select id="modalSizeSelect" style="margin: 1rem 0; width: 100%; padding: 0.5rem;">
+      <option value="">-- Choose Size --</option>
+    </select>
+    <button onclick="confirmSizeAndRedirect()" style="margin-right: 10px;">Confirm</button>
+    <button onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+<!-- Confirmation Modal -->
+<div id="confirmationModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); align-items:center; justify-content:center; z-index:1000;">
+  <div style="background:white; padding:2rem; border-radius:10px; width:90%; max-width:400px; text-align:center;">
+    <p id="confirmationText" style="margin-bottom: 1.5rem;"></p>
+    <button onclick="closeConfirmationModal()" style="margin-right: 1rem; padding:0.5rem 1.5rem;">Continue Shopping</button>
+    <a href="cart.html" style="background:#f06292; color:white; text-decoration:none; padding:0.5rem 1.5rem; border-radius:5px;">Go to Cart</a>
+  </div>
+</div>
+
+
     <script>
       let isInches = true;
     
@@ -408,121 +489,218 @@
 
     const products = {
       1: {
-        title: "Gabriella Ruched Mini Dress - Orange",
-        price: "$39.99",
-        desc: "Available In Orange. Mesh Mini Dress. Adjustable Spaghetti Strap. Bra Cup. Cut Out. Silver Hardware. Back Zipper Closure. Lining. Stretch. Shell: 95% Nylon 5% Spandex. Lining: 100% Polyester. Imported.",
-        images: ["https://cdn.shopify.com/s/files/1/0293/9277/files/05-23-23Studio2_KJ_RL_13-55-35_45_PD74125SFN_Orange_28970_JB.jpg?v=1685117986&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/05-23-23Studio2_KJ_RL_13-56-10_45_PD74125SFN_Orange_28973_JB.jpg?v=1685117986&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/05-23-23Studio2_KJ_RL_13-55-32_45_PD74125SFN_Orange_28969_JB.jpg?v=1685117986&width=600&height=900&crop=center"]
+      title: "Gabriella Ruched Mini Dress - Orange",
+      price: "$39.99",
+      desc: "Available In Orange. Mesh Mini Dress. Adjustable Spaghetti Strap. Bra Cup. Cut Out. Silver Hardware. Back Zipper Closure. Lining. Stretch. Shell: 95% Nylon 5% Spandex. Lining: 100% Polyester. Imported.",
+      images: [
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/05-23-23Studio2_KJ_RL_13-55-35_45_PD74125SFN_Orange_28970_JB.jpg?v=1685117986&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/05-23-23Studio2_KJ_RL_13-56-10_45_PD74125SFN_Orange_28973_JB.jpg?v=1685117986&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/05-23-23Studio2_KJ_RL_13-55-32_45_PD74125SFN_Orange_28969_JB.jpg?v=1685117986&width=600&height=900&crop=center"
+      ],
+      sizes: ["XS", "S", "M", "L", "XL"]
       },
-    2: {
+      2: {
       title: "Floral Midi Dress",
-    price: "$29.99",
+      price: "$29.99",
       desc: "Elegant floral midi dress...",
-      images: ["https://cdn.shopify.com/s/files/1/0293/9277/products/04-11-23Studio1_TA_AC_10-32-30_9_D13453_Black_33176_SG.jpg?v=1681507033&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/04-24-23Studio4_HY_AP_13-32-38_29_D13453_Black_24899_PLUS_ES.jpg?v=1682713763&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/products/04-11-23Studio1_TA_AC_10-31-48_9_D13453_Black_33166_SG.jpg?v=1681507034&width=600&height=900&crop=center"]
+      images: [
+        "https://cdn.shopify.com/s/files/1/0293/9277/products/04-11-23Studio1_TA_AC_10-32-30_9_D13453_Black_33176_SG.jpg?v=1681507033&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/04-24-23Studio4_HY_AP_13-32-38_29_D13453_Black_24899_PLUS_ES.jpg?v=1682713763&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/products/04-11-23Studio1_TA_AC_10-31-48_9_D13453_Black_33166_SG.jpg?v=1681507034&width=600&height=900&crop=center"
+      ],
+      sizes: ["XS", "S", "M", "L", "XL"]
       },
       3: {
       title: "Boho Maxi Dress",
       price: "$42.00",
       desc: "A chic boho maxi dress perfect for summer outings...",
-      images: ["https://cdn.shopify.com/s/files/1/0293/9277/files/04-25-23Studio2_KJ_RL_14-48-02_27_SBD357_Pinkcombo_19249_DQ.jpg?v=1682716612&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/05-02-23Studio4_KS_AP_14-01-22_40_SBD357_Pinkcombo_30771_PLUS_EH.jpg?v=1683663604&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/05-02-23Studio4_KS_AP_14-01-52_40_SBD357_Pinkcombo_30778_PLUS_EH.jpg?v=1683663601&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/9-9-2024__230_Laney_Mini_Dress_Pink-combo_GF.jpg?v=1727195483&width=600&height=900&crop=center"]
-    },
+      images: [
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/04-25-23Studio2_KJ_RL_14-48-02_27_SBD357_Pinkcombo_19249_DQ.jpg?v=1682716612&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/05-02-23Studio4_KS_AP_14-01-22_40_SBD357_Pinkcombo_30771_PLUS_EH.jpg?v=1683663604&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/05-02-23Studio4_KS_AP_14-01-52_40_SBD357_Pinkcombo_30778_PLUS_EH.jpg?v=1683663601&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/9-9-2024__230_Laney_Mini_Dress_Pink-combo_GF.jpg?v=1727195483&width=600&height=900&crop=center"
+      ],
+      sizes: ["XS", "S", "M", "L", "XL"]
+      },
       4: {
-        title: "Julia Flocked Mini Dress - Black",
-        price: "$25.99",
-        desc: "Available In Black And Chocolate. Micro Mini Dress. Halter. Sweetheart Neckline. Floral Design. Side Zipper Closure. Ruffle Trim. Lining. Dress Length = 31\". Disclaimer: Placement Of Burnout Will Vary. Shell/Lining: 95% Polyester 5% Spandex. Imported.",
-        images: ["https://cdn.shopify.com/s/files/1/0293/9277/files/07-21-23Studio2_KJ_RL_12-11-17_7_10584D_Black_P_16042_JB.jpg?v=1690308117&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/07-21-23Studio2_KJ_RL_12-11-17_7_10584D_Black_P_16045_JB.jpg?v=1690308112&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/1-2-2023_Julia_Floral_Mini_Dress_Black_033_GF.jpg?v=1741809991&width=600&height=900&crop=center"]
+      title: "Julia Flocked Mini Dress - Black",
+      price: "$25.99",
+      desc: "Available In Black And Chocolate. Micro Mini Dress. Halter. Sweetheart Neckline. Floral Design. Side Zipper Closure. Ruffle Trim. Lining. Dress Length = 31\". Disclaimer: Placement Of Burnout Will Vary. Shell/Lining: 95% Polyester 5% Spandex. Imported.",
+      images: [
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/07-21-23Studio2_KJ_RL_12-11-17_7_10584D_Black_P_16042_JB.jpg?v=1690308117&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/07-21-23Studio2_KJ_RL_12-11-17_7_10584D_Black_P_16045_JB.jpg?v=1690308112&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/1-2-2023_Julia_Floral_Mini_Dress_Black_033_GF.jpg?v=1741809991&width=600&height=900&crop=center"
+      ],
+      sizes: ["S", "XL"]
       },
       5: {
-        title: "Ruffles and Roses Mini Dress - Black",
-        price: "$70.99",
-        desc: "Mesh Midi Dress. Halter. Open Back. Side Zipper. Ruffle Trim. Ruffle Train. Flower Applique. Shell: 100% Polyester. Imported.",
-        images: ["https://cdn.shopify.com/s/files/1/0293/9277/files/06-09-23Studio3_HY_IM_14-17-56_43_GW22C1647_Black_17566_DQ_DQ.jpg?v=1686867080&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/06-09-23Studio3_HY_IM_14-17-56_43_GW22C1647_Black_17578_DQ_DQ.jpg?v=1686867080&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/2-10-25__339_Ruffles_and_Roses_Mini_Dress_Black_JR.jpg?v=1743550337&width=600&height=900&crop=center"]
+      title: "Ruffles and Roses Mini Dress - Black",
+      price: "$70.99",
+      desc: "Mesh Midi Dress. Halter. Open Back. Side Zipper. Ruffle Trim. Ruffle Train. Flower Applique. Shell: 100% Polyester. Imported.",
+      images: [
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/06-09-23Studio3_HY_IM_14-17-56_43_GW22C1647_Black_17566_DQ_DQ.jpg?v=1686867080&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/06-09-23Studio3_HY_IM_14-17-56_43_GW22C1647_Black_17578_DQ_DQ.jpg?v=1686867080&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/2-10-25__339_Ruffles_and_Roses_Mini_Dress_Black_JR.jpg?v=1743550337&width=600&height=900&crop=center"
+      ],
+      sizes: ["XS", "S", "M", "L", "XL"]
       },
       2000: {
-        title: "Simplistic Linen Tube Top - Black",
-        price: "$15.00",
-        desc: "Simplistic Linen Tube Top - Black. Smocked, Tie Front, Cropped. Made with 80% Rayon and 20% Linen. Perfect for casual summer outings. Imported.",
-        images: ["https://cdn.shopify.com/s/files/1/0293/9277/products/03-06-23Studio2_ID_RL_13-33-12_5_DZ23A601FN_Black_3489_DG.jpg?v=1678228994&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/products/03-06-23Studio2_ID_RL_13-34-55_5_DZ23A601FN_Black_3501_DG.jpg?v=1678228993&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/02-14-24_S4_20_DZ23A601FN_Black_DT_SS_11-03-05_50142_PXF.jpg?v=1708388035&width=600&height=900&crop=center"]
+      title: "Simplistic Linen Tube Top - Black",
+      price: "$15.00",
+      desc: "Simplistic Linen Tube Top - Black. Smocked, Tie Front, Cropped. Made with 80% Rayon and 20% Linen. Perfect for casual summer outings. Imported.",
+      images: [
+        "https://cdn.shopify.com/s/files/1/0293/9277/products/03-06-23Studio2_ID_RL_13-33-12_5_DZ23A601FN_Black_3489_DG.jpg?v=1678228994&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/products/03-06-23Studio2_ID_RL_13-34-55_5_DZ23A601FN_Black_3501_DG.jpg?v=1678228993&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/02-14-24_S4_20_DZ23A601FN_Black_DT_SS_11-03-05_50142_PXF.jpg?v=1708388035&width=600&height=900&crop=center"
+      ],
+      sizes: ["XS", "S", "M", "L"]
       },
       2001: {
-        title: "ACDC No Bull Rhinestone Tube Top - White",
-        price: "$12.99",
-        desc: "Available In White. Tube Top. Strapless. Front Screen. Rhinestone Detail. Cropped. Stretch. Disclaimer: Due To The Printing Process A Difference In Saturation May Occur. Each Garment Is Unique. 95% Cotton 5% Spandex. Imported.",
-        images: ["https://cdn.shopify.com/s/files/1/0293/9277/files/04-04-25_S2_17_PRYAC040RCHER_White_CXB_RL_15-14-26_19310_SG.jpg?v=1744062241&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/04-04-25_S2_17_PRYAC040RCHER_White_CXB_RL_15-15-06_19315_SG.jpg?v=1744062235&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/04-04-25_S2_17_PRYAC040RCHER_White_CXB_RL_15-13-51_19304_SG.jpg?v=1744062241&width=600&height=900&crop=center"]
+      title: "ACDC No Bull Rhinestone Tube Top - White",
+      price: "$12.99",
+      desc: "Available In White. Tube Top. Strapless. Front Screen. Rhinestone Detail. Cropped. Stretch. Disclaimer: Due To The Printing Process A Difference In Saturation May Occur. Each Garment Is Unique. 95% Cotton 5% Spandex. Imported.",
+      images: [
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/04-04-25_S2_17_PRYAC040RCHER_White_CXB_RL_15-14-26_19310_SG.jpg?v=1744062241&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/04-04-25_S2_17_PRYAC040RCHER_White_CXB_RL_15-15-06_19315_SG.jpg?v=1744062235&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/04-04-25_S2_17_PRYAC040RCHER_White_CXB_RL_15-13-51_19304_SG.jpg?v=1744062241&width=600&height=900&crop=center"
+      ],
+      sizes: ["XS", "S", "M", "L"]
       },
       2002: {
-        title: "Biggie Smalls '94 Washed Oversized Tee - Olive",
-        price: "$15.99",
-        desc: "Available In Olive. This oversized t-shirt features a classic crew neck and short sleeves, offering a relaxed and comfortable fit. The front screen design adds a stylish touch, while the pigment-washed finish gives it a unique, vintage look. Made with 100% cotton, this t-shirt provides a soft feel and slight stretch for all-day comfort. Perfect for casual outings or lounging. Imported.",
-        images: ["https://cdn.shopify.com/s/files/1/0293/9277/files/03-31-25_S6_34_BSL144104_Olive_KF_MC_14-21-09_54262_PXF.jpg?v=1743556159&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/03-31-25_S6_34_BSL144104_Olive_KF_MC_14-21-15_54263_PXF.jpg?v=1743556154&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/03-31-25_S6_34_BSL144104_Olive_KF_MC_14-21-01_54259_PXF.jpg?v=1743556159&width=600&height=900&crop=center"]
+      title: "Biggie Smalls '94 Washed Oversized Tee - Olive",
+      price: "$15.99",
+      desc: "Available In Olive. This oversized t-shirt features a classic crew neck and short sleeves, offering a relaxed and comfortable fit. The front screen design adds a stylish touch, while the pigment-washed finish gives it a unique, vintage look. Made with 100% cotton, this t-shirt provides a soft feel and slight stretch for all-day comfort. Perfect for casual outings or lounging. Imported.",
+      images: [
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/03-31-25_S6_34_BSL144104_Olive_KF_MC_14-21-09_54262_PXF.jpg?v=1743556159&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/03-31-25_S6_34_BSL144104_Olive_KF_MC_14-21-15_54263_PXF.jpg?v=1743556154&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/03-31-25_S6_34_BSL144104_Olive_KF_MC_14-21-01_54259_PXF.jpg?v=1743556159&width=600&height=900&crop=center"
+      ],
+      sizes: ["S", "M", "L", "XL"]
       },
       2003: {
-        title: "Vacay Vibe Striped Crochet Polo - Multi Color",
-        price: "$10.99",
-        desc: "A vibrant striped crochet polo in multi-color, perfect for a casual day out or a beach vacation. Features a lightweight and breathable design with a relaxed fit. Made with high-quality materials for comfort and durability. A must-have for your summer wardrobe.",
-        images: ["https://cdn.shopify.com/s/files/1/0293/9277/files/12-18-24_S2_17_T10375_MultiColor_CXB_RL_14-22-13_26497_CM.jpg?v=1734713142&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/12-18-24_S2_17_T10375_MultiColor_CXB_RL_14-22-33_26501_CM.jpg?v=1734713142&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/12-16-24_S4_7_T10375_MultiColor_RS_PC_11-14-05_PLUS_109810_PXF.jpg?v=1734713142&width=600&height=900&crop=center"]
+      title: "Vacay Vibe Striped Crochet Polo - Multi Color",
+      price: "$10.99",
+      desc: "A vibrant striped crochet polo in multi-color, perfect for a casual day out or a beach vacation. Features a lightweight and breathable design with a relaxed fit. Made with high-quality materials for comfort and durability. A must-have for your summer wardrobe.",
+      images: [
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/12-18-24_S2_17_T10375_MultiColor_CXB_RL_14-22-13_26497_CM.jpg?v=1734713142&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/12-18-24_S2_17_T10375_MultiColor_CXB_RL_14-22-33_26501_CM.jpg?v=1734713142&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/12-16-24_S4_7_T10375_MultiColor_RS_PC_11-14-05_PLUS_109810_PXF.jpg?v=1734713142&width=600&height=900&crop=center"
+      ],
+      sizes: ["S", "M", "L"]
       },
       2004: {
-        title: "Heart Of Roses Ed Hardy Zip Front Hoodie - Heather Grey",
-        price: "$29.99",
-        desc: "Available In Heather Grey. Zip Front Hoodie. Long Sleeve. Drawstring. Ed Hardy Graphic. Front And Back Screen. Pair Back To 'Heart Of Roses Ed Hardy Pant'. Disclaimer: Due To The Printing Process A Difference In Saturation May Occur. Each Garment Is Unique. 55% Cotton 45% Polyester. Imported.",
-        images: ["https://cdn.shopify.com/s/files/1/0293/9277/files/09-21-23Studio2_CC_RL_15-00-28_30_EHW180012_HeatherGrey_60379_MR.jpg?v=1696024693&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/09-21-23Studio2_CC_RL_15-01-10_30_EHW180012_HeatherGrey_60383_MR.jpg?v=1696024687&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/09-21-23Studio2_CC_RL_15-01-25_30_EHW180012_HeatherGrey_60384_MR.jpg?v=1696024687&width=600&height=900&crop=center"]
+      title: "Heart Of Roses Ed Hardy Zip Front Hoodie - Heather Grey",
+      price: "$29.99",
+      desc: "Available In Heather Grey. Zip Front Hoodie. Long Sleeve. Drawstring. Ed Hardy Graphic. Front And Back Screen. Pair Back To 'Heart Of Roses Ed Hardy Pant'. Disclaimer: Due To The Printing Process A Difference In Saturation May Occur. Each Garment Is Unique. 55% Cotton 45% Polyester. Imported.",
+      images: [
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/09-21-23Studio2_CC_RL_15-00-28_30_EHW180012_HeatherGrey_60379_MR.jpg?v=1696024693&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/09-21-23Studio2_CC_RL_15-01-10_30_EHW180012_HeatherGrey_60383_MR.jpg?v=1696024687&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/09-21-23Studio2_CC_RL_15-01-25_30_EHW180012_HeatherGrey_60384_MR.jpg?v=1696024687&width=600&height=900&crop=center"
+      ],
+      sizes: ["S", "M", "L", "XL"]
       },
       3000: {
-        title: "Days In Malibu Bucket Hat - Beige",
-        price: "$39.99",
-        desc: "A stylish and versatile bucket hat in beige, perfect for sunny days. Made with high-quality materials for comfort and durability. Features a classic design that complements any casual outfit. Ideal for beach outings, vacations, or everyday wear.",
-        images: ["https://cdn.shopify.com/s/files/1/0293/9277/products/DaysInMalibuBucketHat-Beige_MER_2.jpg?v=1629754514&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/products/03-08-21Studio4_RT_ON_13-19-17_43_MZ2009016_Beige_26110_JK.jpg?v=1629754514&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/products/01-27-21Studio1_JP_CP_09-55-53_12_MZ2009016_Beige_3643_KL.jpg?v=1629754514&width=600&height=900&crop=center"]
+      title: "Days In Malibu Bucket Hat - Beige",
+      price: "$39.99",
+      desc: "A stylish and versatile bucket hat in beige, perfect for sunny days. Made with high-quality materials for comfort and durability. Features a classic design that complements any casual outfit. Ideal for beach outings, vacations, or everyday wear.",
+      images: [
+        "https://cdn.shopify.com/s/files/1/0293/9277/products/DaysInMalibuBucketHat-Beige_MER_2.jpg?v=1629754514&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/products/03-08-21Studio4_RT_ON_13-19-17_43_MZ2009016_Beige_26110_JK.jpg?v=1629754514&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/products/01-27-21Studio1_JP_CP_09-55-53_12_MZ2009016_Beige_3643_KL.jpg?v=1629754514&width=600&height=900&crop=center"
+      ],
+      sizes: ["One Size"]
       },
       3001: {
-        title: "Love Gone Bad Beret - Black",
-        price: "$29.99",
-        desc: "A stylish beret featuring hardware detail and made with faux leather material. Perfect for adding a chic touch to your outfit. Imported.",
-        images: ["https://cdn.shopify.com/s/files/1/0293/9277/files/08-21-24_S5_83_KT1557_Black_CZ_AP_14-05-50_10097_PXF.jpg?v=1724371016&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/08-13-24_S15_39_KT1557_Black_CZ_10-40-363507_ES.jpg?v=1723742648&width=600&height=900&crop=center"]
+      title: "Love Gone Bad Beret - Black",
+      price: "$29.99",
+      desc: "A stylish beret featuring hardware detail and made with faux leather material. Perfect for adding a chic touch to your outfit. Imported.",
+      images: [
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/08-21-24_S5_83_KT1557_Black_CZ_AP_14-05-50_10097_PXF.jpg?v=1724371016&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/08-13-24_S15_39_KT1557_Black_CZ_10-40-363507_ES.jpg?v=1723742648&width=600&height=900&crop=center"
+      ],
+      sizes: ["One Size"]
       },
       4000: {
-        title: "Icon Living Handbag - Black",
-        price: "$39.99",
-        desc: "Shoulder Bag with a top zip closure and a detachable card holder. A stylish and functional accessory to complement your outfit. Imported.",
-        images: ["https://cdn.shopify.com/s/files/1/0293/9277/products/08-30-22Studio1_RT_10-48-57_23_KELLY_Black_9842_JB.jpg?v=1661894852&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/products/07-11-22Studio3_ME_RL_09-20-01_14_KELLY_Black_0800_WG.jpg?v=1661894852&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/products/07-11-22Studio3_ME_RL_09-20-11_14_KELLY_Black_0803_WG.jpg?v=1661894852&width=600&height=900&crop=center"]
+      title: "Icon Living Handbag - Black",
+      price: "$39.99",
+      desc: "Shoulder Bag with a top zip closure and a detachable card holder. A stylish and functional accessory to complement your outfit. Imported.",
+      images: [
+        "https://cdn.shopify.com/s/files/1/0293/9277/products/08-30-22Studio1_RT_10-48-57_23_KELLY_Black_9842_JB.jpg?v=1661894852&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/products/07-11-22Studio3_ME_RL_09-20-01_14_KELLY_Black_0800_WG.jpg?v=1661894852&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/products/07-11-22Studio3_ME_RL_09-20-11_14_KELLY_Black_0803_WG.jpg?v=1661894852&width=600&height=900&crop=center"
+      ],
+      sizes: ["One Size"]
       },
       4001: {
-        title: "The Secret Is Out Shoulder Bag - Red",
-        price: "$29.99",
-        desc: "The Secret Is Out Shoulder Bag - Red. Features a top zip closure, bead detail, and ring detail. A stylish and functional accessory to complement your outfit. Imported.",
-        images: ["https://cdn.shopify.com/s/files/1/0293/9277/files/02-21-25_S6_76_LM8963_Red_CXB_IM_13-55-28_31053_PXF.jpg?v=1740510252&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/02-21-25_S6_76_LM8963_Red_CXB_IM_13-55-19_31050_PXF.jpg?v=1740510252&width=600&height=900&crop=center"]
+      title: "The Secret Is Out Shoulder Bag - Red",
+      price: "$29.99",
+      desc: "The Secret Is Out Shoulder Bag - Red. Features a top zip closure, bead detail, and ring detail. A stylish and functional accessory to complement your outfit. Imported.",
+      images: [
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/02-21-25_S6_76_LM8963_Red_CXB_IM_13-55-28_31053_PXF.jpg?v=1740510252&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/02-21-25_S6_76_LM8963_Red_CXB_IM_13-55-19_31050_PXF.jpg?v=1740510252&width=600&height=900&crop=center"
+      ],
+      sizes: ["One Size"]
       },
       7000: {
-        title: "Problem Solved Stretch Lace Up Bootcut Jeans - Medium Wash",
-        price: "$39.99",
-        desc: "Available In Medium Wash. Bootcut Jean. 5 Pocket. Fray Hem. Lace Up. 10.5\" High Rise. 34\" Inseam. High Stretch. Disclaimer: Due To The Distressing Process, Each Garment Is Unique. 68% Cotton 27% Polyester 3% Viscose 2% Spandex.",
-        images: ["https://cdn.shopify.com/s/files/1/0293/9277/files/10-23-24_S2_31_D231453026_MediumWash_CXB_RL_16-21-47_16581_SL.jpg?v=1729892197&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/10-23-24_S2_31_D231453026_MediumWash_CXB_RL_16-22-17_16586_SL.jpg?v=1729892197&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/10-23-24_S2_31_D231453026_MediumWash_CXB_RL_16-21-55_16583_SL.jpg?v=1729892197&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/10-23-24_S2_31_D231453026_MediumWash_CXB_RL_16-22-44_16589_SL.jpg?v=1729892197&width=600&height=900&crop=center"]
+      title: "Problem Solved Stretch Lace Up Bootcut Jeans - Medium Wash",
+      price: "$39.99",
+      desc: "Available In Medium Wash. Bootcut Jean. 5 Pocket. Fray Hem. Lace Up. 10.5\" High Rise. 34\" Inseam. High Stretch. Disclaimer: Due To The Distressing Process, Each Garment Is Unique. 68% Cotton 27% Polyester 3% Viscose 2% Spandex.",
+      images: [
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/10-23-24_S2_31_D231453026_MediumWash_CXB_RL_16-21-47_16581_SL.jpg?v=1729892197&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/10-23-24_S2_31_D231453026_MediumWash_CXB_RL_16-22-17_16586_SL.jpg?v=1729892197&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/10-23-24_S2_31_D231453026_MediumWash_CXB_RL_16-21-55_16583_SL.jpg?v=1729892197&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/10-23-24_S2_31_D231453026_MediumWash_CXB_RL_16-22-44_16589_SL.jpg?v=1729892197&width=600&height=900&crop=center"
+      ],
+      sizes: ["XS", "S", "M", "L", "XL"]
       },
       7001: {
-        title: "Switching Gears Stretch Split Hem Bootcut Jeans - Light Wash",
-        price: "$29.99",
-        desc: "Pair With Switching Gears Stretch Denim Shacket. Bootcut Jean. 5 Pocket. Mesh Paneling. Split Hem. 11.5\" High Rise. 34\" Inseam. High Stretch. Disclaimer: Due To The Specialized Wash Process, Each Garment Is Unique. Self A: 71% Cotton 27% Polyester 2% Spandex. Self B: 90% Polyester 10% Spandex.",
-        images: ["https://cdn.shopify.com/s/files/1/0293/9277/files/10-14-24_S2_16_FN8130HSSAAT_LightWash_ZSR_CXB_RL_14-23-21_42293_EH.jpg?v=1729017992&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/10-14-24_S2_16_FN8130HSSAAT_LightWash_ZSR_CXB_RL_14-23-21_42297_EH.jpg?v=1729017992&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/10-11-24_S4_43_FN8130HSSAAT_LightWash_P_RA_DO_14-25-23_PLUS_54148_PXF_SG.jpg?v=1728935582&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/10-11-24_S4_43_FN8130HSSAAT_LightWash_P_RA_DO_14-25-23_PLUS_54149_PXF_SG.jpg?v=1728935582&width=600&height=900&crop=center"]
+      title: "Switching Gears Stretch Split Hem Bootcut Jeans - Light Wash",
+      price: "$29.99",
+      desc: "Pair With Switching Gears Stretch Denim Shacket. Bootcut Jean. 5 Pocket. Mesh Paneling. Split Hem. 11.5\" High Rise. 34\" Inseam. High Stretch. Disclaimer: Due To The Specialized Wash Process, Each Garment Is Unique. Self A: 71% Cotton 27% Polyester 2% Spandex. Self B: 90% Polyester 10% Spandex.",
+      images: [
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/10-14-24_S2_16_FN8130HSSAAT_LightWash_ZSR_CXB_RL_14-23-21_42293_EH.jpg?v=1729017992&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/10-14-24_S2_16_FN8130HSSAAT_LightWash_ZSR_CXB_RL_14-23-21_42297_EH.jpg?v=1729017992&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/10-11-24_S4_43_FN8130HSSAAT_LightWash_P_RA_DO_14-25-23_PLUS_54148_PXF_SG.jpg?v=1728935582&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/10-11-24_S4_43_FN8130HSSAAT_LightWash_P_RA_DO_14-25-23_PLUS_54149_PXF_SG.jpg?v=1728935582&width=600&height=900&crop=center"
+      ],
+      sizes: ["XS", "S", "M", "L", "XL"]
       },
       7002: {
-        title: "Better Perspective Embellished Baggy Jeans - Light Wash",
-        price: "$25.99",
-        desc: "Better Perspective Embellished Baggy Jeans - Light Wash. Features a relaxed fit with stylish embellishments, perfect for casual outings. Made with high-quality denim for comfort and durability. Imported.",
-        images: ["https://cdn.shopify.com/s/files/1/0293/9277/files/10-01-24_S2_18_FN1219ISTN_LightWash_CXB_RL_14-02-59_41864_SG.jpg?v=1727908991&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/10-01-24_S2_18_FN1219ISTN_LightWash_CXB_RL_14-02-59_41865_SG.jpg?v=1727908992&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/10-01-24_S2_18_FN1219ISTN_LightWash_CXB_RL_14-02-59_41859_SG.jpg?v=1727908991&width=600&height=900&crop=center"]
+      title: "Better Perspective Embellished Baggy Jeans - Light Wash",
+      price: "$25.99",
+      desc: "Better Perspective Embellished Baggy Jeans - Light Wash. Features a relaxed fit with stylish embellishments, perfect for casual outings. Made with high-quality denim for comfort and durability. Imported.",
+      images: [
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/10-01-24_S2_18_FN1219ISTN_LightWash_CXB_RL_14-02-59_41864_SG.jpg?v=1727908991&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/10-01-24_S2_18_FN1219ISTN_LightWash_CXB_RL_14-02-59_41865_SG.jpg?v=1727908992&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/10-01-24_S2_18_FN1219ISTN_LightWash_CXB_RL_14-02-59_41859_SG.jpg?v=1727908991&width=600&height=900&crop=center"
+      ],
+      sizes: ["XS", "S", "M", "L", "XL"]
       },
       7003: {
-        title: "Certifiable Stretch Ripped Flare Jeans - Black Wash",
-        price: "$70.99",
-        desc: "Certifiable Stretch Ripped Flare Jeans - Black Wash. Features a high-rise fit with ripped detailing and a flared silhouette. Made with high-stretch denim for comfort and style. Perfect for casual outings or a night out. Imported.",
-        images: ["https://cdn.shopify.com/s/files/1/0293/9277/files/01-17-25_S2_14_FN9010_BlackWash_CXB_RL_15-34-34_46438_PXF.jpg?v=1737487870&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/01-17-25_S2_14_FN9010_BlackWash_CXB_RL_15-34-34_46442_PXF.jpg?v=1737487870&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/01-21-25_S5_43_FN9010_BlackWash_KS_JS_13-59-08_PLUS_54166_PXF.jpg?v=1737584425&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/01-17-25_S2_14_FN9010_BlackWash_CXB_RL_15-34-34_46440_PXF.jpg?v=1737487870&width=600&height=900&crop=center"]
+      title: "Certifiable Stretch Ripped Flare Jeans - Black Wash",
+      price: "$70.99",
+      desc: "Certifiable Stretch Ripped Flare Jeans - Black Wash. Features a high-rise fit with ripped detailing and a flared silhouette. Made with high-stretch denim for comfort and style. Perfect for casual outings or a night out. Imported.",
+      images: [
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/01-17-25_S2_14_FN9010_BlackWash_CXB_RL_15-34-34_46438_PXF.jpg?v=1737487870&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/01-17-25_S2_14_FN9010_BlackWash_CXB_RL_15-34-34_46442_PXF.jpg?v=1737487870&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/01-21-25_S5_43_FN9010_BlackWash_KS_JS_13-59-08_PLUS_54166_PXF.jpg?v=1737584425&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/01-17-25_S2_14_FN9010_BlackWash_CXB_RL_15-34-34_46440_PXF.jpg?v=1737487870&width=600&height=900&crop=center"
+      ],
+      sizes: ["XS", "S", "M", "L", "XL"]
       },
       7004: {
-        title: "Club Classic Stretch Lace Skinny Jeans - Black",
-        price: "$59.99",
-        desc: "The Secret Is Out Shoulder Bag - Red. Features a top zip closure, bead detail, and ring detail. A stylish and functional accessory to complement your outfit. Imported.",
-        images: ["https://cdn.shopify.com/s/files/1/0293/9277/files/09-25-24_S2_17_24NZF9892_Black_CXB_RL_15-20-13_41625_PXF.jpg?v=1742227710&width=600&height=900&crop=center", "https://cdn.shopify.com/s/files/1/0293/9277/files/09-25-24_S2_17_24NZF9892_Black_CXB_RL_15-20-13_41627_PXF.jpg?v=1727382530&width=600&height=900&crop=center","https://cdn.shopify.com/s/files/1/0293/9277/files/09-25-24_S2_17_24NZF9892_Black_CXB_RL_15-20-13_41623_PXF.jpg?v=1742227710&width=600&height=900&crop=center"]
+      title: "Club Classic Stretch Lace Skinny Jeans - Black",
+      price: "$59.99",
+      desc: "The Secret Is Out Shoulder Bag - Red. Features a top zip closure, bead detail, and ring detail. A stylish and functional accessory to complement your outfit. Imported.",
+      images: [
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/09-25-24_S2_17_24NZF9892_Black_CXB_RL_15-20-13_41625_PXF.jpg?v=1742227710&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/09-25-24_S2_17_24NZF9892_Black_CXB_RL_15-20-13_41627_PXF.jpg?v=1727382530&width=600&height=900&crop=center",
+        "https://cdn.shopify.com/s/files/1/0293/9277/files/09-25-24_S2_17_24NZF9892_Black_CXB_RL_15-20-13_41623_PXF.jpg?v=1742227710&width=600&height=900&crop=center"
+      ],
+      sizes: ["XS", "S", "M", "L", "XL"]
       }
     };
-
+  localStorage.setItem("productsData", JSON.stringify(products));
     if (productId && products[productId]) {
       const product = products[productId];
       document.getElementById("productTitle").textContent = product.title;
@@ -575,6 +753,131 @@
 document.querySelector('.breadcrumb span').textContent = document.getElementById('productTitle').textContent;
 
   </script>
+  <script>
+  let redirectTo = ''; // 'checkout' or 'cart'
+
+function openSizeModal(destination) {
+  redirectTo = destination;
+  const sizeSelect = document.getElementById('modalSizeSelect');
+  sizeSelect.innerHTML = '<option value="">-- Choose Size --</option>';
+
+  if (productId && products[productId] && products[productId].sizes) {
+    products[productId].sizes.forEach(size => {
+      const opt = document.createElement('option');
+      opt.value = size;
+      opt.textContent = size;
+      sizeSelect.appendChild(opt);
+    });
+  }
+
+  document.getElementById('sizeModal').style.display = 'flex';
+}
+
+
+  function closeModal() {
+    document.getElementById('sizeModal').style.display = 'none';
+  }
+
+function confirmSizeAndRedirect() {
+  const selectedSize = document.getElementById('modalSizeSelect').value;
+  if (!selectedSize) {
+    alert("Please select a size.");
+    return;
+  }
+
+  const productId = urlParams.get('product_id');
+  const products = JSON.parse(localStorage.getItem("productsData")) || {};
+  const product = products[productId];
+
+  if (!product) {
+    alert("Product data not found.");
+    return;
+  }
+
+  const cartItem = {
+    id: productId,
+    title: product.title,
+    price: product.price,
+    size: selectedSize,
+    image: product.images[0]
+  };
+
+  if (redirectTo === 'checkout') {
+    // Store single checkout item and redirect
+    localStorage.setItem("checkoutItem", JSON.stringify(cartItem));
+    window.location.href = `checkout.html`;
+  } else {
+    // Add to cart and show confirmation modal
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.push(cartItem);
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    document.getElementById("confirmationText").innerHTML = `<strong>${product.title}</strong> (Size ${selectedSize}) added to cart.`;
+    document.getElementById("sizeModal").style.display = "none";
+    document.getElementById("confirmationModal").style.display = "flex";
+  }
+}
+
+  // Optional: close modal on Escape key
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      closeModal();
+    }
+  });
+</script>
+
+<script>
+  function addToCart(productId) {
+    const selectedSize = document.querySelector("#modalSizeSelect").value;
+
+    if (!selectedSize) {
+      alert("Please select a size.");
+      return;
+    }
+
+    const products = JSON.parse(localStorage.getItem("productsData"));
+    const product = products[productId];
+
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    cart.push({
+      id: productId,
+      title: product.title,
+      price: product.price,
+      size: selectedSize,
+      image: product.images[0]
+    });
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    // Show modal
+    document.getElementById("confirmationText").innerHTML = `<strong>${product.title}</strong> (Size ${selectedSize}) added to cart.`;
+    document.getElementById("confirmationModal").style.display = "flex";
+  }
+
+  function closeConfirmationModal() {
+    document.getElementById("confirmationModal").style.display = "none";
+  }
+</script>
+
+<script>
+  function handleAction(destination) {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+
+    if (isLoggedIn !== "true") {
+      // Not logged in, show modal
+      document.getElementById("loginModal").style.display = "flex";
+    } else {
+      // Proceed to size modal
+      openSizeModal(destination);
+    }
+  }
+
+  function redirectToLogin() {
+    window.location.href = "login.html";
+  }
+</script>
+
 
 </body>
 </html>

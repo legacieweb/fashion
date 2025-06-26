@@ -1,30 +1,257 @@
-<!-- checkout.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Checkout</title>
+  <meta charset="UTF-8" />
+  <title>Checkout - Iyonic Fashion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
-    body { font-family: Arial; padding: 2rem; }
-    form { max-width: 400px; margin: auto; }
-    label { display: block; margin: 1rem 0 0.5rem; }
-    input { width: 100%; padding: 0.5rem; }
-    button { margin-top: 2rem; background: #e91e63; color: white; border: none; padding: 1rem; width: 100%; font-size: 1rem; cursor: pointer; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    header {
+      background-color: #f06292;
+      color: white;
+      padding: 1rem 2rem;
+      text-align: center;
+    }
+
+    .checkout-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .summary {
+      background-color: #fff0f5;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+
+    .summary p {
+      margin: 0.5rem 0;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-weight: bold;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.7rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .btn-submit {
+      display: inline-block;
+      background-color: #f06292;
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn-submit:hover {
+      background-color: #e4577d;
+    }
+
+    .cart-item {
+      border-bottom: 1px solid #ddd;
+      padding: 0.5rem 0;
+    }
+
+    .cart-item:last-child {
+      border: none;
+    }
+
+    .total {
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .checkout-container {
+        padding: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Checkout</h1>
-  <form>
-    <label for="name">Full Name</label>
-    <input type="text" id="name" required>
 
-    <label for="address">Shipping Address</label>
-    <input type="text" id="address" required>
+<header>
+  <h1>Iyonic Fashion - Checkout</h1>
+</header>
 
-    <label for="card">Card Number</label>
-    <input type="text" id="card" required>
+<div class="checkout-container">
+  <h2>Order Summary</h2>
+  <div class="summary" id="orderSummary">
+    <p>Loading cart items...</p>
+  </div>
 
-    <button type="submit">Place Order</button>
+  <h2>Shipping Details</h2>
+  <form id="checkoutForm">
+    <div class="form-group">
+      <label for="name">Full Name</label>
+      <input type="text" required id="name" placeholder="Jane Doe" />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input type="email" required id="email" placeholder="you@example.com" />
+    </div>
+
+    <div class="form-group">
+      <label for="address">Shipping Address</label>
+      <input type="text" required id="address" placeholder="123 Main St" />
+    </div>
+
+    <div class="form-group">
+      <label for="zip">ZIP / Postal Code</label>
+      <input type="text" required id="zip" placeholder="12345" />
+    </div>
+
+    <button type="submit" class="btn-submit">Complete Purchase</button>
   </form>
+</div>
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+<script>
+  const summary = document.getElementById("orderSummary");
+
+  const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+  const checkoutItem = JSON.parse(localStorage.getItem("checkoutItem")) || null;
+  const combinedItems = [...cartItems];
+  if (checkoutItem) combinedItems.push(checkoutItem);
+
+  if (combinedItems.length === 0) {
+    summary.innerHTML = "<p>Your cart is empty.</p>";
+  } else {
+    let total = 0;
+    summary.innerHTML = "";
+
+    combinedItems.forEach(item => {
+      const itemPrice = parseFloat(item.price.replace("$", ""));
+      total += itemPrice;
+
+      const div = document.createElement("div");
+      div.className = "cart-item";
+      div.innerHTML = `
+        <p><strong>Product:</strong> ${item.title}</p>
+        <p><strong>Size:</strong> ${item.size}</p>
+        <p><strong>Price:</strong> ${item.price}</p>
+      `;
+      summary.appendChild(div);
+    });
+
+    const totalEl = document.createElement("p");
+    totalEl.className = "total";
+    totalEl.textContent = `Total: $${total.toFixed(2)}`;
+    summary.appendChild(totalEl);
+  }
+
+  // Autofill user data
+  const storedUser = localStorage.getItem("user");
+  let userId = null;
+  if (storedUser) {
+    try {
+      const user = JSON.parse(storedUser);
+      userId = user._id || user.id || null;
+      if (user.name) document.getElementById("name").value = user.name;
+      if (user.email) document.getElementById("email").value = user.email;
+    } catch (err) {
+      console.warn("Invalid user data in localStorage");
+    }
+  }
+
+  document.getElementById("checkoutForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const name = document.getElementById("name").value;
+    const address = document.getElementById("address").value;
+    const zip = document.getElementById("zip").value;
+
+    const amount = Math.round(
+      combinedItems.reduce((sum, item) => sum + parseFloat(item.price.replace("$", "")), 0) * 100
+    );
+
+    const handler = PaystackPop.setup({
+      key: 'pk_test_232531a5c927ef2cc67ed1b85af3f26e3b8ed2f2',
+      email: email,
+      amount: amount,
+      currency: "USD",
+      metadata: {
+        custom_fields: [
+          { display_name: "Full Name", variable_name: "name", value: name },
+          { display_name: "Shipping Address", variable_name: "address", value: address },
+          { display_name: "ZIP Code", variable_name: "zip", value: zip }
+        ]
+      },
+      callback: function (response) {
+        // Step 1: Send the order to the backend
+        fetch("http://localhost:5000/api/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token") // attach token if required
+          },
+          body: JSON.stringify({
+            userId: userId,
+            email: email,
+            name: name,
+            address: address,
+            zip: zip,
+            items: combinedItems,
+            totalAmount: (amount / 100).toFixed(2),
+            reference: response.reference
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert("✅ Payment and order saved! Reference: " + response.reference);
+            localStorage.removeItem("cart");
+            localStorage.removeItem("checkoutItem");
+            window.location.href = "success.html";
+          } else {
+            alert("⚠️ Order saved failed. Please contact support.");
+          }
+        })
+        .catch(err => {
+          console.error("Order save error:", err);
+          alert("⚠️ Error saving order. Please contact support.");
+        });
+      },
+      onClose: function () {
+        alert("❌ Payment was cancelled.");
+      }
+    });
+
+    handler.openIframe();
+  });
+</script>
+
 </body>
 </html>

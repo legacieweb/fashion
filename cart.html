@@ -1,36 +1,136 @@
-<!-- cart.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Your Cart</title>
+  <meta charset="UTF-8" />
+  <title>Your Cart - Iyonic Fashion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body { font-family: Arial; padding: 2rem; }
-    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-    th, td { border: 1px solid #ddd; padding: 1rem; text-align: center; }
-    button { background: #28a745; color: white; padding: 0.5rem 1rem; border: none; cursor: pointer; margin-top: 1rem; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f9f9f9;
+    }
+
+    header {
+      background-color: #f06292;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    .cart-item {
+      display: flex;
+      gap: 1.2rem;
+      border-bottom: 1px solid #eee;
+      padding: 1rem 0;
+      align-items: center;
+    }
+
+    .cart-item img {
+      width: 100px;
+      border-radius: 6px;
+    }
+
+    .cart-details {
+      flex: 1;
+    }
+
+    .cart-details p {
+      margin: 0.3rem 0;
+    }
+
+    .checkout {
+      margin-top: 2rem;
+      text-align: right;
+    }
+
+    .btn-checkout {
+      background-color: #f06292;
+      color: white;
+      padding: 0.7rem 2rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      text-decoration: none;
+    }
+
+    .btn-checkout:hover {
+      background-color: #e4577d;
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 2rem;
+      color: #777;
+    }
+
+    @media (max-width: 600px) {
+      .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .cart-item img {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Your Shopping Cart</h1>
 
-  <table>
-    <tr>
-      <th>Product</th>
-      <th>Variant</th>
-      <th>Quantity</th>
-      <th>Price</th>
-    </tr>
-    <tr>
-      <td>Red Summer Dress</td>
-      <td>Medium</td>
-      <td>1</td>
-      <td>$39.99</td>
-    </tr>
-  </table>
+  <header>
+    <h1>Your Shopping Cart</h1>
+  </header>
 
-  <h3>Total: $39.99</h3>
+  <div class="container" id="cartContainer">
+    <div class="empty-cart" id="emptyCart">Loading cart...</div>
+  </div>
 
-  <button onclick="location.href='checkout.html'">Checkout</button>
+  <script>
+    const cartContainer = document.getElementById("cartContainer");
+    const emptyCart = document.getElementById("emptyCart");
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    if (cart.length === 0) {
+      emptyCart.textContent = "Your cart is empty.";
+    } else {
+      emptyCart.style.display = "none";
+      let total = 0;
+
+      cart.forEach(item => {
+        const price = parseFloat(item.price.replace("$", "")) || 0;
+        total += price;
+
+        const itemHTML = `
+          <div class="cart-item">
+            <img src="${item.image}" alt="${item.title}" />
+            <div class="cart-details">
+              <p><strong>${item.title}</strong></p>
+              <p>Size: ${item.size}</p>
+              <p>Price: ${item.price}</p>
+            </div>
+          </div>
+        `;
+        cartContainer.insertAdjacentHTML("beforeend", itemHTML);
+      });
+
+      cartContainer.insertAdjacentHTML("beforeend", `
+        <div class="checkout">
+          <p><strong>Total:</strong> $${total.toFixed(2)}</p>
+          <a href="checkout.html" class="btn-checkout">Proceed to Checkout</a>
+        </div>
+      `);
+    }
+  </script>
 </body>
 </html>

@@ -567,37 +567,30 @@ nav::-webkit-scrollbar-track {
         pagination: { el: ".swiper-pagination", clickable: true },
         navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
     });
-    document.addEventListener("DOMContentLoaded", function () {
-        const isLoggedIn = localStorage.getItem("isLoggedIn");
+  document.addEventListener("DOMContentLoaded", function () {
+      const isLoggedIn = localStorage.getItem("isLoggedIn");
 
-        const loginBtn = document.getElementById("login-btn");
-        const signupBtn = document.getElementById("signup-btn");
-        const logoutBtn = document.getElementById("logout-btn");
-        const dashboardBtn = document.getElementById("dashboard-btn");
+      const loginBtn = document.getElementById("login-btn");
+      const signupBtn = document.getElementById("signup-btn");
+      const logoutBtn = document.getElementById("logout-btn");
+      const dashboardBtn = document.getElementById("dashboard-btn");
 
-        if (isLoggedIn === "true") {
-            // Hide login and signup
-            loginBtn.style.display = "none";
-            signupBtn.style.display = "none";
+      if (isLoggedIn === "true") {
+        loginBtn.style.display = "none";
+        signupBtn.style.display = "none";
+        logoutBtn.style.display = "inline-block";
+        dashboardBtn.style.display = "inline-block";
+      } else {
+        loginBtn.style.display = "inline-block";
+        signupBtn.style.display = "inline-block";
+        logoutBtn.style.display = "none";
+        dashboardBtn.style.display = "none";
+      }
 
-            // Show logout and dashboard
-            logoutBtn.style.display = "block";
-            dashboardBtn.style.display = "block";
-        } else {
-            // Show login and signup
-            loginBtn.style.display = "block";
-            signupBtn.style.display = "block";
-
-            // Hide logout and dashboard
-            logoutBtn.style.display = "none";
-            dashboardBtn.style.display = "none";
-        }
-
-        // Logout functionality
-        logoutBtn.addEventListener("click", function () {
-            localStorage.removeItem("isLoggedIn"); // Clear login state
-            location.reload(); // Refresh page to update UI
-        });
+      logoutBtn.addEventListener("click", function () {
+        localStorage.removeItem("isLoggedIn");
+        location.reload();
+      });
     });
 </script>
 

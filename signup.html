@@ -1,43 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Signup - Iyonic Fashion</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <title>Sign Up | Fashion Store - Create Your Account</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Create your Fashion Store account to access exclusive fashion deals, trends, and personalized recommendations. Join our community and discover your unique style today." />
+  <meta name="keywords" content="Fashion Store, Sign Up, Register, Fashion Deals, Clothing, Trends, Account, Women's Fashion, Men's Fashion, Online Shopping" />
+  <meta name="author" content="Fashion Store" />
+  <link rel="icon" href="https://i.imgur.com/Vut7Csh.png" />
+  <link rel="canonical" href="https://yourdomain.com/signup.html" />
+  <meta property="og:title" content="Sign Up | Fashion Store" />
+  <meta property="og:description" content="Join Fashion Store and unlock exclusive fashion deals and trends. Create your account now!" />
+  <meta property="og:image" content="https://i.imgur.com/Vut7Csh.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://yourdomain.com/signup.html" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Sign Up | Fashion Store" />
+  <meta name="twitter:description" content="Create your Fashion Store account and discover your style." />
+  <meta name="twitter:image" content="https://i.imgur.com/Vut7Csh.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .fade-in {
+      animation: fadeIn 0.8s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
-<body class="bg-gray-100 flex justify-center items-center h-screen">
 
-    <div class="bg-white p-8 rounded-lg shadow-md w-96">
-        <h2 class="text-2xl font-bold text-center mb-6">Create an Account</h2>
+<body class="bg-gradient-to-br from-pink-100 via-white to-indigo-100 min-h-screen flex items-center justify-center px-4">
 
-        <form id="signup-form">
-            <input type="text" id="name" placeholder="Name" required class="w-full p-2 border rounded mb-4">
-            <input type="email" id="email" placeholder="Email" required class="w-full p-2 border rounded mb-4">
-            <input type="password" id="password" placeholder="Password" required class="w-full p-2 border rounded mb-4">
-            <button type="submit" class="w-full bg-pink-600 text-white py-2 rounded">Sign Up</button>
-        </form>
-
-        <p class="mt-4 text-center">Already have an account? <a href="login.html" class="text-pink-600">Login</a></p>
+  <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 fade-in">
+    <div class="text-center mb-6">
+      <img src="https://i.imgur.com/Vut7Csh.png" alt="Fashion Store Logo" class="w-24 mx-auto mb-4" />
+      <h2 class="text-3xl font-bold text-gray-800">Create an Account</h2>
+      <p class="text-sm text-gray-500">Join and discover your style.</p>
     </div>
 
-    <script>
-        document.getElementById("signup-form").addEventListener("submit", async function(event) {
-            event.preventDefault();
-            
-            const name = document.getElementById("name").value;
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
+    <form id="signupForm" class="space-y-5">
+      <input type="text" name="name" placeholder="Full Name" required
+        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-pink-400" />
+      <input type="email" name="email" placeholder="Email Address" required
+        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-pink-400" />
+      <input type="password" name="password" placeholder="Password" required
+        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-pink-400" />
+      
+      <button id="signupBtn" type="submit"
+        class="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg hover:bg-indigo-700 transition-all">
+        Sign Up
+      </button>
 
-            const res = await fetch("https://fashion-vmml.onrender.com/api/auth/signup", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, email, password })
-            });
+      <p id="message" class="text-center text-sm text-red-500 mt-2"></p>
+    </form>
 
-            const data = await res.json();
-            alert(data.message);
-            if (res.status === 201) window.location.href = "login.html";
+    <p class="text-center text-sm mt-6 text-gray-600">
+      Already have an account? <a href="login.html" class="text-pink-600 hover:underline font-medium">Log in</a>
+    </p>
+  </div>
+
+  <script>
+    const signupForm = document.getElementById('signupForm');
+    const signupBtn = document.getElementById('signupBtn');
+    const message = document.getElementById('message');
+
+    signupForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      message.textContent = '';
+      signupBtn.disabled = true;
+      signupBtn.textContent = 'Signing up...';
+
+      const form = e.target;
+
+      try {
+        const res = await fetch('http://localhost:5000/api/auth/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: form.name.value.trim(),
+            email: form.email.value.trim(),
+            password: form.password.value
+          })
         });
-    </script>
 
+        const data = await res.json();
+
+        if (res.ok) {
+          localStorage.setItem('isLoggedIn', 'true');
+          window.location.href = 'index.html';
+        } else {
+          message.textContent = data.message || 'Signup failed';
+        }
+      } catch (err) {
+        console.error(err);
+        message.textContent = 'Server error. Try again later.';
+      }
+
+      signupBtn.disabled = false;
+      signupBtn.textContent = 'Sign Up';
+    });
+  </script>
 </body>
 </html>
