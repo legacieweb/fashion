@@ -1,5 +1,3 @@
-// server.js
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -9,18 +7,25 @@ const http = require('http');
 const socketIo = require('socket.io');
 const Message = require('./models/Message');
 require('dotenv').config();
-
 require('./jobs/messageReminder'); // ✅ Import background job
 
-// Load environment variables from .env
 dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
+
+// ✅ Allowed frontend domains
+const allowedOrigins = [
+  'https://fashion-q1zg.onrender.com', // For local dev
+  'https://iyonicfashion.iyonicorp.com' // ✅ Your live frontend domain
+];
+
+// ✅ Configure Socket.IO with strict CORS
 const io = socketIo(server, {
   cors: {
-    origin: '*',
-    methods: ['GET', 'POST']
+    origin: allowedOrigins,
+    methods: ['GET', 'POST'],
+    credentials: true
   }
 });
 
@@ -30,7 +35,10 @@ const mongoURI = process.env.MONGODB_URI;
 // ====================
 // ✅ Middleware
 // ====================
-app.use(cors());
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 app.use(bodyParser.json());
 
 // ====================
@@ -48,14 +56,12 @@ app.get('/', (req, res) => res.send('✅ Iyonic Fashion API is live'));
 io.on('connection', (socket) => {
   console.log('🔌 New socket connected:', socket.id);
 
-  // Join a room
   socket.on('join', ({ userId, isAdmin }) => {
     const room = isAdmin ? 'admin-room' : `user-${userId}`;
     socket.join(room);
     console.log(`👤 Joined room: ${room}`);
   });
 
-  // Handle chat messages
   socket.on('chatMessage', async ({ from, to, content, sender }) => {
     try {
       const msg = new Message({ userId: to, sender, content });
@@ -89,7 +95,7 @@ mongoose.connect(mongoURI, {
 .then(() => {
   console.log('✅ Connected to MongoDB');
   server.listen(port, () => {
-    console.log(`🚀 Server + WebSocket running on http://localhost:${port}`);
+    console.log(`🚀 Server + WebSocket running on port ${port}`);
   });
 })
 .catch(err => {
