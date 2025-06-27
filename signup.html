@@ -77,7 +77,7 @@
       const form = e.target;
 
       try {
-        const res = await fetch('https://fashion-vmml.onrender.com/api/auth/signup', {
+        const res = await fetch('https://fashion-q1zg.onrender.com/api/auth/signup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -91,7 +91,7 @@
 
         if (res.ok) {
           localStorage.setItem('isLoggedIn', 'true');
-          window.location.href = 'index.html';
+          window.location.href = 'https://iyonicfashion.iyonicorp.com/';
         } else {
           message.textContent = data.message || 'Signup failed';
         }
