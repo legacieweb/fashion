@@ -4,29 +4,104 @@ const nodemailer = require('nodemailer');
 
 // Create transporter with private email configuration
 const createTransporter = () => {
+  const port = parseInt(process.env.SMTP_PORT) || 465;
+  const isSecure = port === 465; // Use SSL for port 465, TLS for 587
+  
   return nodemailer.createTransport({
     host: process.env.SMTP_HOST || "mail.privateemail.com",
-    port: process.env.SMTP_PORT || 587,
-    secure: false, // TLS on port 587
+    port: port,
+    secure: isSecure, // SSL for port 465, TLS for port 587
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS
     },
     tls: {
-      rejectUnauthorized: false // sometimes helps with self-signed certs
-    }
+      rejectUnauthorized: false, // sometimes helps with self-signed certs
+      servername: process.env.SMTP_HOST || "mail.privateemail.com"
+    },
+    connectionTimeout: 60000, // 60 seconds
+    greetingTimeout: 30000, // 30 seconds
+    socketTimeout: 60000, // 60 seconds
+    debug: process.env.EMAIL_DEBUG === 'true', // Enable debug logging
+    logger: process.env.EMAIL_DEBUG === 'true' // Enable logger
   });
 };
 
-// Verify transporter configuration
-const transporter = createTransporter();
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("❌ Email transporter configuration error:", error);
-  } else {
+// Verify transporter configuration (non-blocking)
+const verifyEmailConnection = async () => {
+  try {
+    const transporter = createTransporter();
+    await transporter.verify();
     console.log("✅ Email server is ready to send messages");
+    return true;
+  } catch (error) {
+    console.error("❌ Email transporter configuration error:", error.message);
+    console.log("⚠️ Email service will continue but may not work properly");
+    
+    // Log specific troubleshooting steps
+    if (error.code === 'ETIMEDOUT') {
+      console.log("🔧 Troubleshooting steps for connection timeout:");
+      console.log("   1. Check if SMTP_HOST is correct: mail.privateemail.com");
+      console.log("   2. Try different ports: 587 (TLS) or 465 (SSL)");
+      console.log("   3. Check firewall/network restrictions");
+      console.log("   4. Verify your hosting provider allows SMTP connections");
+    }
+    return false;
   }
-});
+};
+
+// Run verification in background (don't block server startup)
+setTimeout(() => {
+  verifyEmailConnection();
+}, 2000); // Wait 2 seconds after server starts
+
+// Try multiple SMTP configurations
+const tryMultipleConfigurations = async (mailOptions) => {
+  const configurations = [
+    // Configuration 1: SSL on port 465
+    {
+      host: process.env.SMTP_HOST || "mail.privateemail.com",
+      port: 465,
+      secure: true,
+      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+      tls: { rejectUnauthorized: false }
+    },
+    // Configuration 2: TLS on port 587
+    {
+      host: process.env.SMTP_HOST || "mail.privateemail.com",
+      port: 587,
+      secure: false,
+      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+      tls: { rejectUnauthorized: false }
+    },
+    // Configuration 3: Alternative port 25
+    {
+      host: process.env.SMTP_HOST || "mail.privateemail.com",
+      port: 25,
+      secure: false,
+      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+      tls: { rejectUnauthorized: false }
+    }
+  ];
+
+  for (let i = 0; i < configurations.length; i++) {
+    try {
+      console.log(`📧 Trying SMTP configuration ${i + 1}: ${configurations[i].host}:${configurations[i].port} (${configurations[i].secure ? 'SSL' : 'TLS'})`);
+      
+      const transporter = nodemailer.createTransport(configurations[i]);
+      const info = await transporter.sendMail(mailOptions);
+      
+      console.log(`✅ Email sent successfully with configuration ${i + 1}:`, info.messageId);
+      return { success: true, messageId: info.messageId, config: i + 1 };
+      
+    } catch (error) {
+      console.log(`❌ Configuration ${i + 1} failed:`, error.message);
+      if (i === configurations.length - 1) {
+        throw error; // Throw error only if all configurations failed
+      }
+    }
+  }
+};
 
 module.exports = async function sendEmail({ to, subject, text, html, shopName = "Iyonic Fashion" }) {
   // Check if email is disabled
@@ -67,19 +142,22 @@ module.exports = async function sendEmail({ to, subject, text, html, shopName = 
     console.log(`📧 Sending email to: ${to}`);
     console.log(`📧 Subject: ${subject}`);
     
-    const info = await transporter.sendMail(mailOptions);
+    // Try multiple SMTP configurations
+    const result = await tryMultipleConfigurations(mailOptions);
     
-    console.log("✅ Email sent successfully:", info.messageId);
+    console.log("✅ Email sent successfully:", result.messageId);
     console.log("📧 Recipient:", to);
+    console.log(`📧 Used configuration: ${result.config}`);
     
     return {
       success: true,
-      messageId: info.messageId,
-      recipient: to
+      messageId: result.messageId,
+      recipient: to,
+      configuration: result.config
     };
     
   } catch (error) {
-    console.error("❌ Email sending failed:", error);
+    console.error("❌ Email sending failed with all configurations:", error);
     
     // Log specific error types for debugging
     if (error.code === 'EAUTH') {
