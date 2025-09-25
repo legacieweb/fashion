@@ -101,7 +101,8 @@
       if (res.ok && data.user && data.token) {
         localStorage.setItem('user', JSON.stringify(data.user));
         localStorage.setItem('token', data.token);
-        window.location.href = 'https://iyonicfashion.iyonicorp.com/';
+        localStorage.setItem('isLoggedIn', 'true');
+        window.location.href = 'index.html';
       } else {
         messageEl.textContent = data.message || 'Login failed.';
         loginBtn.disabled = false;

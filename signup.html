@@ -90,8 +90,10 @@
         const data = await res.json();
 
         if (res.ok) {
+          localStorage.setItem('user', JSON.stringify(data.user));
+          localStorage.setItem('token', data.token);
           localStorage.setItem('isLoggedIn', 'true');
-          window.location.href = 'https://iyonicfashion.iyonicorp.com/';
+          window.location.href = 'index.html';
         } else {
           message.textContent = data.message || 'Signup failed';
         }

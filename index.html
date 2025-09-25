@@ -589,6 +589,8 @@ nav::-webkit-scrollbar-track {
 
       logoutBtn.addEventListener("click", function () {
         localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
         location.reload();
       });
     });

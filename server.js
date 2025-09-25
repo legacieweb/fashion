@@ -14,16 +14,10 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 
-// ✅ Allowed frontend domains
-const allowedOrigins = [
-  'https://fashion-q1zg.onrender.com', // For local dev
-  'https://iyonicfashion.iyonicorp.com' // ✅ Your live frontend domain
-];
-
-// ✅ Configure Socket.IO with strict CORS
+// ✅ Configure Socket.IO to allow all origins
 const io = socketIo(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: true,
     methods: ['GET', 'POST'],
     credentials: true
   }
@@ -35,10 +29,7 @@ const mongoURI = process.env.MONGODB_URI;
 // ====================
 // ✅ Middleware
 // ====================
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
-}));
+app.use(cors()); // Allow all origins
 app.use(bodyParser.json());
 
 // ====================

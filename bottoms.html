@@ -129,6 +129,8 @@
     // Logout functionality
     logoutBtn.addEventListener("click", function () {
         localStorage.removeItem("isLoggedIn"); // Clear login state
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
         location.reload(); // Refresh page to update UI
     });
   });
