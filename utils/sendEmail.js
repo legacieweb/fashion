@@ -1,21 +1,34 @@
 // utils/sendEmail.js
+require("dotenv").config();
 const nodemailer = require('nodemailer');
 
-// Create transporter with better configuration
+// Create transporter with private email configuration
 const createTransporter = () => {
   return nodemailer.createTransport({
-    service: 'gmail',
+    host: process.env.SMTP_HOST || "mail.privateemail.com",
+    port: process.env.SMTP_PORT || 587,
+    secure: false, // TLS on port 587
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS
     },
     tls: {
-      rejectUnauthorized: false
+      rejectUnauthorized: false // sometimes helps with self-signed certs
     }
   });
 };
 
-module.exports = async function sendEmail({ to, subject, text, html }) {
+// Verify transporter configuration
+const transporter = createTransporter();
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("❌ Email transporter configuration error:", error);
+  } else {
+    console.log("✅ Email server is ready to send messages");
+  }
+});
+
+module.exports = async function sendEmail({ to, subject, text, html, shopName = "Iyonic Fashion" }) {
   // Check if email is disabled
   if (process.env.EMAIL_ENABLED === 'false') {
     console.log(`⚠️ Email disabled: ${subject} to ${to}`);
@@ -23,44 +36,61 @@ module.exports = async function sendEmail({ to, subject, text, html }) {
   }
 
   // Skip email sending in development if credentials are not properly configured
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
     console.log(`⚠️ Email skipped (no credentials): ${subject} to ${to}`);
     return { success: false, reason: 'No credentials' };
   }
 
-  if (process.env.EMAIL_DEBUG === 'true') {
-    console.log(`📧 Attempting to send email: ${subject} to ${to}`);
-  }
-
   try {
-    const transporter = createTransporter();
-    
-    const info = await transporter.sendMail({
-      from: `"Iyonic Fashion" <${process.env.EMAIL_USER}>`,
-      to,
+    // Validate email address
+    if (!to || !to.includes('@')) {
+      throw new Error('Invalid recipient email address');
+    }
+
+    // Validate required fields
+    if (!subject || (!text && !html)) {
+      throw new Error('Subject and content (text or html) are required');
+    }
+
+    if (process.env.EMAIL_DEBUG === 'true') {
+      console.log(`📧 Attempting to send email: ${subject} to ${to}`);
+    }
+
+    const mailOptions = {
+      from: `"${shopName}" <${process.env.SMTP_USER}>`,
+      to: to.trim(), // Ensure no whitespace issues
       subject,
       text,
       html
-    });
+    };
 
-    console.log(`✅ Email sent to ${to}: ${info.messageId}`);
-    return { success: true, messageId: info.messageId };
+    console.log(`📧 Sending email to: ${to}`);
+    console.log(`📧 Subject: ${subject}`);
+    
+    const info = await transporter.sendMail(mailOptions);
+    
+    console.log("✅ Email sent successfully:", info.messageId);
+    console.log("📧 Recipient:", to);
+    
+    return {
+      success: true,
+      messageId: info.messageId,
+      recipient: to
+    };
+    
   } catch (error) {
-    console.error(`❌ Email send error to ${to}:`, error.message);
+    console.error("❌ Email sending failed:", error);
     
     // Log specific error types for debugging
     if (error.code === 'EAUTH') {
-      console.error('❌ Authentication failed. Please check EMAIL_USER and EMAIL_PASS in .env');
-      console.error('❌ For Gmail, you need to use an App Password, not your regular password');
-      console.error('❌ To generate an App Password:');
-      console.error('   1. Go to Google Account settings');
-      console.error('   2. Security → 2-Step Verification → App passwords');
-      console.error('   3. Generate a new app password for "Mail"');
+      console.error('❌ Authentication failed. Please check SMTP_USER and SMTP_PASS in .env');
+      console.error('❌ Verify your private email credentials are correct');
     } else if (error.code === 'ECONNECTION' || error.code === 'ETIMEDOUT') {
       console.error('❌ Connection failed. This could be due to:');
       console.error('   - Firewall blocking SMTP connections');
       console.error('   - Network restrictions');
-      console.error('   - Gmail SMTP temporarily unavailable');
+      console.error('   - SMTP server temporarily unavailable');
+      console.error('   - Incorrect SMTP_HOST or SMTP_PORT settings');
     }
     
     // Log the email content for debugging purposes
