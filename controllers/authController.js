@@ -14,32 +14,52 @@ const generateToken = (userId) => {
 // ======================
 exports.signup = async (req, res) => {
   try {
+    console.log('🔐 Signup request received');
+    console.log('Request body:', req.body);
+    
     const { name, email, password } = req.body;
 
-    if (!name || !email || !password)
+    if (!name || !email || !password) {
+      console.log('❌ Missing fields - name:', !!name, 'email:', !!email, 'password:', !!password);
       return res.status(400).json({ message: 'All fields are required' });
+    }
 
+    console.log('✅ All fields provided, checking for existing user...');
     const existingUser = await User.findOne({ email });
-    if (existingUser)
+    if (existingUser) {
+      console.log('❌ Email already exists:', email);
       return res.status(400).json({ message: 'Email already in use' });
+    }
 
+    console.log('✅ Creating new user...');
     const user = await User.create({ name, email, password });
+    console.log('✅ User created with ID:', user._id);
+    
     const token = generateToken(user._id);
+    console.log('✅ Token generated');
 
-    // ✅ Send Welcome Email
-    await sendEmail({
-      to: email,
-      subject: 'Welcome to Iyonic Fashion 👗',
-      text: `Hi ${name},\n\nThank you for signing up! You can now access your dashboard and shop with us.\n\n- Iyonic Fashion`
-    });
+    // ✅ Send Welcome Email (optional for local dev)
+    try {
+      console.log('📧 Attempting to send welcome email...');
+      await sendEmail({
+        to: email,
+        subject: 'Welcome to Iyonic Fashion 👗',
+        text: `Hi ${name},\n\nThank you for signing up! You can now access your dashboard and shop with us.\n\n- Iyonic Fashion`
+      });
+      console.log('✅ Welcome email sent successfully');
+    } catch (emailErr) {
+      console.error('⚠️ Welcome email failed (non-critical):', emailErr.message);
+    }
 
+    console.log('✅ Sending success response');
     res.status(201).json({
       message: 'Signup successful',
       user: { _id: user._id, name: user.name, email: user.email },
       token
     });
   } catch (err) {
-    console.error('Signup error:', err.message);
+    console.error('❌ Signup error:', err);
+    console.error('❌ Error stack:', err.stack);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };

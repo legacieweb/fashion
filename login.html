@@ -55,11 +55,15 @@
 
 
 <script>
+  const redirectTo = sessionStorage.getItem('redirectAfterLogin') || 'index.html';
+  sessionStorage.removeItem('redirectAfterLogin');
+
   const loginForm = document.getElementById('loginForm');
   const resetForm = document.getElementById('resetForm');
   const showReset = document.getElementById('showReset');
   const backToLogin = document.getElementById('backToLogin');
   const sendCodeBtn = document.getElementById('sendCodeBtn');
+  const updatePasswordBtn = document.getElementById('updatePasswordBtn');
   const codeSection = document.getElementById('codeSection');
   const messageEl = document.getElementById('message');
   const resetMsg = document.getElementById('resetMessage');
@@ -102,7 +106,7 @@
         localStorage.setItem('user', JSON.stringify(data.user));
         localStorage.setItem('token', data.token);
         localStorage.setItem('isLoggedIn', 'true');
-        window.location.href = 'index.html';
+        window.location.href = redirectTo;
       } else {
         messageEl.textContent = data.message || 'Login failed.';
         loginBtn.disabled = false;
@@ -120,6 +124,9 @@
     const email = resetForm.resetEmail.value.trim();
     resetMsg.textContent = '';
     if (!email) return (resetMsg.textContent = 'Email required');
+
+    sendCodeBtn.disabled = true;
+    sendCodeBtn.textContent = 'Sending...';
 
     try {
       const res = await fetch('https://fashion-q1zg.onrender.com/api/auth/send-reset-code', {
@@ -139,6 +146,9 @@
       console.error(err);
       resetMsg.textContent = 'Server error.';
     }
+
+    sendCodeBtn.disabled = false;
+    sendCodeBtn.textContent = 'Send Code';
   };
 
   resetForm.addEventListener('submit', async e => {
@@ -146,6 +156,9 @@
     const email = resetForm.resetEmail.value.trim();
     const code = resetForm.code.value.trim();
     const newPassword = resetForm.newPassword.value;
+
+    updatePasswordBtn.disabled = true;
+    updatePasswordBtn.textContent = 'Updating...';
 
     try {
       const res = await fetch('https://fashion-q1zg.onrender.com/api/auth/reset-password', {
@@ -167,6 +180,9 @@
       console.error(err);
       resetMsg.textContent = 'Server error.';
     }
+
+    updatePasswordBtn.disabled = false;
+    updatePasswordBtn.textContent = 'Update Password';
   });
 </script>
 

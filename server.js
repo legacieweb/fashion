@@ -32,6 +32,20 @@ const mongoURI = process.env.MONGODB_URI;
 app.use(cors()); // Allow all origins
 app.use(bodyParser.json());
 
+// Add request logging middleware
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+  console.log('Headers:', req.headers);
+  console.log('Body:', req.body);
+  next();
+});
+
+// Add error handling middleware
+app.use((err, req, res, next) => {
+  console.error('❌ Server Error:', err);
+  res.status(500).json({ message: 'Internal server error', error: err.message });
+});
+
 // ====================
 // ✅ API Routes
 // ====================
@@ -79,10 +93,10 @@ io.on('connection', (socket) => {
 // ====================
 // ✅ Connect MongoDB and Start Server
 // ====================
-mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+console.log('🔄 Attempting to connect to MongoDB...');
+console.log('MongoDB URI:', mongoURI ? 'Set' : 'Not set');
+
+mongoose.connect(mongoURI)
 .then(() => {
   console.log('✅ Connected to MongoDB');
   server.listen(port, () => {
@@ -91,5 +105,6 @@ mongoose.connect(mongoURI, {
 })
 .catch(err => {
   console.error('❌ MongoDB connection failed:', err.message);
+  console.error('❌ Full error:', err);
   process.exit(1);
 });

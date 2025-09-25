@@ -64,6 +64,9 @@
   </div>
 
   <script>
+    const redirectTo = sessionStorage.getItem('redirectAfterLogin') || 'index.html';
+    sessionStorage.removeItem('redirectAfterLogin');
+
     const signupForm = document.getElementById('signupForm');
     const signupBtn = document.getElementById('signupBtn');
     const message = document.getElementById('message');
@@ -93,7 +96,7 @@
           localStorage.setItem('user', JSON.stringify(data.user));
           localStorage.setItem('token', data.token);
           localStorage.setItem('isLoggedIn', 'true');
-          window.location.href = 'index.html';
+          window.location.href = redirectTo;
         } else {
           message.textContent = data.message || 'Signup failed';
         }

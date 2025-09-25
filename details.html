@@ -271,8 +271,8 @@
     <div class="nav-buttons">
       <a href="dashboard.html" id="dashboard-btn" class="hidden">Dashboard</a>
       <button id="logout-btn" class="hidden">Logout</button>
-      <a href="login.html" id="login-btn">Login</a>
-      <a href="signup.html" id="signup-btn">Signup</a>
+      <button id="login-btn">Login</button>
+      <button id="signup-btn">Signup</button>
     </div>
   </header>
   <div class="breadcrumb">
@@ -725,6 +725,17 @@
         const logoutBtn = document.getElementById("logout-btn");
         const dashboardBtn = document.getElementById("dashboard-btn");
 
+        // Set redirect params for login and signup
+        const currentPage = window.location.pathname.split('/').pop();
+        loginBtn.addEventListener('click', () => {
+          sessionStorage.setItem('redirectAfterLogin', currentPage);
+          window.location.href = 'login.html';
+        });
+        signupBtn.addEventListener('click', () => {
+          sessionStorage.setItem('redirectAfterLogin', currentPage);
+          window.location.href = 'signup.html';
+        });
+
         if (isLoggedIn === "true") {
             // Hide login and signup
             loginBtn.style.display = "none";
@@ -874,7 +885,9 @@ function confirmSizeAndRedirect() {
   }
 
   function redirectToLogin() {
-    window.location.href = "login.html";
+    const currentPage = window.location.pathname.split('/').pop();
+    sessionStorage.setItem('redirectAfterLogin', currentPage);
+    window.location.href = 'login.html';
   }
 </script>
 

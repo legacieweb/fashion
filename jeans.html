@@ -108,6 +108,17 @@
     const logoutBtn = document.getElementById("logout-btn");
     const dashboardBtn = document.getElementById("dashboard-btn");
 
+    // Set redirect params for login and signup
+    const currentPage = window.location.pathname.split('/').pop();
+    loginBtn.addEventListener('click', () => {
+      sessionStorage.setItem('redirectAfterLogin', currentPage);
+      window.location.href = 'login.html';
+    });
+    signupBtn.addEventListener('click', () => {
+      sessionStorage.setItem('redirectAfterLogin', currentPage);
+      window.location.href = 'signup.html';
+    });
+
     if (isLoggedIn === "true") {
         // Hide login and signup
         loginBtn.style.display = "none";

@@ -138,6 +138,13 @@
 </div>
   <script src="https://js.paystack.co/v1/inline.js"></script>
 <script>
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
+  if (isLoggedIn !== "true") {
+    const currentPage = window.location.pathname.split('/').pop();
+    sessionStorage.setItem('redirectAfterLogin', currentPage);
+    window.location.href = 'login.html';
+  }
+
   const summary = document.getElementById("orderSummary");
 
   const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
