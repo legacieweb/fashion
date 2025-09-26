@@ -55,47 +55,122 @@ setTimeout(() => {
   verifyEmailConnection();
 }, 2000); // Wait 2 seconds after server starts
 
-// Try multiple SMTP configurations
+// Try multiple SMTP configurations including network-friendly alternatives
 const tryMultipleConfigurations = async (mailOptions) => {
   const configurations = [
-    // Configuration 1: SSL on port 465
+    // Configuration 1: SSL on port 465 with enhanced network settings
     {
       host: process.env.SMTP_HOST || "mail.privateemail.com",
       port: 465,
       secure: true,
       auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-      tls: { rejectUnauthorized: false }
+      tls: { 
+        rejectUnauthorized: false,
+        ciphers: 'SSLv3',
+        servername: process.env.SMTP_HOST || "mail.privateemail.com"
+      },
+      connectionTimeout: 30000,
+      greetingTimeout: 30000,
+      socketTimeout: 30000
     },
-    // Configuration 2: TLS on port 587
+    // Configuration 2: TLS on port 587 with STARTTLS
     {
       host: process.env.SMTP_HOST || "mail.privateemail.com",
       port: 587,
       secure: false,
+      requireTLS: true,
       auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-      tls: { rejectUnauthorized: false }
+      tls: { 
+        rejectUnauthorized: false,
+        servername: process.env.SMTP_HOST || "mail.privateemail.com"
+      },
+      connectionTimeout: 30000,
+      greetingTimeout: 30000,
+      socketTimeout: 30000
     },
-    // Configuration 3: Alternative port 25
+    // Configuration 3: Alternative submission port 2525 (often works on cloud platforms)
+    {
+      host: process.env.SMTP_HOST || "mail.privateemail.com",
+      port: 2525,
+      secure: false,
+      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+      tls: { rejectUnauthorized: false },
+      connectionTimeout: 30000,
+      greetingTimeout: 30000,
+      socketTimeout: 30000
+    },
+    // Configuration 4: Gmail fallback (if Gmail credentials are available)
+    ...(process.env.GMAIL_USER && process.env.GMAIL_PASS ? [{
+      service: 'gmail',
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS
+      },
+      tls: { rejectUnauthorized: false }
+    }] : []),
+    // Configuration 5: Alternative port 25 (basic SMTP)
     {
       host: process.env.SMTP_HOST || "mail.privateemail.com",
       port: 25,
       secure: false,
       auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-      tls: { rejectUnauthorized: false }
+      tls: { rejectUnauthorized: false },
+      connectionTimeout: 30000,
+      greetingTimeout: 30000,
+      socketTimeout: 30000
     }
   ];
 
   for (let i = 0; i < configurations.length; i++) {
     try {
-      console.log(`📧 Trying SMTP configuration ${i + 1}: ${configurations[i].host}:${configurations[i].port} (${configurations[i].secure ? 'SSL' : 'TLS'})`);
+      const configName = configurations[i].service || 
+                         `${configurations[i].host}:${configurations[i].port}`;
+      const securityType = configurations[i].secure ? 'SSL' : 
+                          configurations[i].requireTLS ? 'TLS' : 'Plain';
+      
+      console.log(`📧 Trying configuration ${i + 1}: ${configName} (${securityType})`);
       
       const transporter = nodemailer.createTransport(configurations[i]);
+      
+      // Quick connection test before sending
+      if (process.env.EMAIL_DEBUG === 'true') {
+        console.log(`   ⏳ Testing connection to ${configName}...`);
+        await transporter.verify();
+        console.log(`   ✅ Connection verified for ${configName}`);
+      }
+      
       const info = await transporter.sendMail(mailOptions);
       
-      console.log(`✅ Email sent successfully with configuration ${i + 1}:`, info.messageId);
-      return { success: true, messageId: info.messageId, config: i + 1 };
+      console.log(`✅ Email sent successfully with ${configName}:`, info.messageId);
+      
+      // Store successful configuration for future use
+      if (typeof global !== 'undefined') {
+        global.lastWorkingEmailConfig = i;
+      }
+      
+      return { 
+        success: true, 
+        messageId: info.messageId, 
+        config: i + 1,
+        configName: configName,
+        securityType: securityType
+      };
       
     } catch (error) {
-      console.log(`❌ Configuration ${i + 1} failed:`, error.message);
+      const configName = configurations[i].service || 
+                         `${configurations[i].host}:${configurations[i].port}`;
+      
+      console.log(`❌ Configuration ${i + 1} (${configName}) failed:`, error.message);
+      
+      // Log specific error details for debugging
+      if (error.code === 'ETIMEDOUT') {
+        console.log(`   🔧 Network timeout for ${configName} - may not work on this network`);
+      } else if (error.code === 'EAUTH') {
+        console.log(`   🔧 Authentication failed for ${configName} - check credentials`);
+      } else if (error.code === 'ECONNECTION') {
+        console.log(`   🔧 Connection refused for ${configName} - port may be blocked`);
+      }
+      
       if (i === configurations.length - 1) {
         throw error; // Throw error only if all configurations failed
       }
@@ -103,7 +178,25 @@ const tryMultipleConfigurations = async (mailOptions) => {
   }
 };
 
+// Environment detection
+const isRenderEnvironment = () => {
+  return process.env.RENDER || 
+         process.env.NODE_ENV === 'production' || 
+         process.env.RENDER_SERVICE_NAME ||
+         process.env.RENDER_EXTERNAL_HOSTNAME;
+};
+
+// Import Render-optimized email service
+const sendEmailRender = require('./sendEmail-render');
+
 module.exports = async function sendEmail({ to, subject, text, html, shopName = "Iyonic Fashion" }) {
+  // Use Render-optimized service in production/cloud environments
+  if (isRenderEnvironment()) {
+    console.log('🌐 Detected cloud/production environment - using Render-optimized email service');
+    return await sendEmailRender({ to, subject, text, html, shopName });
+  }
+  
+  console.log('💻 Detected local environment - using standard email service');
   // Check if email is disabled
   if (process.env.EMAIL_ENABLED === 'false') {
     console.log(`⚠️ Email disabled: ${subject} to ${to}`);
@@ -147,13 +240,15 @@ module.exports = async function sendEmail({ to, subject, text, html, shopName = 
     
     console.log("✅ Email sent successfully:", result.messageId);
     console.log("📧 Recipient:", to);
-    console.log(`📧 Used configuration: ${result.config}`);
+    console.log(`📧 Used configuration: ${result.configName} (${result.securityType})`);
     
     return {
       success: true,
       messageId: result.messageId,
       recipient: to,
-      configuration: result.config
+      configuration: result.config,
+      configName: result.configName,
+      securityType: result.securityType
     };
     
   } catch (error) {
