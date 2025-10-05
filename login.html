@@ -11,45 +11,65 @@
   <style>
     body {
       font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #000000 0%, #1a0a0f 25%, #2d0a1f 50%, #1a0a0f 75%, #000000 100%);
     }
     .fade {
       transition: all 0.4s ease;
     }
+    .glass-card {
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%);
+      border: 1px solid rgba(236, 72, 153, 0.3);
+      backdrop-filter: blur(10px);
+    }
+    .input-field {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(236, 72, 153, 0.4);
+      color: #fce7f3;
+    }
+    .input-field:focus {
+      background: rgba(0, 0, 0, 0.8);
+      border-color: #ec4899;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2);
+    }
+    .input-field::placeholder {
+      color: rgba(252, 231, 243, 0.5);
+    }
   </style>
 </head>
-<body class="bg-gradient-to-br from-pink-100 via-white to-indigo-100 min-h-screen flex items-center justify-center px-4">
+<body class="min-h-screen flex items-center justify-center px-4">
 
   <div class="w-full max-w-md space-y-6">
     <div class="text-center">
-      <img src="https://i.imgur.com/Vut7Csh.png" alt="Fashion Store Logo" class="w-24 mx-auto mb-4" />
-      <h2 class="text-3xl font-bold text-gray-800">Welcome to Fashion Store</h2>
-      <p class="text-sm text-gray-500">Style meets simplicity</p>
+      <img src="https://i.imgur.com/Vut7Csh.png" alt="Fashion Store Logo" class="w-24 mx-auto mb-4 drop-shadow-[0_0_15px_rgba(236,72,153,0.5)]" />
+      <h2 class="text-3xl font-bold text-pink-400">Welcome to Fashion Store</h2>
+      <p class="text-sm text-pink-300">Style meets simplicity</p>
     </div>
 
     <!-- Login Form -->
-    <form id="loginForm" class="bg-white shadow-lg rounded-2xl p-6 space-y-4 fade">
-      <h3 class="text-xl font-semibold text-center text-gray-700">Login</h3>
-      <input type="email" name="email" placeholder="Email" required class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pink-400" />
-      <input type="password" name="password" placeholder="Password" required class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pink-400" />
-      <button type="submit" id="loginBtn" class="bg-green-500 hover:bg-green-600 text-white w-full py-3 rounded-lg font-semibold transition-all">Login</button>
-      <p class="text-sm text-center text-pink-600 hover:underline cursor-pointer" id="showReset">Forgot Password?</p>
-      <p id="message" class="text-center text-sm text-red-500"></p>
+    <form id="loginForm" class="glass-card shadow-[0_0_30px_rgba(236,72,153,0.3)] rounded-2xl p-6 space-y-4 fade">
+      <h3 class="text-xl font-semibold text-center text-pink-400">Login</h3>
+      <input type="email" name="email" placeholder="Email" required class="input-field w-full px-4 py-3 rounded-lg transition-all" />
+      <input type="password" name="password" placeholder="Password" required class="input-field w-full px-4 py-3 rounded-lg transition-all" />
+      <button type="submit" id="loginBtn" class="bg-gradient-to-r from-pink-600 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-black font-bold w-full py-3 rounded-lg transition-all shadow-[0_0_20px_rgba(236,72,153,0.4)] hover:shadow-[0_0_30px_rgba(236,72,153,0.6)]">Login</button>
+      <p class="text-sm text-center text-pink-400 hover:text-pink-300 hover:underline cursor-pointer transition-colors" id="showReset">Forgot Password?</p>
+      <p id="message" class="text-center text-sm text-pink-500"></p>
     </form>
 
     <!-- Reset Password Form -->
-    <form id="resetForm" class="bg-white shadow-lg rounded-2xl p-6 space-y-4 hidden fade">
-      <h3 class="text-xl font-semibold text-center text-gray-700">Reset Password</h3>
-      <input type="email" name="resetEmail" placeholder="Your Email" required class="w-full px-4 py-3 border rounded-lg" />
-      <button type="button" id="sendCodeBtn" class="bg-blue-500 hover:bg-blue-600 text-white w-full py-3 rounded-lg font-semibold">Send Code</button>
+    <form id="resetForm" class="glass-card shadow-[0_0_30px_rgba(236,72,153,0.3)] rounded-2xl p-6 space-y-4 hidden fade">
+      <h3 class="text-xl font-semibold text-center text-pink-400">Reset Password</h3>
+      <input type="email" name="resetEmail" placeholder="Your Email" required class="input-field w-full px-4 py-3 rounded-lg transition-all" />
+      <button type="button" id="sendCodeBtn" class="bg-gradient-to-r from-pink-600 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-black font-bold w-full py-3 rounded-lg transition-all shadow-[0_0_20px_rgba(236,72,153,0.4)] hover:shadow-[0_0_30px_rgba(236,72,153,0.6)]">Send Code</button>
 
       <div id="codeSection" class="space-y-3 hidden">
-        <input type="text" name="code" placeholder="Verification Code" class="w-full px-4 py-3 border rounded-lg" />
-        <input type="password" name="newPassword" placeholder="New Password" class="w-full px-4 py-3 border rounded-lg" />
-        <button type="submit" id="updatePasswordBtn" class="bg-pink-500 hover:bg-pink-600 text-white w-full py-3 rounded-lg font-semibold">Update Password</button>
+        <input type="text" name="code" placeholder="Verification Code" class="input-field w-full px-4 py-3 rounded-lg transition-all" />
+        <input type="password" name="newPassword" placeholder="New Password" class="input-field w-full px-4 py-3 rounded-lg transition-all" />
+        <button type="submit" id="updatePasswordBtn" class="bg-gradient-to-r from-pink-600 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-black font-bold w-full py-3 rounded-lg transition-all shadow-[0_0_20px_rgba(236,72,153,0.4)] hover:shadow-[0_0_30px_rgba(236,72,153,0.6)]">Update Password</button>
       </div>
 
-      <p id="resetMessage" class="text-center text-sm text-red-500"></p>
-      <p class="text-sm text-center text-indigo-600 hover:underline cursor-pointer" id="backToLogin">← Back to login</p>
+      <p id="resetMessage" class="text-center text-sm text-pink-500"></p>
+      <p class="text-sm text-center text-pink-400 hover:text-pink-300 hover:underline cursor-pointer transition-colors" id="backToLogin">← Back to login</p>
     </form>
   </div>
 
@@ -93,7 +113,7 @@
     loginBtn.textContent = 'Logging in...';
 
     try {
-      const res = await fetch('https://fashion-q1zg.onrender.com/api/auth/login', {
+      const res = await fetch('https://fashion-onh3.onrender.com/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -129,7 +149,7 @@
     sendCodeBtn.textContent = 'Sending...';
 
     try {
-      const res = await fetch('https://fashion-q1zg.onrender.com/api/auth/send-reset-code', {
+      const res = await fetch('https://fashion-onh3.onrender.com/api/auth/send-reset-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
@@ -138,7 +158,8 @@
       if (res.ok) {
         codeSection.classList.remove('hidden');
         resetMsg.textContent = '✅ Code sent to email';
-        resetMsg.classList.add('text-green-600');
+        resetMsg.classList.remove('text-pink-500');
+        resetMsg.classList.add('text-pink-400');
       } else {
         resetMsg.textContent = data.message || 'Failed to send code.';
       }
@@ -161,7 +182,7 @@
     updatePasswordBtn.textContent = 'Updating...';
 
     try {
-      const res = await fetch('https://fashion-q1zg.onrender.com/api/auth/reset-password', {
+      const res = await fetch('https://fashion-onh3.onrender.com/api/auth/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, code, newPassword })
@@ -170,7 +191,8 @@
       const data = await res.json();
       if (res.ok) {
         resetMsg.textContent = '✅ Password updated! Please login.';
-        resetMsg.classList.add('text-green-600');
+        resetMsg.classList.remove('text-pink-500');
+        resetMsg.classList.add('text-pink-400');
         codeSection.classList.add('hidden');
         resetForm.reset();
       } else {

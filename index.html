@@ -5,42 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fashion Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
-  nav {
-    background-color: #ffffff;
-    padding: 10px;
-    text-align: center;
-    overflow-x: auto; /* Enable horizontal scrolling */
-    white-space: nowrap; /* Keep items in one line */
-    display: flex;
-    flex-wrap: nowrap; /* Prevent wrapping */
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile */
-}
-
-nav button {
-    background: none;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    flex: 0 0 auto; /* Prevent buttons from shrinking */
-}
-
-nav::-webkit-scrollbar {
-    height: 5px; /* Small scrollbar */
-}
-
-nav::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 5px;
-}
-
-nav::-webkit-scrollbar-track {
-    background: #555;
-}
-        nav button:hover {
-            text-decoration: underline;
+        /* Black and Pink Theme Override */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #ec4899 #000000;
         }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #000000;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ec4899;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f472b6;
+        }
+
+        body {
+            background: #000000 !important;
+            color: #ec4899 !important;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%) !important;
+            padding: 15px 10px !important;
+            text-align: center;
+            overflow-x: auto;
+            white-space: nowrap;
+            display: flex;
+            flex-wrap: nowrap;
+            -webkit-overflow-scrolling: touch;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+            border-bottom: 2px solid rgba(236, 72, 153, 0.5);
+        }
+
+        nav a {
+            background: rgba(0, 0, 0, 0.2) !important;
+            color: white !important;
+            border: 2px solid rgba(255, 255, 255, 0.3) !important;
+            padding: 10px 20px !important;
+            cursor: pointer;
+            flex: 0 0 auto;
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+            transition: all 0.3s ease !important;
+            text-decoration: none !important;
+            margin: 0 5px;
+        }
+
+        nav a:hover {
+            background: rgba(0, 0, 0, 0.4) !important;
+            border-color: white !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
         /* Hero section styling */
         .hero {
             background: url('https://source.unsplash.com/1600x900/?fashion,clothing') center/cover no-repeat;
@@ -52,44 +82,204 @@ nav::-webkit-scrollbar-track {
             color: white;
             text-align: center;
         }
+
         .hero-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
         }
+
         .hero-content {
             position: relative;
             z-index: 2;
         }
+
         .custom-shape {
-    clip-path: polygon(25% 0%, 100% 0%, 100% 75%, 75% 100%, 0% 100%, 0% 25%);
-}
+            clip-path: polygon(25% 0%, 100% 0%, 100% 75%, 75% 100%, 0% 100%, 0% 25%);
+        }
 
-@keyframes float {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0); }
-}
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
 
-.animate-float {
-    animation: float 4s ease-in-out infinite;
-}
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
 
+        /* Override Tailwind classes for black and pink theme */
+        .bg-gray-100, .bg-gray-50 {
+            background: #000000 !important;
+        }
+
+        .bg-white {
+            background: rgba(236, 72, 153, 0.05) !important;
+            border: 2px solid rgba(236, 72, 153, 0.2) !important;
+        }
+
+        .text-gray-900, .text-gray-800, .text-gray-700, .text-gray-600, .text-black {
+            color: #ec4899 !important;
+        }
+
+        .text-gray-400, .text-gray-500 {
+            color: #f472b6 !important;
+        }
+
+        .shadow, .shadow-lg, .shadow-xl {
+            box-shadow: 0 10px 40px rgba(236, 72, 153, 0.2) !important;
+        }
+
+        .rounded-2xl, .rounded-lg, .rounded-xl {
+            border-radius: 20px !important;
+        }
+
+        /* Product cards */
+        .product-item {
+            background: #000000 !important;
+            border: 2px solid rgba(236, 72, 153, 0.3) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .product-item:hover {
+            border-color: #ec4899 !important;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(236, 72, 153, 0.4) !important;
+        }
+
+        .product-item h3 {
+            color: #f472b6 !important;
+        }
+
+        /* Buttons */
+        .bg-pink-500, .bg-pink-600 {
+            background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%) !important;
+        }
+
+        .bg-pink-500:hover, .bg-pink-600:hover, .bg-pink-700:hover {
+            background: linear-gradient(135deg, #f472b6 0%, #ec4899 100%) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.5) !important;
+        }
+
+        .bg-blue-500, .bg-green-500, .bg-yellow-500 {
+            background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%) !important;
+        }
+
+        .bg-blue-500:hover, .bg-green-500:hover, .bg-yellow-500:hover,
+        .bg-blue-700:hover, .bg-green-700:hover, .bg-yellow-700:hover {
+            background: linear-gradient(135deg, #f472b6 0%, #ec4899 100%) !important;
+        }
+
+        .bg-black {
+            background: rgba(236, 72, 153, 0.1) !important;
+            border: 2px solid rgba(236, 72, 153, 0.3) !important;
+        }
+
+        .bg-black:hover, .bg-gray-800:hover {
+            background: rgba(236, 72, 153, 0.2) !important;
+            border-color: #ec4899 !important;
+        }
+
+        /* Featured collections */
+        .absolute.bottom-0 {
+            background: rgba(0, 0, 0, 0.9) !important;
+            border-top: 2px solid #ec4899 !important;
+        }
+
+        .absolute.bottom-0 a {
+            color: #f472b6 !important;
+            font-weight: 700 !important;
+        }
+
+        /* Sections */
+        .bg-gradient-to-r {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, #000000 100%) !important;
+        }
+
+        .from-gray-100, .from-pink-100 {
+            --tw-gradient-from: rgba(236, 72, 153, 0.1) !important;
+        }
+
+        .to-white {
+            --tw-gradient-to: #000000 !important;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000 !important;
+            border-top: 3px solid #ec4899 !important;
+        }
+
+        footer h3 {
+            color: #f472b6 !important;
+        }
+
+        footer .bg-gray-800 {
+            background: rgba(236, 72, 153, 0.1) !important;
+            border: 2px solid rgba(236, 72, 153, 0.3) !important;
+        }
+
+        footer input {
+            color: #ec4899 !important;
+        }
+
+        footer input::placeholder {
+            color: rgba(236, 72, 153, 0.5) !important;
+        }
+
+        footer button {
+            background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%) !important;
+        }
+
+        .border-gray-700 {
+            border-color: rgba(236, 72, 153, 0.3) !important;
+        }
+
+        /* Brand logos section */
+        .bg-gray-50 {
+            background: #000000 !important;
+        }
+
+        /* Swiper */
+        .swiper-button-next, .swiper-button-prev {
+            color: #ec4899 !important;
+        }
+
+        .swiper-pagination-bullet-active {
+            background: #ec4899 !important;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
 
             <!-- 🛍️ Header -->
-            <header class="bg-pink-600 text-white p-2 flex justify-between items-center">
-                <h1 class="text-lg sm:text-xl font-bold">Iyonic Fashion</h1>
-                <div class="flex items-center space-x-2 sm:space-x-4">
-                    <a href="dashboard.html" id="dashboard-btn" class="bg-yellow-500 text-xs sm:text-sm px-3 py-1 rounded hidden">Dashboard</a>
-                    <button id="logout-btn" class="bg-red-500 text-xs sm:text-sm px-3 py-1 rounded hidden">Logout</button>
-                    <button id="login-btn" class="bg-white text-pink-600 text-xs sm:text-sm px-3 py-1 rounded">Login</button>
-                    <button id="signup-btn" class="bg-white text-pink-600 text-xs sm:text-sm px-3 py-1 rounded">Signup</button>
+            <header style="background: #000000; border-bottom: 3px solid #ec4899; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3);">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <h1 style="font-size: 1.75rem; font-weight: 800; background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.5px;">Iyonic Fashion</h1>
+                    <p style="font-size: 0.9rem; color: #f472b6; font-weight: 500; display: none;" class="sm:block">
+                        <i class="fas fa-shopping-bag"></i> Your Style Destination
+                    </p>
+                </div>
+                <div class="flex items-center space-x-2 sm:space-x-3">
+                    <a href="cart.html" style="background: rgba(236, 72, 153, 0.1); color: #ec4899; padding: 0.6rem 1.2rem; border: 2px solid rgba(236, 72, 153, 0.3); border-radius: 8px; font-weight: 600; font-size: 0.9rem; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-shopping-cart"></i> <span class="hidden sm:inline">Cart</span>
+                    </a>
+                    <a href="dashboard.html" id="dashboard-btn" style="background: rgba(236, 72, 153, 0.1); color: #ec4899; padding: 0.6rem 1.2rem; border: 2px solid rgba(236, 72, 153, 0.3); border-radius: 8px; font-weight: 600; font-size: 0.9rem; text-decoration: none; transition: all 0.3s ease; display: none;">
+                        <i class="fas fa-tachometer-alt"></i> <span class="hidden sm:inline">Dashboard</span>
+                    </a>
+                    <button id="logout-btn" style="background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); color: white; padding: 0.6rem 1.2rem; border: none; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.3s ease; display: none;">
+                        <i class="fas fa-sign-out-alt"></i> <span class="hidden sm:inline">Logout</span>
+                    </button>
+                    <button id="login-btn" style="background: rgba(236, 72, 153, 0.1); color: #ec4899; padding: 0.6rem 1.2rem; border: 2px solid rgba(236, 72, 153, 0.3); border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.3s ease;">
+                        <i class="fas fa-sign-in-alt"></i> <span class="hidden sm:inline">Login</span>
+                    </button>
+                    <button id="signup-btn" style="background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); color: white; padding: 0.6rem 1.2rem; border: none; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.3s ease;">
+                        <i class="fas fa-user-plus"></i> <span class="hidden sm:inline">Signup</span>
+                    </button>
                 </div>
             </header>
 

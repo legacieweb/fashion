@@ -22,6 +22,7 @@
   <style>
     body {
       font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #000000 0%, #1a0a0f 25%, #2d0a1f 50%, #1a0a0f 75%, #000000 100%);
     }
     .fade-in {
       animation: fadeIn 0.8s ease-out;
@@ -30,36 +31,55 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    .glass-card {
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%);
+      border: 1px solid rgba(236, 72, 153, 0.3);
+      backdrop-filter: blur(10px);
+    }
+    .input-field {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(236, 72, 153, 0.4);
+      color: #fce7f3;
+    }
+    .input-field:focus {
+      background: rgba(0, 0, 0, 0.8);
+      border-color: #ec4899;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2);
+    }
+    .input-field::placeholder {
+      color: rgba(252, 231, 243, 0.5);
+    }
   </style>
 </head>
 
-<body class="bg-gradient-to-br from-pink-100 via-white to-indigo-100 min-h-screen flex items-center justify-center px-4">
+<body class="min-h-screen flex items-center justify-center px-4">
 
-  <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 fade-in">
+  <div class="w-full max-w-md glass-card shadow-[0_0_30px_rgba(236,72,153,0.3)] rounded-2xl p-8 fade-in">
     <div class="text-center mb-6">
-      <img src="https://i.imgur.com/Vut7Csh.png" alt="Fashion Store Logo" class="w-24 mx-auto mb-4" />
-      <h2 class="text-3xl font-bold text-gray-800">Create an Account</h2>
-      <p class="text-sm text-gray-500">Join and discover your style.</p>
+      <img src="https://i.imgur.com/Vut7Csh.png" alt="Fashion Store Logo" class="w-24 mx-auto mb-4 drop-shadow-[0_0_15px_rgba(236,72,153,0.5)]" />
+      <h2 class="text-3xl font-bold text-pink-400">Create an Account</h2>
+      <p class="text-sm text-pink-300">Join and discover your style.</p>
     </div>
 
     <form id="signupForm" class="space-y-5">
       <input type="text" name="name" placeholder="Full Name" required
-        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-pink-400" />
+        class="input-field w-full px-4 py-3 rounded-lg transition-all" />
       <input type="email" name="email" placeholder="Email Address" required
-        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-pink-400" />
+        class="input-field w-full px-4 py-3 rounded-lg transition-all" />
       <input type="password" name="password" placeholder="Password" required
-        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-pink-400" />
+        class="input-field w-full px-4 py-3 rounded-lg transition-all" />
       
       <button id="signupBtn" type="submit"
-        class="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg hover:bg-indigo-700 transition-all">
+        class="w-full bg-gradient-to-r from-pink-600 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-black font-bold py-3 rounded-lg transition-all shadow-[0_0_20px_rgba(236,72,153,0.4)] hover:shadow-[0_0_30px_rgba(236,72,153,0.6)]">
         Sign Up
       </button>
 
-      <p id="message" class="text-center text-sm text-red-500 mt-2"></p>
+      <p id="message" class="text-center text-sm text-pink-500 mt-2"></p>
     </form>
 
-    <p class="text-center text-sm mt-6 text-gray-600">
-      Already have an account? <a href="login.html" class="text-pink-600 hover:underline font-medium">Log in</a>
+    <p class="text-center text-sm mt-6 text-pink-400">
+      Already have an account? <a href="login.html" class="text-pink-300 hover:text-pink-200 hover:underline font-medium transition-colors">Log in</a>
     </p>
   </div>
 
@@ -80,7 +100,7 @@
       const form = e.target;
 
       try {
-        const res = await fetch('https://fashion-q1zg.onrender.com/api/auth/signup', {
+        const res = await fetch('https://fashion-onh3.onrender.com/api/auth/signup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

@@ -6,332 +6,966 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    * {
+      font-family: 'Inter', sans-serif;
+    }
 
+    body {
+      background: #000000 !important;
+      color: #ec4899 !important;
+    }
+
+    .card-hover {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(236, 72, 153, 0.3);
+      background: #000000 !important;
+    }
+
+    .card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(236, 72, 153, 0.4), 0 10px 10px -5px rgba(236, 72, 153, 0.3);
+      border-color: rgba(236, 72, 153, 0.6);
+    }
+
+    .gradient-bg {
+      background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+    }
+
+    .gradient-pink {
+      background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+    }
+
+    .gradient-light-pink {
+      background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-slide-in {
+      animation: slideIn 0.5s ease-out forwards;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    .animate-pulse-slow {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    .notification-badge {
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    .sidebar-link {
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      color: #ec4899 !important;
+    }
+
+    .sidebar-link::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 3px;
+      background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+      transform: scaleY(0);
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-link:hover::before,
+    .sidebar-link.active::before {
+      transform: scaleY(1);
+    }
+
+    .sidebar-link:hover {
+      background: rgba(236, 72, 153, 0.2) !important;
+      padding-left: 1.5rem;
+    }
+
+    .glass-effect {
+      background: rgba(236, 72, 153, 0.1) !important;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(236, 72, 153, 0.3);
+    }
+
+    .status-badge {
+      transition: all 0.3s ease;
+    }
+
+    .status-badge:hover {
+      transform: scale(1.05);
+    }
+
+    .sidebar-link.active {
+      background: rgba(236, 72, 153, 0.2) !important;
+      color: #f472b6 !important;
+    }
+
+    /* Smooth scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #000000;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #ec4899;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #f472b6;
+    }
+
+    /* Override all white/gray backgrounds */
+    .bg-white, .bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-700, .bg-gray-800, .bg-gray-900 {
+      background-color: #000000 !important;
+    }
+
+    /* Override all text colors */
+    .text-gray-800, .text-gray-700, .text-gray-600, .text-gray-500, .text-gray-400, .text-gray-300 {
+      color: #ec4899 !important;
+    }
+
+    /* Border colors */
+    .border-pink-100, .border-pink-200, .border-pink-800, .border-pink-900, .border-gray-200 {
+      border-color: rgba(236, 72, 153, 0.3) !important;
+    }
+
+    /* Input fields */
+    input, textarea, select {
+      background-color: #000000 !important;
+      color: #ec4899 !important;
+      border-color: rgba(236, 72, 153, 0.5) !important;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: rgba(236, 72, 153, 0.5) !important;
+    }
+
+    /* Tables */
+    table {
+      background-color: #000000 !important;
+    }
+
+    th, td {
+      color: #ec4899 !important;
+      border-color: rgba(236, 72, 153, 0.3) !important;
+    }
+
+    /* Buttons */
+    button {
+      color: #ec4899 !important;
+    }
+
+    /* Hover states */
+    .hover\:bg-pink-50:hover, .hover\:bg-pink-100:hover, .hover\:bg-pink-200:hover {
+      background-color: rgba(236, 72, 153, 0.2) !important;
+    }
+
+    .hover\:bg-pink-800:hover, .hover\:bg-pink-900:hover {
+      background-color: rgba(236, 72, 153, 0.3) !important;
+    }
+
+    /* Dark mode overrides */
+    .dark\:bg-gray-800, .dark\:bg-gray-700, .dark\:bg-pink-900 {
+      background-color: #000000 !important;
+    }
+
+    .dark\:text-white, .dark\:text-gray-300, .dark\:text-gray-400, .dark\:text-pink-100, .dark\:text-pink-200, .dark\:text-pink-300 {
+      color: #ec4899 !important;
+    }
+
+    .dark\:border-pink-800, .dark\:border-pink-900 {
+      border-color: rgba(236, 72, 153, 0.3) !important;
+    }
+
+    .dark\:hover\:bg-pink-800:hover, .dark\:hover\:bg-pink-900:hover {
+      background-color: rgba(236, 72, 153, 0.3) !important;
+    }
+  </style>
 </head>
-<body class="bg-gray-100">
+<body class="transition-colors duration-300" style="background: #000000;">
 
-<!-- ✅ Header (Mobile) -->
-<header class="bg-gray-800 text-white flex justify-between items-center px-4 py-3 md:hidden">
-  <h1 class="text-lg font-semibold">Admin Dashboard</h1>
-  <button id="menuBtn" class="text-white text-2xl">&#9776;</button>
-</header>
+  <!-- Mobile Header -->
+  <header class="gradient-bg text-white flex justify-between items-center px-6 py-4 md:hidden shadow-lg">
+    <div class="flex items-center space-x-3">
+      <img src="https://i.imgur.com/Vut7Csh.png" alt="Logo" class="w-10 h-10 rounded-full" />
+      <h1 class="text-xl font-bold text-black">Admin Panel</h1>
+    </div>
+    <div class="flex items-center space-x-4">
+      <button id="notificationBtn" class="relative">
+        <i class="fas fa-bell text-xl text-black"></i>
+        <span id="notifBadge" class="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 rounded-full text-xs flex items-center justify-center notification-badge hidden">0</span>
+      </button>
+      <button id="menuBtn" class="text-black focus:outline-none text-2xl">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
 
-<!-- ✅ Mobile Menu -->
-<div id="mobileMenu" class="bg-white md:hidden hidden border-b border-gray-300">
-  <nav class="flex flex-col p-4 space-y-2 text-gray-800">
-    <a href="#" class="menu-link relative" data-section="orders">📦 Orders</a>
+  <!-- Mobile Menu -->
+  <div id="mobileMenu" class="bg-white dark:bg-gray-800 w-full md:hidden hidden border-b border-pink-200 dark:border-pink-800 shadow-lg transform transition-all duration-300">
+    <nav class="flex flex-col p-4 space-y-2">
+      <a href="#" class="menu-link sidebar-link px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300" data-section="dashboard">
+        <i class="fas fa-chart-line mr-3"></i>Dashboard
+      </a>
+      <a href="#" class="menu-link sidebar-link px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300" data-section="orders">
+        <i class="fas fa-shopping-bag mr-3"></i>Orders
+      </a>
+      <a href="#" class="menu-link sidebar-link px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 relative" data-section="messages">
+        <i class="fas fa-comments mr-3"></i>Messages
+        <span id="badge-mobile" class="absolute top-2 right-2 w-2 h-2 bg-pink-500 rounded-full hidden"></span>
+      </a>
+      <button onclick="logout()" class="text-left px-4 py-3 rounded-lg text-pink-600 hover:bg-pink-50 dark:hover:bg-pink-900">
+        <i class="fas fa-sign-out-alt mr-3"></i>Logout
+      </button>
+    </nav>
+  </div>
 
-    <a href="#" class="menu-link relative" data-section="messages">
-      💬 Messages
-      <span id="badge-mobile" class="absolute top-0 right-0 mt-1 mr-2 w-2 h-2 bg-red-500 rounded-full hidden"></span>
-    </a>
-
-    <button onclick="logout()" class="text-left text-red-600">🚪 Logout</button>
-  </nav>
-</div>
-
-<div class="flex min-h-screen">
-
-<!-- ✅ Sidebar (Desktop) -->
-<aside class="hidden md:flex flex-col w-64 bg-white p-4 shadow-md text-gray-700 space-y-4">
-  <h2 class="text-xl font-bold mb-4 text-gray-900">Admin Menu</h2>
-
-  <a href="#" class="menu-link relative" data-section="orders">📦 Orders</a>
-
-  <a href="#" class="menu-link relative" data-section="messages">
-    💬 Messages
-    <span id="badge-desktop" class="absolute top-0 right-0 mt-1 mr-2 w-2 h-2 bg-red-500 rounded-full hidden"></span>
-  </a>
-
-  <button onclick="logout()" class="text-left text-red-600">🚪 Logout</button>
-</aside>
-
-
-  <!-- ✅ Main Content -->
-  <main class="flex-1 p-4 space-y-6">
-
-    <!-- Orders Section -->
-    <section id="ordersSection" class="bg-white p-6 rounded shadow">
-      <h2 class="text-xl font-bold text-gray-700 mb-4">All Orders</h2>
-      <div id="ordersContainer">Loading orders...</div>
-    </section>
-
-<section id="messagesSection" class="bg-white p-6 rounded shadow hidden">
-  <h2 class="text-xl font-bold text-gray-700 mb-4">Customer Messages</h2>
-
-<div class="relative mb-4 max-w-xs">
-  <button id="dropdownButton" class="border px-4 py-2 rounded w-full flex justify-between items-center">
-    <span id="dropdownLabel">Select a user</span>
-    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-    </svg>
-  </button>
-  <ul id="userDropdown" class="absolute bg-white shadow-lg rounded w-full mt-2 hidden max-h-60 overflow-y-auto z-50 border">
-    <!-- JS will insert user list here -->
-  </ul>
-</div>
-
-
-  <div id="chatBox" class="h-64 overflow-y-auto bg-gray-100 p-4 rounded mb-4 border"></div>
-
-  <form id="replyForm" class="flex space-x-2">
-    <input
-      type="text"
-      id="replyInput"
-      placeholder="Type reply..."
-      class="flex-1 px-3 py-2 border rounded"
-    />
-    <button type="submit" class="bg-gray-800 text-white px-4 rounded">Send</button>
-  </form>
-</section>
-
-<audio id="sendSound" src="happy-message-ping-351298.mp3" preload="auto"></audio>
-<audio id="receiveSound" src="new-notification-011-364050.mp3" preload="auto"></audio>
-
-
-  </main>
-</div>
-<script>
-const token = localStorage.getItem("token");
-if (!token) {
-  alert("Unauthorized. Please login as admin.");
-  window.location.href = "login.html";
-}
-
-function logout() {
-  localStorage.clear();
-  window.location.href = "login.html";
-}
-
-const socket = io("http://localhost:5000");
-socket.emit("join", { isAdmin: true });
-
-const unreadUserMap = new Map();
-let activeChatUserId = null;
-
-const container = document.getElementById("ordersContainer");
-const chatBox = document.getElementById("chatBox");
-const replyForm = document.getElementById("replyForm");
-const replyInput = document.getElementById("replyInput");
-const dropdownBtn = document.getElementById("dropdownButton");
-const dropdownList = document.getElementById("userDropdown");
-const dropdownLabel = document.getElementById("dropdownLabel");
-
-const sendSound = document.getElementById("sendSound");
-const receiveSound = document.getElementById("receiveSound");
-
-const sections = {
-  orders: document.getElementById("ordersSection"),
-  messages: document.getElementById("messagesSection")
-};
-
-document.querySelectorAll(".menu-link").forEach(link => {
-  link.addEventListener("click", e => {
-    e.preventDefault();
-    const target = e.target.getAttribute("data-section");
-    for (const key in sections) sections[key].style.display = "none";
-    sections[target].style.display = "block";
-
-    if (target === "messages") {
-      hideSidebarBadge("messages");
-      loadMessageUsers();
-      if (activeChatUserId) loadChat(activeChatUserId);
-    }
-  });
-});
-
-document.getElementById("menuBtn")?.addEventListener("click", () => {
-  document.getElementById("mobileMenu").classList.toggle("hidden");
-});
-
-sections.orders.style.display = "block";
-fetchOrders();
-
-dropdownBtn.addEventListener("click", () => {
-  dropdownList.classList.toggle("hidden");
-});
-
-// 📦 Fetch Orders
-async function fetchOrders() {
-  try {
-    const res = await fetch("http://localhost:5000/api/orders", {
-      headers: { Authorization: "Bearer " + token }
-    });
-    const data = await res.json();
-    container.innerHTML = "";
-
-    if (!data.success || !data.orders.length) {
-      container.innerHTML = "<p class='text-gray-500'>No orders found.</p>";
-      return;
-    }
-
-    data.orders.forEach(order => {
-      const orderEl = document.createElement("div");
-      orderEl.className = "border p-4 rounded mb-4 bg-gray-50";
-      const userName = order.userId?.name || order.name || "Unknown";
-      const userEmail = order.userId?.email || order.email || "N/A";
-
-      const itemsHTML = order.items.map(item =>
-        `<li>${item.title} — Size: ${item.size} — $${item.price}</li>`).join("");
-
-      const statusId = `status-${order._id}`;
-      const msgId = `msg-${order._id}`;
-
-      orderEl.innerHTML = `
-        <h3 class="text-lg font-semibold">${userName} <span class="text-sm text-gray-500">(${userEmail})</span></h3>
-        <p class="text-sm text-gray-600">Reference: ${order.reference}</p>
-        <p class="text-sm text-gray-600">Date: ${new Date(order.createdAt).toLocaleString()}</p>
-        <p class="text-sm text-gray-600">Address: ${order.address}, ZIP: ${order.zip}</p>
-        <ul class="list-disc list-inside text-sm mt-2">${itemsHTML}</ul>
-        <p class="mt-2 font-semibold">Total: $${order.totalAmount.toFixed(2)}</p>
-        <div class="mt-2">
-          <label class="text-sm mr-2">Status:</label>
-          <select id="${statusId}" data-order-id="${order._id}" class="border px-2 py-1 text-sm rounded">
-            ${['Pending','Processing','Shipped','Delivered','Cancelled'].map(s =>
-              `<option value="${s}" ${order.status === s ? 'selected' : ''}>${s}</option>`).join("")}
-          </select>
-          <p id="${msgId}" class="text-sm text-green-600 mt-1 hidden">Status updated!</p>
+  <div class="flex">
+    <!-- Sidebar for Desktop -->
+    <aside class="hidden md:flex flex-col w-72 bg-white dark:bg-gray-800 min-h-screen shadow-xl border-r border-pink-100 dark:border-pink-900">
+      <div class="p-6 gradient-bg text-white">
+        <!-- Admin Profile Card -->
+        <div class="glass-effect rounded-xl p-4">
+          <div class="flex flex-col items-center text-center space-y-3">
+            <div class="w-16 h-16 rounded-full bg-white flex items-center justify-center text-pink-600 font-bold text-2xl shadow-lg">
+              <i class="fas fa-user-shield"></i>
+            </div>
+            <div class="flex-1">
+              <p class="font-bold text-base">Administrator</p>
+              <p class="text-xs opacity-90 mt-1">admin@iyonic.com</p>
+              <p class="text-xs opacity-80 mt-1">Full Access</p>
+            </div>
+          </div>
         </div>
-      `;
-      container.appendChild(orderEl);
+      </div>
 
-      document.getElementById(statusId).addEventListener("change", async (e) => {
-        const newStatus = e.target.value;
-        const orderId = e.target.dataset.orderId;
-        const msg = document.getElementById(msgId);
-        try {
-          const res = await fetch(`http://localhost:5000/api/orders/${orderId}/status`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + token
-            },
-            body: JSON.stringify({ status: newStatus })
-          });
-          const result = await res.json();
-          msg.textContent = result.success ? "✅ Status updated!" : "❌ Failed to update.";
-          msg.className = result.success ? "text-green-600 text-sm mt-1" : "text-red-600 text-sm mt-1";
-          msg.style.display = "block";
-        } catch (err) {
-          console.error("Status update error:", err);
+      <nav class="flex-1 p-4 space-y-2">
+        <a href="#" class="menu-link sidebar-link active px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 flex items-center" data-section="dashboard">
+          <i class="fas fa-chart-line mr-3 w-5"></i>Dashboard
+        </a>
+        <a href="#" class="menu-link sidebar-link px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 flex items-center" data-section="orders">
+          <i class="fas fa-shopping-bag mr-3 w-5"></i>Orders
+        </a>
+        <a href="#" class="menu-link sidebar-link px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 flex items-center relative" data-section="messages">
+          <i class="fas fa-comments mr-3 w-5"></i>Messages
+          <span id="badge-desktop" class="absolute top-2 right-2 w-2 h-2 bg-pink-500 rounded-full hidden"></span>
+        </a>
+      </nav>
+
+      <div class="p-4 border-t border-pink-200 dark:border-pink-800">
+        <button id="darkModeToggle" class="w-full px-4 py-3 rounded-lg bg-pink-100 dark:bg-pink-900 hover:bg-pink-200 dark:hover:bg-pink-800 transition-colors flex items-center justify-center space-x-2">
+          <i class="fas fa-moon dark:hidden text-pink-600"></i>
+          <i class="fas fa-sun hidden dark:inline text-pink-200"></i>
+          <span class="text-sm font-medium text-pink-700 dark:text-pink-100">Toggle Theme</span>
+        </button>
+        <button onclick="logout()" class="w-full mt-2 px-4 py-3 rounded-lg text-pink-600 hover:bg-pink-50 dark:hover:bg-pink-900 transition-colors flex items-center justify-center space-x-2">
+          <i class="fas fa-sign-out-alt"></i>
+          <span class="text-sm font-medium">Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-4 md:p-8 overflow-y-auto">
+      <!-- Top Bar -->
+      <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Admin Dashboard 👨‍💼</h1>
+          <p class="text-gray-600 dark:text-gray-400 mt-1">Manage your store efficiently</p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <!-- Notification Button -->
+          <button id="notificationBtnDesktop" class="relative hidden md:block p-3 rounded-lg hover:bg-pink-100 dark:hover:bg-pink-900 transition-colors">
+            <i class="fas fa-bell text-xl text-pink-600 dark:text-pink-300"></i>
+            <span id="notifBadgeDesktop" class="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 rounded-full text-xs flex items-center justify-center text-white notification-badge hidden">0</span>
+          </button>
+          <!-- Dark Mode Toggle (Mobile) -->
+          <button id="darkModeToggleMobile" class="md:hidden p-3 rounded-lg hover:bg-pink-100 dark:hover:bg-pink-900 transition-colors">
+            <i class="fas fa-moon dark:hidden text-pink-600"></i>
+            <i class="fas fa-sun hidden dark:inline text-pink-300"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dashboard Section -->
+      <section id="dashboardSection" class="space-y-6">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Card 1 -->
+          <div class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg animate-slide-in">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-full gradient-pink flex items-center justify-center">
+                <i class="fas fa-shopping-cart text-white text-xl"></i>
+              </div>
+              <span class="text-xs font-semibold text-pink-600 bg-pink-100 dark:bg-pink-900 px-2 py-1 rounded-full">Total</span>
+            </div>
+            <h3 class="text-gray-600 dark:text-gray-400 text-sm font-medium">Total Orders</h3>
+            <p class="text-3xl font-bold text-gray-800 dark:text-white mt-2" id="totalOrders">0</p>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg animate-slide-in" style="animation-delay: 0.1s;">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-full gradient-light-pink flex items-center justify-center">
+                <i class="fas fa-dollar-sign text-pink-600 text-xl"></i>
+              </div>
+              <span class="text-xs font-semibold text-pink-600 bg-pink-100 dark:bg-pink-900 px-2 py-1 rounded-full">Revenue</span>
+            </div>
+            <h3 class="text-gray-600 dark:text-gray-400 text-sm font-medium">Total Revenue</h3>
+            <p class="text-3xl font-bold text-gray-800 dark:text-white mt-2">$<span id="totalRevenue">0.00</span></p>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg animate-slide-in" style="animation-delay: 0.2s;">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-full gradient-pink flex items-center justify-center">
+                <i class="fas fa-clock text-white text-xl"></i>
+              </div>
+              <span class="text-xs font-semibold text-pink-600 bg-pink-100 dark:bg-pink-900 px-2 py-1 rounded-full">Pending</span>
+            </div>
+            <h3 class="text-gray-600 dark:text-gray-400 text-sm font-medium">Pending Orders</h3>
+            <p class="text-3xl font-bold text-gray-800 dark:text-white mt-2" id="pendingOrders">0</p>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg animate-slide-in" style="animation-delay: 0.3s;">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-full gradient-light-pink flex items-center justify-center">
+                <i class="fas fa-users text-pink-600 text-xl"></i>
+              </div>
+              <span class="text-xs font-semibold text-pink-600 bg-pink-100 dark:bg-pink-900 px-2 py-1 rounded-full">Active</span>
+            </div>
+            <h3 class="text-gray-600 dark:text-gray-400 text-sm font-medium">Total Customers</h3>
+            <p class="text-3xl font-bold text-gray-800 dark:text-white mt-2" id="totalCustomers">0</p>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Revenue Chart -->
+          <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg card-hover">
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Revenue Overview</h3>
+            <canvas id="revenueChart" height="200"></canvas>
+          </div>
+
+          <!-- Order Status Chart -->
+          <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg card-hover">
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Order Status</h3>
+            <canvas id="statusChart" height="200"></canvas>
+          </div>
+        </div>
+
+        <!-- Recent Orders Preview -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white">Recent Orders</h3>
+            <button onclick="showSection('orders')" class="text-pink-600 hover:text-pink-700 text-sm font-medium">View All →</button>
+          </div>
+          <div id="recentOrdersPreview" class="space-y-3">
+            <p class="text-gray-500 dark:text-gray-400 text-center py-4">Loading...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Orders Section -->
+      <section id="ordersSection" class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg hidden">
+        <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
+          <i class="fas fa-shopping-bag mr-3 text-pink-500"></i>All Orders
+        </h2>
+        <div id="ordersContainer" class="space-y-4">
+          <div class="flex items-center justify-center py-12">
+            <div class="animate-pulse-slow">
+              <i class="fas fa-spinner fa-spin text-4xl text-pink-500"></i>
+              <p class="text-gray-500 dark:text-gray-400 mt-4">Loading orders...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Messages Section -->
+      <section id="messagesSection" class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg hidden">
+        <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
+          <i class="fas fa-comments mr-3 text-pink-500"></i>Customer Messages
+        </h2>
+
+        <!-- User Dropdown -->
+        <div class="relative mb-6 max-w-md">
+          <button id="dropdownButton" class="border-2 border-gray-300 dark:border-gray-600 px-4 py-3 rounded-lg w-full flex justify-between items-center hover:border-pink-500 transition-colors bg-white dark:bg-gray-700">
+            <span id="dropdownLabel" class="text-gray-700 dark:text-gray-300">Select a customer</span>
+            <i class="fas fa-chevron-down text-gray-400"></i>
+          </button>
+          <ul id="userDropdown" class="absolute bg-white dark:bg-gray-700 shadow-2xl rounded-lg w-full mt-2 hidden max-h-60 overflow-y-auto z-50 border-2 border-gray-200 dark:border-gray-600">
+            <!-- JS will insert user list here -->
+          </ul>
+        </div>
+
+        <!-- Chat Box -->
+        <div id="chatBox" class="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 h-96 overflow-y-auto mb-4 space-y-3">
+          <div class="text-center text-gray-400 py-8">
+            <i class="fas fa-comments text-4xl mb-2"></i>
+            <p>Select a customer to view messages</p>
+          </div>
+        </div>
+
+        <!-- Reply Form -->
+        <form id="replyForm" class="flex space-x-2">
+          <input
+            type="text"
+            id="replyInput"
+            placeholder="Type your reply..."
+            class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+          />
+          <button type="submit" class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2">
+            <i class="fas fa-paper-plane"></i>
+            <span>Send</span>
+          </button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <!-- Audio Elements -->
+  <audio id="sendSound" src="happy-message-ping-351298.mp3" preload="auto"></audio>
+  <audio id="receiveSound" src="new-notification-011-364050.mp3" preload="auto"></audio>
+
+  <script>
+    // =================== INITIALIZATION ===================
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Unauthorized. Please login as admin.");
+      window.location.href = "login.html";
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+
+    // =================== DARK MODE ===================
+    const darkModeToggle = document.getElementById("darkModeToggle");
+    const darkModeToggleMobile = document.getElementById("darkModeToggleMobile");
+    
+    const isDarkMode = localStorage.getItem("darkMode") === "true";
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+    }
+
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle("dark");
+      localStorage.setItem("darkMode", document.documentElement.classList.contains("dark"));
+    }
+
+    darkModeToggle?.addEventListener("click", toggleDarkMode);
+    darkModeToggleMobile?.addEventListener("click", toggleDarkMode);
+
+    // =================== SECTION NAVIGATION ===================
+    const sections = {
+      dashboard: document.getElementById("dashboardSection"),
+      orders: document.getElementById("ordersSection"),
+      messages: document.getElementById("messagesSection")
+    };
+
+    function showSection(sectionName) {
+      for (const key in sections) {
+        sections[key].classList.add("hidden");
+      }
+      sections[sectionName].classList.remove("hidden");
+      
+      // Update active link
+      document.querySelectorAll(".menu-link").forEach(link => {
+        link.classList.remove("active");
+        if (link.getAttribute("data-section") === sectionName) {
+          link.classList.add("active");
         }
       });
-    });
-  } catch (err) {
-    console.error(err);
-    container.innerHTML = "<p class='text-red-600'>Failed to load orders.</p>";
-  }
-}
 
-// 📨 Load users for chat
-async function loadMessageUsers() {
-  const res = await fetch("http://localhost:5000/api/messages/users");
-  const data = await res.json();
-
-  dropdownList.innerHTML = "";
-  data.users.forEach(user => {
-    const isUnread = unreadUserMap.has(user._id);
-    const li = document.createElement("li");
-    li.className = "px-4 py-2 hover:bg-gray-100 cursor-pointer flex justify-between items-center";
-    li.innerHTML = `
-      <span>${user.name || "Unknown"} (${user.email})</span>
-      ${isUnread ? '<span class="w-2 h-2 bg-red-500 rounded-full ml-2"></span>' : ''}
-    `;
-    li.addEventListener("click", () => {
-      dropdownLabel.textContent = `${user.name || "Unknown"} (${user.email})`;
-      dropdownList.classList.add("hidden");
-      activeChatUserId = user._id;
-      unreadUserMap.delete(user._id);   // 🛠️ remove badge only when clicked
-      hideSidebarBadge("messages");
-      loadMessageUsers();               // 🔁 Refresh dropdown
-      loadChat(user._id);
-    });
-    dropdownList.appendChild(li);
-  });
-}
-
-// 💬 Load chat messages
-async function loadChat(userId) {
-  chatBox.innerHTML = "<p class='text-gray-500'>Loading...</p>";
-  const res = await fetch(`http://localhost:5000/api/messages/${userId}`);
-  const data = await res.json();
-  chatBox.innerHTML = "";
-  data.messages.forEach(msg => {
-    renderMessage(msg.content, msg.sender === 'admin' ? 'right' : 'left', msg.timestamp);
-  });
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-// 📤 Send reply
-replyForm.addEventListener("submit", e => {
-  e.preventDefault();
-  const content = replyInput.value.trim();
-  if (!activeChatUserId || !content) return;
-
-  socket.emit("chatMessage", {
-    from: "admin",
-    to: activeChatUserId,
-    sender: "admin",
-    content
-  });
-
-  renderMessage(content, 'right');
-  playSendSound();
-  replyInput.value = "";
-});
-
-// 📥 Receive message
-socket.on("chatMessage", ({ content, from, sender, timestamp }) => {
-  if (sender === "user") {
-    if (from === activeChatUserId) {
-      renderMessage(content, 'left', timestamp);
-    } else {
-      unreadUserMap.set(from, true);
-      showSidebarBadge("messages");
+      if (sectionName === "messages") {
+        hideSidebarBadge("messages");
+        loadMessageUsers();
+        if (activeChatUserId) loadChat(activeChatUserId);
+      }
+      
+      if (window.innerWidth < 768) {
+        document.getElementById("mobileMenu").classList.add("hidden");
+      }
     }
-    loadMessageUsers(); // 🔁 Refresh dropdown every time
-    playReceiveSound();
-  }
-});
 
-// 🧱 Message Renderer
-function renderMessage(content, position, timestamp = new Date()) {
-  const div = document.createElement("div");
-  div.className = `mb-2 px-4 py-2 max-w-xs rounded-lg text-sm flex ${
-    position === 'right' ? 'bg-gray-300 self-end ml-auto' : 'bg-pink-100 self-start'
-  }`;
-  div.innerHTML = `
-    <div>
-      <p>${content}</p>
-      <span class="text-xs text-gray-600 block mt-1">${new Date(timestamp).toLocaleTimeString()}</span>
-    </div>
-  `;
-  chatBox.appendChild(div);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
+    document.querySelectorAll(".menu-link").forEach(link => {
+      link.addEventListener("click", e => {
+        e.preventDefault();
+        const target = e.target.closest('.menu-link').getAttribute("data-section");
+        showSection(target);
+      });
+    });
 
-// 🔊 Audio
-function playSendSound() {
-  if (sendSound) sendSound.play().catch(err => console.warn("Send sound not played", err));
-}
-function playReceiveSound() {
-  if (receiveSound) receiveSound.play().catch(err => console.warn("Receive sound not played", err));
-}
+    document.getElementById("menuBtn").addEventListener("click", () => {
+      document.getElementById("mobileMenu").classList.toggle("hidden");
+    });
 
-// 🔴 Badge
-function showSidebarBadge(section) {
-  if (section === 'messages') {
-    document.getElementById("badge-desktop")?.classList.remove("hidden");
-    document.getElementById("badge-mobile")?.classList.remove("hidden");
-  }
-}
-function hideSidebarBadge(section) {
-  if (section === 'messages') {
-    document.getElementById("badge-desktop")?.classList.add("hidden");
-    document.getElementById("badge-mobile")?.classList.add("hidden");
-  }
-}
-</script>
+    // =================== SOCKET.IO ===================
+    const socket = io("https://fashion-onh3.onrender.com");
+    socket.emit("join", { isAdmin: true });
 
+    const unreadUserMap = new Map();
+    let activeChatUserId = null;
+
+    const chatBox = document.getElementById("chatBox");
+    const replyForm = document.getElementById("replyForm");
+    const replyInput = document.getElementById("replyInput");
+    const dropdownBtn = document.getElementById("dropdownButton");
+    const dropdownList = document.getElementById("userDropdown");
+    const dropdownLabel = document.getElementById("dropdownLabel");
+
+    const sendSound = document.getElementById("sendSound");
+    const receiveSound = document.getElementById("receiveSound");
+
+    // =================== LOAD ORDERS & STATS ===================
+    let allOrders = [];
+    let revenueChart, statusChart;
+
+    async function fetchOrders() {
+      const container = document.getElementById("ordersContainer");
+      try {
+        const res = await fetch("https://fashion-onh3.onrender.com/api/orders", {
+          headers: { Authorization: "Bearer " + token }
+        });
+        const data = await res.json();
+        container.innerHTML = "";
+
+        if (!data.success || !data.orders.length) {
+          container.innerHTML = `
+            <div class="text-center py-12">
+              <i class="fas fa-box-open text-6xl text-gray-300 dark:text-gray-600 mb-4"></i>
+              <p class="text-gray-500 dark:text-gray-400">No orders found.</p>
+            </div>
+          `;
+          return;
+        }
+
+        allOrders = data.orders;
+        updateDashboardStats(allOrders);
+        updateCharts(allOrders);
+        updateRecentOrders(allOrders.slice(0, 5));
+
+        data.orders.forEach((order, index) => {
+          const orderEl = document.createElement("div");
+          orderEl.className = "border-2 border-gray-200 dark:border-gray-700 p-6 rounded-xl hover:border-pink-500 transition-all card-hover animate-slide-in";
+          orderEl.style.animationDelay = `${index * 0.05}s`;
+          
+          const userName = order.userId?.name || order.name || "Unknown";
+          const userEmail = order.userId?.email || order.email || "N/A";
+
+          const itemsHTML = order.items.map(item =>
+            `<li class="flex justify-between py-2 border-b border-gray-100 dark:border-gray-700">
+              <span>${item.title} (Size: ${item.size})</span>
+              <span class="font-semibold">$${item.price}</span>
+            </li>`).join("");
+
+          const statusId = `status-${order._id}`;
+          const msgId = `msg-${order._id}`;
+
+          const statusColors = {
+            Pending: 'bg-yellow-500',
+            Processing: 'bg-blue-500',
+            Shipped: 'bg-purple-500',
+            Delivered: 'bg-green-500',
+            Cancelled: 'bg-red-500'
+          };
+
+          orderEl.innerHTML = `
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <h3 class="text-lg font-bold text-gray-800 dark:text-white">${userName}</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400">${userEmail}</p>
+                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Ref: ${order.reference}</p>
+              </div>
+              <span class="px-3 py-1 rounded-full text-white text-sm font-medium ${statusColors[order.status] || 'bg-gray-500'}">
+                ${order.status}
+              </span>
+            </div>
+            <div class="mb-4">
+              <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Order Date: ${new Date(order.createdAt).toLocaleString()}</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Shipping: ${order.address}, ZIP: ${order.zip}</p>
+              <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Items:</p>
+              <ul class="space-y-1">${itemsHTML}</ul>
+            </div>
+            <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Total Amount</p>
+                <p class="text-2xl font-bold text-pink-600">$${order.totalAmount.toFixed(2)}</p>
+              </div>
+              <div class="flex items-center space-x-3">
+                <select id="${statusId}" data-order-id="${order._id}" class="border-2 border-gray-300 dark:border-gray-600 px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 dark:bg-gray-700 dark:text-white">
+                  ${['Pending','Processing','Shipped','Delivered','Cancelled'].map(s =>
+                    `<option value="${s}" ${order.status === s ? 'selected' : ''}>${s}</option>`).join("")}
+                </select>
+              </div>
+            </div>
+            <p id="${msgId}" class="text-sm text-center mt-2 hidden"></p>
+          `;
+          container.appendChild(orderEl);
+
+          document.getElementById(statusId).addEventListener("change", async (e) => {
+            const newStatus = e.target.value;
+            const orderId = e.target.dataset.orderId;
+            const msg = document.getElementById(msgId);
+            try {
+              const res = await fetch(`https://fashion-onh3.onrender.com/api/orders/${orderId}/status`, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: "Bearer " + token
+                },
+                body: JSON.stringify({ status: newStatus })
+              });
+              const result = await res.json();
+              msg.textContent = result.success ? "✅ Status updated!" : "❌ Failed to update.";
+              msg.className = result.success ? "text-green-600 text-sm text-center mt-2" : "text-red-600 text-sm text-center mt-2";
+              msg.classList.remove("hidden");
+              setTimeout(() => msg.classList.add("hidden"), 3000);
+              
+              if (result.success) {
+                fetchOrders(); // Refresh to update stats
+              }
+            } catch (err) {
+              console.error("Status update error:", err);
+            }
+          });
+        });
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = `
+          <div class="text-center py-12">
+            <i class="fas fa-exclamation-circle text-6xl text-red-400 mb-4"></i>
+            <p class="text-red-500">Failed to load orders.</p>
+          </div>
+        `;
+      }
+    }
+
+    function updateDashboardStats(orders) {
+      const total = orders.length;
+      const pending = orders.filter(o => o.status === 'Pending' || o.status === 'Processing').length;
+      const revenue = orders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+      const customers = new Set(orders.map(o => o.userId?._id || o.userId)).size;
+
+      document.getElementById("totalOrders").textContent = total;
+      document.getElementById("pendingOrders").textContent = pending;
+      document.getElementById("totalRevenue").textContent = revenue.toFixed(2);
+      document.getElementById("totalCustomers").textContent = customers;
+    }
+
+    function updateRecentOrders(orders) {
+      const preview = document.getElementById("recentOrdersPreview");
+      preview.innerHTML = "";
+      
+      if (!orders.length) {
+        preview.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-center py-4">No recent orders</p>';
+        return;
+      }
+
+      orders.forEach(order => {
+        const div = document.createElement("div");
+        div.className = "flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors";
+        const userName = order.userId?.name || order.name || "Unknown";
+        div.innerHTML = `
+          <div class="flex-1">
+            <p class="font-semibold text-gray-800 dark:text-white">${userName}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">${new Date(order.createdAt).toLocaleString()}</p>
+          </div>
+          <div class="text-right">
+            <p class="font-bold text-pink-600">$${order.totalAmount.toFixed(2)}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">${order.status}</p>
+          </div>
+        `;
+        preview.appendChild(div);
+      });
+    }
+
+    function updateCharts(orders) {
+      // Revenue Chart
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const currentMonth = new Date().getMonth();
+      const last6Months = [];
+      const revenueData = new Array(6).fill(0);
+
+      for (let i = 5; i >= 0; i--) {
+        const monthIndex = (currentMonth - i + 12) % 12;
+        last6Months.push(months[monthIndex]);
+      }
+
+      orders.forEach(order => {
+        const orderMonth = new Date(order.createdAt).getMonth();
+        const monthDiff = (currentMonth - orderMonth + 12) % 12;
+        if (monthDiff < 6) {
+          revenueData[5 - monthDiff] += order.totalAmount || 0;
+        }
+      });
+
+      const revenueCtx = document.getElementById('revenueChart');
+      if (revenueChart) revenueChart.destroy();
+      
+      revenueChart = new Chart(revenueCtx, {
+        type: 'bar',
+        data: {
+          labels: last6Months,
+          datasets: [{
+            label: 'Revenue ($)',
+            data: revenueData,
+            backgroundColor: 'rgba(236, 72, 153, 0.8)',
+            borderColor: 'rgb(236, 72, 153)',
+            borderWidth: 2,
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
+      // Status Chart
+      const statusCounts = {
+        Pending: 0,
+        Processing: 0,
+        Shipped: 0,
+        Delivered: 0,
+        Cancelled: 0
+      };
+
+      orders.forEach(order => {
+        if (statusCounts.hasOwnProperty(order.status)) {
+          statusCounts[order.status]++;
+        }
+      });
+
+      const statusCtx = document.getElementById('statusChart');
+      if (statusChart) statusChart.destroy();
+      
+      statusChart = new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+          labels: Object.keys(statusCounts),
+          datasets: [{
+            data: Object.values(statusCounts),
+            backgroundColor: [
+              'rgba(234, 179, 8, 0.8)',
+              'rgba(59, 130, 246, 0.8)',
+              'rgba(168, 85, 247, 0.8)',
+              'rgba(34, 197, 94, 0.8)',
+              'rgba(239, 68, 68, 0.8)'
+            ],
+            borderWidth: 2,
+            borderColor: '#fff'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+    }
+
+    // =================== MESSAGES ===================
+    dropdownBtn.addEventListener("click", () => {
+      dropdownList.classList.toggle("hidden");
+    });
+
+    async function loadMessageUsers() {
+      const res = await fetch("https://fashion-onh3.onrender.com/api/messages/users");
+      const data = await res.json();
+
+      dropdownList.innerHTML = "";
+      data.users.forEach(user => {
+        const isUnread = unreadUserMap.has(user._id);
+        const li = document.createElement("li");
+        li.className = "px-4 py-3 hover:bg-pink-50 dark:hover:bg-gray-600 cursor-pointer flex justify-between items-center transition-colors";
+        li.innerHTML = `
+          <div>
+            <p class="font-medium text-gray-800 dark:text-white">${user.name || "Unknown"}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">${user.email}</p>
+          </div>
+          ${isUnread ? '<span class="w-2 h-2 bg-red-500 rounded-full ml-2"></span>' : ''}
+        `;
+        li.addEventListener("click", () => {
+          dropdownLabel.textContent = `${user.name || "Unknown"} (${user.email})`;
+          dropdownList.classList.add("hidden");
+          activeChatUserId = user._id;
+          unreadUserMap.delete(user._id);
+          hideSidebarBadge("messages");
+          loadMessageUsers();
+          loadChat(user._id);
+        });
+        dropdownList.appendChild(li);
+      });
+    }
+
+    async function loadChat(userId) {
+      chatBox.innerHTML = '<div class="text-center text-gray-400 py-8"><i class="fas fa-spinner fa-spin text-2xl"></i></div>';
+      const res = await fetch(`https://fashion-onh3.onrender.com/api/messages/${userId}`);
+      const data = await res.json();
+      chatBox.innerHTML = "";
+      
+      if (data.messages && data.messages.length > 0) {
+        data.messages.forEach(msg => {
+          renderMessage(msg.content, msg.sender === 'admin' ? 'right' : 'left', msg.timestamp);
+        });
+      } else {
+        chatBox.innerHTML = `
+          <div class="text-center text-gray-400 py-8">
+            <i class="fas fa-comments text-4xl mb-2"></i>
+            <p>No messages yet</p>
+          </div>
+        `;
+      }
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    replyForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const content = replyInput.value.trim();
+      if (!activeChatUserId || !content) return;
+
+      socket.emit("chatMessage", {
+        from: "admin",
+        to: activeChatUserId,
+        sender: "admin",
+        content
+      });
+
+      renderMessage(content, 'right');
+      playSendSound();
+      replyInput.value = "";
+    });
+
+    socket.on("chatMessage", ({ content, from, sender, timestamp }) => {
+      if (sender === "user") {
+        if (from === activeChatUserId) {
+          renderMessage(content, 'left', timestamp);
+        } else {
+          unreadUserMap.set(from, true);
+          showSidebarBadge("messages");
+          showNotification("New message from customer");
+        }
+        loadMessageUsers();
+        playReceiveSound();
+      }
+    });
+
+    function renderMessage(content, position, timestamp = new Date()) {
+      const div = document.createElement("div");
+      div.className = `flex ${position === 'right' ? 'justify-end' : 'justify-start'} animate-slide-in`;
+      div.innerHTML = `
+        <div class="max-w-xs px-4 py-3 rounded-2xl ${
+          position === 'right' 
+            ? 'bg-gradient-to-r from-pink-400 to-pink-600 text-white' 
+            : 'bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white'
+        }">
+          <p class="text-sm">${content}</p>
+          <span class="text-xs opacity-70 block mt-1">${new Date(timestamp).toLocaleTimeString()}</span>
+        </div>
+      `;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // =================== SOUNDS ===================
+    function playSendSound() {
+      if (sendSound) sendSound.play().catch(err => console.warn("Send sound not played", err));
+    }
+    
+    function playReceiveSound() {
+      if (receiveSound) receiveSound.play().catch(err => console.warn("Receive sound not played", err));
+    }
+
+    // =================== NOTIFICATION BADGE ===================
+    function showSidebarBadge(section) {
+      if (section === 'messages') {
+        document.getElementById("badge-desktop")?.classList.remove("hidden");
+        document.getElementById("badge-mobile")?.classList.remove("hidden");
+      }
+    }
+
+    function hideSidebarBadge(section) {
+      if (section === 'messages') {
+        document.getElementById("badge-desktop")?.classList.add("hidden");
+        document.getElementById("badge-mobile")?.classList.add("hidden");
+      }
+    }
+
+    // =================== NOTIFICATIONS ===================
+    let notificationCount = 0;
+
+    function showNotification(message) {
+      notificationCount++;
+      updateNotificationBadge();
+    }
+
+    function updateNotificationBadge() {
+      const badges = [
+        document.getElementById("notifBadge"),
+        document.getElementById("notifBadgeDesktop")
+      ];
+      
+      badges.forEach(badge => {
+        if (badge) {
+          if (notificationCount > 0) {
+            badge.textContent = notificationCount > 9 ? '9+' : notificationCount;
+            badge.classList.remove("hidden");
+          } else {
+            badge.classList.add("hidden");
+          }
+        }
+      });
+    }
+
+    // =================== INITIALIZE ===================
+    showSection('dashboard');
+    fetchOrders();
+  </script>
 </body>
 </html>
