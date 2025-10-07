@@ -674,7 +674,7 @@
     async function loadOrders() {
       const orderList = document.getElementById("orderList");
       try {
-        const res = await fetch(`http://localhost:5000/api/orders/user/${user._id}`, {
+        const res = await fetch(`https://fashion-onh3.onrender.com/api/orders/user/${user._id}`, {
           headers: { Authorization: "Bearer " + token }
         });
         const data = await res.json();
@@ -859,7 +859,7 @@
       }
 
       try {
-        const res = await fetch('http://localhost:5000/api/auth/change-password', {
+        const res = await fetch('https://fashion-onh3.onrender.com/api/auth/change-password', {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -880,7 +880,7 @@
     });
 
     // =================== LIVE CHAT ===================
-    const socket = io("http://localhost:5000");
+    const socket = io("https://fashion-onh3.onrender.com");
     socket.emit("join", { userId: user._id, isAdmin: false });
 
     const chatBox = document.getElementById("chatBox");
@@ -906,7 +906,7 @@
     async function loadChat() {
       chatBox.innerHTML = '<div class="text-center text-gray-400 py-8"><i class="fas fa-spinner fa-spin text-2xl"></i></div>';
       try {
-        const res = await fetch(`http://localhost:5000/api/messages/${user._id}`);
+        const res = await fetch(`https://fashion-onh3.onrender.com/api/messages/${user._id}`);
         const data = await res.json();
         chatBox.innerHTML = "";
         if (data.messages && data.messages.length > 0) {
