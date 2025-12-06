@@ -427,6 +427,322 @@
       line-height: 1.6;
     }
 
+    /* Color Variant Selector */
+    .color-variant-section {
+      margin: 1.5rem 0;
+    }
+
+    .color-variant-section h4 {
+      color: #f472b6;
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+
+    .color-swatches {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .color-swatch {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 3px solid rgba(236, 72, 153, 0.3);
+      transition: all 0.3s ease;
+      position: relative;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .color-swatch:hover {
+      transform: scale(1.15);
+      border-color: #ec4899;
+      box-shadow: 0 4px 15px rgba(236, 72, 153, 0.5);
+    }
+
+    .color-swatch.selected {
+      border: 4px solid #ec4899;
+      box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.3), 0 4px 15px rgba(236, 72, 153, 0.6);
+      transform: scale(1.1);
+    }
+
+    .color-swatch.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+    }
+
+    .selected-color-name {
+      color: #f472b6;
+      font-weight: 600;
+      font-size: 1rem;
+      margin-left: 10px;
+    }
+
+    /* Enhanced Modal Styling */
+    #variantModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { 
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .variant-modal-content {
+      background: linear-gradient(145deg, #0a0a0a 0%, #1a0a14 100%);
+      border: 3px solid #ec4899;
+      border-radius: 25px;
+      padding: 2.5rem;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(236, 72, 153, 0.4), 
+                  0 0 100px rgba(236, 72, 153, 0.2),
+                  inset 0 1px 0 rgba(236, 72, 153, 0.1);
+      animation: slideUp 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .variant-modal-content::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(236, 72, 153, 0.1) 0%, transparent 70%);
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    .variant-modal-content > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .modal-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid rgba(236, 72, 153, 0.3);
+    }
+
+    .modal-header h3 {
+      color: #f472b6;
+      font-size: 1.8rem;
+      margin: 0 0 0.5rem 0;
+      font-weight: 700;
+      text-shadow: 0 0 20px rgba(236, 72, 153, 0.5);
+    }
+
+    .modal-header .product-name {
+      color: #ec4899;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .modal-section {
+      margin: 1.5rem 0;
+    }
+
+    .modal-section label {
+      display: block;
+      color: #f472b6;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .modal-color-swatches {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 1rem;
+      background: rgba(236, 72, 153, 0.05);
+      border-radius: 15px;
+      border: 1px solid rgba(236, 72, 153, 0.2);
+    }
+
+    .modal-color-swatch {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 3px solid rgba(236, 72, 153, 0.3);
+      transition: all 0.3s ease;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-color-swatch:hover {
+      transform: scale(1.2) rotate(5deg);
+      border-color: #f472b6;
+      box-shadow: 0 6px 20px rgba(236, 72, 153, 0.6);
+    }
+
+    .modal-color-swatch.selected {
+      border: 4px solid #ec4899;
+      box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.3), 0 6px 25px rgba(236, 72, 153, 0.8);
+      transform: scale(1.15);
+    }
+
+    .modal-color-swatch.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 1.8rem;
+      font-weight: bold;
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.9);
+    }
+
+    .color-name-display {
+      text-align: center;
+      color: #f472b6;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-top: 0.75rem;
+      min-height: 1.5rem;
+      text-transform: capitalize;
+    }
+
+    .modal-size-select {
+      background: rgba(236, 72, 153, 0.1);
+      border: 2px solid rgba(236, 72, 153, 0.4);
+      color: #ec4899;
+      padding: 1rem;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      width: 100%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    .modal-size-select:hover {
+      border-color: #ec4899;
+      background: rgba(236, 72, 153, 0.15);
+    }
+
+    .modal-size-select:focus {
+      outline: none;
+      border-color: #f472b6;
+      box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2);
+    }
+
+    .modal-size-select option {
+      background: #000;
+      color: #ec4899;
+      padding: 0.5rem;
+    }
+
+    .modal-actions-new {
+      display: flex;
+      gap: 15px;
+      margin-top: 2rem;
+    }
+
+    .modal-actions-new button {
+      flex: 1;
+      padding: 1rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .modal-btn-confirm {
+      background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+    }
+
+    .modal-btn-confirm:hover {
+      background: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(236, 72, 153, 0.6);
+    }
+
+    .modal-btn-confirm:active {
+      transform: translateY(0);
+    }
+
+    .modal-btn-cancel {
+      background: rgba(236, 72, 153, 0.1);
+      color: #ec4899;
+      border: 2px solid rgba(236, 72, 153, 0.4);
+    }
+
+    .modal-btn-cancel:hover {
+      background: rgba(236, 72, 153, 0.2);
+      border-color: #ec4899;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      .variant-modal-content {
+        padding: 1.5rem;
+      }
+
+      .modal-header h3 {
+        font-size: 1.4rem;
+      }
+
+      .modal-color-swatch {
+        width: 50px;
+        height: 50px;
+      }
+
+      .modal-actions-new {
+        flex-direction: column;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -486,6 +802,16 @@
       <div class="stars">★★★★☆ (4.5/5)</div>
       <p class="price" id="productPrice">$39.99</p>
       <p id="productDesc">A stunning Gabriella Ruched Mini Dress - Orange, perfect for casual and semi-formal occasions. Made with breathable cotton blend and designed to turn heads!</p>
+      
+      <!-- Color Variant Selection -->
+      <div class="color-variant-section" id="colorVariantSection">
+        <h4>Select Color:</h4>
+        <div class="color-swatches" id="colorSwatches">
+          <!-- Color swatches will be dynamically loaded here -->
+        </div>
+        <div class="selected-color-name" id="selectedColorName">Select a color</div>
+      </div>
+
 <div class="btn-group">
   <button onclick="handleAction('checkout')">Buy Now</button>
   <button onclick="handleAction('cart')">Add to Cart</button>
@@ -495,13 +821,14 @@
 
 <!-- Login Required Modal -->
 <div id="loginModal" style="display: none; position: fixed; top: 0; left: 0;
-  width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); justify-content: center;
-  align-items: center; z-index: 1000;">
-  <div style="background: white; padding: 2rem; border-radius: 10px; max-width: 300px; text-align: center;">
-    <h3>Login Required</h3>
-    <p>You need to login to continue.</p>
-    <button onclick="redirectToLogin()" style="margin-top: 1rem; background: #f06292; color: white;
-      border: none; padding: 0.5rem 1.5rem; border-radius: 5px; cursor: pointer;">Login</button>
+  width: 100%; height: 100%; background-color: rgba(0,0,0,0.95); backdrop-filter: blur(10px); justify-content: center;
+  align-items: center; z-index: 10000;">
+  <div style="background: linear-gradient(145deg, #0a0a0a 0%, #1a0a14 100%); border: 3px solid #ec4899; padding: 2.5rem; border-radius: 20px; max-width: 400px; text-align: center; box-shadow: 0 20px 60px rgba(236, 72, 153, 0.4);">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
+    <h3 style="color: #f472b6; font-size: 1.8rem; margin: 0 0 1rem 0; font-weight: 700;">Login Required</h3>
+    <p style="color: #ec4899; font-size: 1.1rem; margin-bottom: 1.5rem;">You need to login to continue shopping.</p>
+    <button onclick="redirectToLogin()" style="margin-top: 1rem; background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); color: white;
+      border: none; padding: 0.75rem 2rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4); transition: all 0.3s ease;">Login Now</button>
   </div>
 </div>
 
@@ -557,23 +884,44 @@
         </table>
       </div>
     </div>
-<!-- Size Selection Modal -->
-<div id="sizeModal" class="modal" style="display: none; position: fixed; z-index: 999; inset: 0; background-color: rgba(0,0,0,0.6); align-items: center; justify-content: center;">
-  <div style="background: #fff; padding: 2rem; border-radius: 8px; width: 300px; text-align: center; position: relative;">
-    <h3>Select a Size</h3>
-    <select id="modalSizeSelect" style="margin: 1rem 0; width: 100%; padding: 0.5rem;">
-      <option value="">-- Choose Size --</option>
-    </select>
-    <button onclick="confirmSizeAndRedirect()" style="margin-right: 10px;">Confirm</button>
-    <button onclick="closeModal()">Cancel</button>
+<!-- Enhanced Variant Selection Modal -->
+<div id="variantModal">
+  <div class="variant-modal-content">
+    <div class="modal-header">
+      <h3>✨ Customize Your Order ✨</h3>
+      <p class="product-name" id="modalProductName">Product Name</p>
+    </div>
+    
+    <div class="modal-section" id="modalColorSection">
+      <label>Choose Color:</label>
+      <div class="modal-color-swatches" id="modalColorSwatches">
+        <!-- Color swatches will be dynamically loaded here -->
+      </div>
+      <div class="color-name-display" id="modalSelectedColorName">Select a color</div>
+    </div>
+    
+    <div class="modal-section">
+      <label>Choose Size:</label>
+      <select id="modalSizeSelect" class="modal-size-select">
+        <option value="">-- Select Size --</option>
+      </select>
+    </div>
+    
+    <div class="modal-actions-new">
+      <button class="modal-btn-cancel" onclick="closeVariantModal()">Cancel</button>
+      <button class="modal-btn-confirm" onclick="confirmVariantSelection()">Confirm</button>
+    </div>
   </div>
 </div>
 <!-- Confirmation Modal -->
-<div id="confirmationModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); align-items:center; justify-content:center; z-index:1000;">
-  <div style="background:white; padding:2rem; border-radius:10px; width:90%; max-width:400px; text-align:center;">
-    <p id="confirmationText" style="margin-bottom: 1.5rem;"></p>
-    <button onclick="closeConfirmationModal()" style="margin-right: 1rem; padding:0.5rem 1.5rem;">Continue Shopping</button>
-    <a href="cart.html" style="background:#f06292; color:white; text-decoration:none; padding:0.5rem 1.5rem; border-radius:5px;">Go to Cart</a>
+<div id="confirmationModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); backdrop-filter: blur(10px); align-items:center; justify-content:center; z-index:10000;">
+  <div style="background: linear-gradient(145deg, #0a0a0a 0%, #1a0a14 100%); border: 3px solid #ec4899; padding:2.5rem; border-radius:20px; width:90%; max-width:450px; text-align:center; box-shadow: 0 20px 60px rgba(236, 72, 153, 0.4);">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">🎉</div>
+    <p id="confirmationText" style="margin-bottom: 1.5rem; color: #f472b6; font-size: 1.1rem; font-weight: 600;"></p>
+    <div style="display: flex; gap: 15px; margin-top: 1.5rem;">
+      <button onclick="closeConfirmationModal()" style="flex: 1; padding:0.75rem 1.5rem; background: rgba(236, 72, 153, 0.1); color: #ec4899; border: 2px solid rgba(236, 72, 153, 0.4); border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">Continue Shopping</button>
+      <a href="cart.html" style="flex: 1; background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); color:white; text-decoration:none; padding:0.75rem 1.5rem; border-radius:10px; font-weight: 600; display: inline-block; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);">Go to Cart</a>
+    </div>
   </div>
 </div>
 
@@ -654,15 +1002,45 @@
 
     const products = {
       1: {
-      title: "Gabriella Ruched Mini Dress - Orange",
-      price: "$39.99",
-      desc: "Available In Orange. Mesh Mini Dress. Adjustable Spaghetti Strap. Bra Cup. Cut Out. Silver Hardware. Back Zipper Closure. Lining. Stretch. Shell: 95% Nylon 5% Spandex. Lining: 100% Polyester. Imported.",
+      title: "Hanging neck dress with slit sleeveless gold backless design",
+      price: "$43.99",
+      desc: `
+    Style: Sexy Style
+    Pattern Type: Solid Color
+    Sleeve Length: Sleeveless
+    Neckline: Strap Neck
+    Length: Long Dress
+    Fabric: Polyester (Polyester Fiber)
+    Closure Type: Pullover
+    Details: Pleating, Backless
+    Fit Type: High Waist
+    Occasion: Casual
+    Gender: Female
+    `,
       images: [
-        "https://cdn.shopify.com/s/files/1/0293/9277/files/05-23-23Studio2_KJ_RL_13-55-35_45_PD74125SFN_Orange_28970_JB.jpg?v=1685117986&width=600&height=900&crop=center",
-        "https://cdn.shopify.com/s/files/1/0293/9277/files/05-23-23Studio2_KJ_RL_13-56-10_45_PD74125SFN_Orange_28973_JB.jpg?v=1685117986&width=600&height=900&crop=center",
-        "https://cdn.shopify.com/s/files/1/0293/9277/files/05-23-23Studio2_KJ_RL_13-55-32_45_PD74125SFN_Orange_28969_JB.jpg?v=1685117986&width=600&height=900&crop=center"
+        "https://shopifyfile.oss-accelerate.aliyuncs.com/attached/pingtai/202510/DEEF9004492AAEE57572AA1EB68AF330.jpg",
+        "https://shopifyfile.oss-accelerate.aliyuncs.com/attached/pingtai/202510/26F3AE98111ADD20F663F1E5AA37628C.jpg",
+        "https://shopifyfile.oss-accelerate.aliyuncs.com/attached/pingtai/202510/E139E1036208752DBB5E4F049E9F1AC3.jpg",
+        "https://shopifyfile.oss-accelerate.aliyuncs.com/attached/pingtai/202510/5DE508327F1F73AA4DBAB7C47BC5889F.jpg",
+        "https://shopifyfile.oss-accelerate.aliyuncs.com/attached/pingtai/202510/8A085A6991AB7B343B04F15E06CB2393.jpg",
+        "https://shopifyfile.oss-accelerate.aliyuncs.com/attached/pingtai/202510/81B5C2DF2AEDC7110AEBAE5C6AF89E22.jpg",
+        "https://shopifyfile.oss-accelerate.aliyuncs.com/attached/pingtai/202510/A73A5CBBD5147E6437C8856F43DB4338.jpg"
       ],
-      sizes: ["XS", "S", "M", "L", "XL"]
+      sizes: ["XS", "S", "M", "L", "XL"],
+      colors: [
+        { name: "Gold", hex: "#FFD700", images: [
+          "https://shopifyfile.oss-accelerate.aliyuncs.com/attached/pingtai/202510/DEEF9004492AAEE57572AA1EB68AF330.jpg",
+          "https://shopifyfile.oss-accelerate.aliyuncs.com/attached/pingtai/202510/26F3AE98111ADD20F663F1E5AA37628C.jpg"
+        ]},
+        { name: "Purple", hex: "#9333EA", images: [
+          "https://shopifyfile.oss-accelerate.aliyuncs.com/attached/pingtai/202510/E139E1036208752DBB5E4F049E9F1AC3.jpg",
+          "https://shopifyfile.oss-accelerate.aliyuncs.com/attached/pingtai/202510/5DE508327F1F73AA4DBAB7C47BC5889F.jpg"
+        ]},
+        { name: "Green", hex: "#10B981", images: [
+          "https://shopifyfile.oss-accelerate.aliyuncs.com/attached/pingtai/202510/8A085A6991AB7B343B04F15E06CB2393.jpg",
+          "https://shopifyfile.oss-accelerate.aliyuncs.com/attached/pingtai/202510/81B5C2DF2AEDC7110AEBAE5C6AF89E22.jpg"
+        ]}
+      ]
       },
       2: {
       title: "Floral Midi Dress",
@@ -673,7 +1051,13 @@
         "https://cdn.shopify.com/s/files/1/0293/9277/files/04-24-23Studio4_HY_AP_13-32-38_29_D13453_Black_24899_PLUS_ES.jpg?v=1682713763&width=600&height=900&crop=center",
         "https://cdn.shopify.com/s/files/1/0293/9277/products/04-11-23Studio1_TA_AC_10-31-48_9_D13453_Black_33166_SG.jpg?v=1681507034&width=600&height=900&crop=center"
       ],
-      sizes: ["XS", "S", "M", "L", "XL"]
+      sizes: ["XS", "S", "M", "L", "XL"],
+      colors: [
+        { name: "Black", hex: "#000000", images: [
+          "https://cdn.shopify.com/s/files/1/0293/9277/products/04-11-23Studio1_TA_AC_10-32-30_9_D13453_Black_33176_SG.jpg?v=1681507033&width=600&height=900&crop=center",
+          "https://cdn.shopify.com/s/files/1/0293/9277/files/04-24-23Studio4_HY_AP_13-32-38_29_D13453_Black_24899_PLUS_ES.jpg?v=1682713763&width=600&height=900&crop=center"
+        ]}
+      ]
       },
       3: {
       title: "Boho Maxi Dress",
@@ -685,7 +1069,13 @@
         "https://cdn.shopify.com/s/files/1/0293/9277/files/05-02-23Studio4_KS_AP_14-01-52_40_SBD357_Pinkcombo_30778_PLUS_EH.jpg?v=1683663601&width=600&height=900&crop=center",
         "https://cdn.shopify.com/s/files/1/0293/9277/files/9-9-2024__230_Laney_Mini_Dress_Pink-combo_GF.jpg?v=1727195483&width=600&height=900&crop=center"
       ],
-      sizes: ["XS", "S", "M", "L", "XL"]
+      sizes: ["XS", "S", "M", "L", "XL"],
+      colors: [
+        { name: "Pink Combo", hex: "#ec4899", images: [
+          "https://cdn.shopify.com/s/files/1/0293/9277/files/04-25-23Studio2_KJ_RL_14-48-02_27_SBD357_Pinkcombo_19249_DQ.jpg?v=1682716612&width=600&height=900&crop=center",
+          "https://cdn.shopify.com/s/files/1/0293/9277/files/05-02-23Studio4_KS_AP_14-01-22_40_SBD357_Pinkcombo_30771_PLUS_EH.jpg?v=1683663604&width=600&height=900&crop=center"
+        ]}
+      ]
       },
       4: {
       title: "Julia Flocked Mini Dress - Black",
@@ -866,6 +1256,10 @@
       }
     };
   localStorage.setItem("productsData", JSON.stringify(products));
+    
+    // Global variable to track selected color
+    let selectedColor = null;
+    
     if (productId && products[productId]) {
       const product = products[productId];
       document.getElementById("productTitle").textContent = product.title;
@@ -881,7 +1275,58 @@
         thumb.onclick = () => changeImage(img);
         thumbContainer.appendChild(thumb);
       });
+
+      // Load color variants if available
+      if (product.colors && product.colors.length > 0) {
+        const colorSwatchesContainer = document.getElementById('colorSwatches');
+        const selectedColorName = document.getElementById('selectedColorName');
+        
+        // Set first color as default
+        selectedColor = product.colors[0].name;
+        selectedColorName.textContent = selectedColor;
+        
+        product.colors.forEach((color, index) => {
+          const swatch = document.createElement('div');
+          swatch.className = 'color-swatch' + (index === 0 ? ' selected' : '');
+          swatch.style.backgroundColor = color.hex;
+          swatch.title = color.name;
+          swatch.onclick = () => selectColor(color, swatch);
+          colorSwatchesContainer.appendChild(swatch);
+        });
+      } else {
+        // Hide color section if no colors available
+        document.getElementById('colorVariantSection').style.display = 'none';
+      }
     }
+
+    // Function to select color
+    function selectColor(color, swatchElement) {
+      selectedColor = color.name;
+      
+      // Update selected color name
+      document.getElementById('selectedColorName').textContent = color.name;
+      
+      // Update swatch selection
+      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+      swatchElement.classList.add('selected');
+      
+      // Update main image and thumbnails
+      if (color.images && color.images.length > 0) {
+        document.getElementById('mainImage').src = color.images[0];
+        
+        const thumbContainer = document.getElementById('thumbnailList');
+        thumbContainer.innerHTML = '';
+        color.images.forEach(img => {
+          const thumb = document.createElement('img');
+          thumb.src = img;
+          thumb.onclick = () => changeImage(img);
+          thumbContainer.appendChild(thumb);
+        });
+      }
+    }
+    
+    // Make selectColor available globally
+    window.selectColor = selectColor;
     document.addEventListener("DOMContentLoaded", function () {
         const isLoggedIn = localStorage.getItem("isLoggedIn");
 
@@ -931,14 +1376,53 @@ document.querySelector('.breadcrumb span').textContent = document.getElementById
   </script>
   <script>
   let redirectTo = ''; // 'checkout' or 'cart'
+  let modalSelectedColor = null;
 
-function openSizeModal(destination) {
+function openVariantModal(destination) {
   redirectTo = destination;
+  
+  const productId = urlParams.get('product_id');
+  const products = JSON.parse(localStorage.getItem("productsData")) || {};
+  const product = products[productId];
+  
+  if (!product) {
+    alert("Product data not found.");
+    return;
+  }
+
+  // Set modal product name
+  document.getElementById('modalProductName').textContent = product.title;
+  
+  // Populate color swatches in modal
+  const modalColorSwatches = document.getElementById('modalColorSwatches');
+  modalColorSwatches.innerHTML = '';
+  
+  if (product.colors && product.colors.length > 0) {
+    // Set first color as default
+    modalSelectedColor = product.colors[0].name;
+    
+    product.colors.forEach((color, index) => {
+      const swatch = document.createElement('div');
+      swatch.className = 'modal-color-swatch' + (index === 0 ? ' selected' : '');
+      swatch.style.backgroundColor = color.hex;
+      swatch.title = color.name;
+      swatch.onclick = () => selectModalColor(color, swatch);
+      modalColorSwatches.appendChild(swatch);
+    });
+    
+    document.getElementById('modalSelectedColorName').textContent = modalSelectedColor;
+  } else {
+    // If no colors, use the currently selected color from main page
+    modalSelectedColor = selectedColor || 'Default';
+    document.getElementById('modalColorSection').style.display = 'none';
+  }
+  
+  // Populate sizes
   const sizeSelect = document.getElementById('modalSizeSelect');
   sizeSelect.innerHTML = '<option value="">-- Choose Size --</option>';
-
-  if (productId && products[productId] && products[productId].sizes) {
-    products[productId].sizes.forEach(size => {
+  
+  if (product.sizes) {
+    product.sizes.forEach(size => {
       const opt = document.createElement('option');
       opt.value = size;
       opt.textContent = size;
@@ -946,15 +1430,25 @@ function openSizeModal(destination) {
     });
   }
 
-  document.getElementById('sizeModal').style.display = 'flex';
+  document.getElementById('variantModal').style.display = 'flex';
 }
 
+function selectModalColor(color, swatchElement) {
+  modalSelectedColor = color.name;
+  
+  // Update selected color name
+  document.getElementById('modalSelectedColorName').textContent = color.name;
+  
+  // Update swatch selection
+  document.querySelectorAll('.modal-color-swatch').forEach(s => s.classList.remove('selected'));
+  swatchElement.classList.add('selected');
+}
 
-  function closeModal() {
-    document.getElementById('sizeModal').style.display = 'none';
-  }
+function closeVariantModal() {
+  document.getElementById('variantModal').style.display = 'none';
+}
 
-function confirmSizeAndRedirect() {
+function confirmVariantSelection() {
   const selectedSize = document.getElementById('modalSizeSelect').value;
   if (!selectedSize) {
     alert("Please select a size.");
@@ -970,12 +1464,25 @@ function confirmSizeAndRedirect() {
     return;
   }
 
+  // Use the color selected in modal, or fall back to main page selection
+  const finalColor = modalSelectedColor || selectedColor || 'Default';
+  
+  // Find the color object to get the image
+  let colorImage = product.images[0];
+  if (product.colors) {
+    const colorObj = product.colors.find(c => c.name === finalColor);
+    if (colorObj && colorObj.images && colorObj.images.length > 0) {
+      colorImage = colorObj.images[0];
+    }
+  }
+
   const cartItem = {
     id: productId,
     title: product.title,
     price: product.price,
     size: selectedSize,
-    image: product.images[0]
+    color: finalColor,
+    image: colorImage
   };
 
   if (redirectTo === 'checkout') {
@@ -988,8 +1495,12 @@ function confirmSizeAndRedirect() {
     cart.push(cartItem);
     localStorage.setItem("cart", JSON.stringify(cart));
 
-    document.getElementById("confirmationText").innerHTML = `<strong>${product.title}</strong> (Size ${selectedSize}) added to cart.`;
-    document.getElementById("sizeModal").style.display = "none";
+    document.getElementById("confirmationText").innerHTML = `
+      <strong>${product.title}</strong><br>
+      Color: ${finalColor} | Size: ${selectedSize}<br>
+      Added to cart! 🎉
+    `;
+    document.getElementById("variantModal").style.display = "none";
     document.getElementById("confirmationModal").style.display = "flex";
   }
 }
@@ -997,7 +1508,7 @@ function confirmSizeAndRedirect() {
   // Optional: close modal on Escape key
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") {
-      closeModal();
+      closeVariantModal();
     }
   });
 </script>
@@ -1044,8 +1555,8 @@ function confirmSizeAndRedirect() {
       // Not logged in, show modal
       document.getElementById("loginModal").style.display = "flex";
     } else {
-      // Proceed to size modal
-      openSizeModal(destination);
+      // Proceed to variant modal (color + size)
+      openVariantModal(destination);
     }
   }
 

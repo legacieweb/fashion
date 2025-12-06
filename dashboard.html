@@ -709,7 +709,13 @@
           
           const items = order.items?.map(i => `
             <li class="flex justify-between py-2 border-b border-gray-100 dark:border-gray-700">
-              <span>${i.title} (Size: ${i.size})</span>
+              <div>
+                <span class="font-medium">${i.title}</span>
+                <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  ${i.color ? `<span>🎨 ${i.color}</span> • ` : ''}
+                  <span>📏 Size: ${i.size}</span>
+                </div>
+              </div>
               <span class="font-semibold">$${i.price}</span>
             </li>
           `).join("") || "";
@@ -765,6 +771,77 @@
       document.getElementById("completedOrders").textContent = completed;
       document.getElementById("pendingOrders").textContent = pending;
       document.getElementById("totalSpent").textContent = totalSpent.toFixed(2);
+      
+      // Update Recent Activity
+      updateRecentActivity(orders);
+    }
+
+    function updateRecentActivity(orders) {
+      const activityList = document.getElementById("activityList");
+      if (!activityList) return;
+      
+      activityList.innerHTML = "";
+      
+      if (!orders || orders.length === 0) {
+        activityList.innerHTML = `
+          <div class="text-center py-4">
+            <p class="text-sm text-gray-500 dark:text-gray-400">No recent activity</p>
+          </div>
+        `;
+        return;
+      }
+      
+      // Sort orders by date (most recent first) and take the last 5
+      const recentOrders = [...orders]
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, 5);
+      
+      recentOrders.forEach(order => {
+        const statusConfig = {
+          'delivered': { color: 'bg-green-500', icon: 'fa-check-circle', text: 'Order Delivered' },
+          'shipped': { color: 'bg-purple-500', icon: 'fa-shipping-fast', text: 'Order Shipped' },
+          'processing': { color: 'bg-blue-500', icon: 'fa-cog', text: 'Order Processing' },
+          'pending': { color: 'bg-yellow-500', icon: 'fa-clock', text: 'Order Placed' },
+          'cancelled': { color: 'bg-red-500', icon: 'fa-times-circle', text: 'Order Cancelled' }
+        };
+        
+        const config = statusConfig[order.status] || statusConfig['pending'];
+        const timeAgo = getTimeAgo(new Date(order.createdAt));
+        
+        const activityItem = document.createElement("div");
+        activityItem.className = "flex items-start space-x-3 animate-slide-in";
+        activityItem.innerHTML = `
+          <div class="w-2 h-2 rounded-full ${config.color} mt-2"></div>
+          <div class="flex-1">
+            <p class="text-sm font-medium text-gray-800 dark:text-white">${config.text}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">${timeAgo}</p>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Ref: ${order.reference}</p>
+          </div>
+        `;
+        activityList.appendChild(activityItem);
+      });
+    }
+
+    function getTimeAgo(date) {
+      const seconds = Math.floor((new Date() - date) / 1000);
+      
+      const intervals = {
+        year: 31536000,
+        month: 2592000,
+        week: 604800,
+        day: 86400,
+        hour: 3600,
+        minute: 60
+      };
+      
+      for (const [unit, secondsInUnit] of Object.entries(intervals)) {
+        const interval = Math.floor(seconds / secondsInUnit);
+        if (interval >= 1) {
+          return `${interval} ${unit}${interval > 1 ? 's' : ''} ago`;
+        }
+      }
+      
+      return 'Just now';
     }
 
     // =================== CHART ===================

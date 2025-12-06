@@ -30,6 +30,7 @@ const OrderSchema = new mongoose.Schema({
       id: { type: String, required: true },       // product ID
       title: { type: String, required: true },
       size: { type: String, required: true },
+      color: { type: String, default: 'Default' }, // Color variant
       price: { type: Number, required: true, default: 0 }, // Ensure numeric
       image: { type: String }
     }

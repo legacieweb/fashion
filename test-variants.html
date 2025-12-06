@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Product Variants</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #ec4899;
+      padding: 2rem;
+    }
+    .test-card {
+      background: #1a1a1a;
+      border: 2px solid #ec4899;
+      border-radius: 15px;
+      padding: 2rem;
+      margin: 1rem 0;
+      max-width: 800px;
+    }
+    h1 {
+      color: #f472b6;
+      text-align: center;
+    }
+    h2 {
+      color: #f472b6;
+      margin-top: 0;
+    }
+    .test-link {
+      display: inline-block;
+      background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      text-decoration: none;
+      margin: 0.5rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    .test-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(236, 72, 153, 0.5);
+    }
+    .feature-list {
+      list-style: none;
+      padding: 0;
+    }
+    .feature-list li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(236, 72, 153, 0.2);
+    }
+    .feature-list li:before {
+      content: "✓ ";
+      color: #f472b6;
+      font-weight: bold;
+      margin-right: 0.5rem;
+    }
+    .status {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .status.success {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+      border: 1px solid #10b981;
+    }
+    .code-block {
+      background: #0a0a0a;
+      border: 1px solid #ec4899;
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+    }
+    .code-block code {
+      color: #f472b6;
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎨 Product Variant System - Test Page</h1>
+  
+  <div class="test-card">
+    <h2>✅ Implementation Status</h2>
+    <span class="status success">COMPLETE</span>
+    <ul class="feature-list">
+      <li>Color variant selection on product page</li>
+      <li>Premium black & pink themed modal</li>
+      <li>Dynamic color swatch loading</li>
+      <li>Image updates based on color selection</li>
+      <li>Size selection in modal</li>
+      <li>Variant data in cart/checkout</li>
+      <li>Responsive design</li>
+      <li>Smooth animations</li>
+    </ul>
+  </div>
+
+  <div class="test-card">
+    <h2>🧪 Test Products</h2>
+    <p>Click the links below to test each product with color variants:</p>
+    
+    <div style="margin: 1rem 0;">
+      <a href="details.html?product_id=1" class="test-link">
+        Product 1: Gabriella Dress<br>
+        <small style="opacity: 0.8;">Colors: Gold, Purple, Green</small>
+      </a>
+    </div>
+    
+    <div style="margin: 1rem 0;">
+      <a href="details.html?product_id=2" class="test-link">
+        Product 2: Black Dress<br>
+        <small style="opacity: 0.8;">Colors: Black</small>
+      </a>
+    </div>
+    
+    <div style="margin: 1rem 0;">
+      <a href="details.html?product_id=3" class="test-link">
+        Product 3: Pink Combo Dress<br>
+        <small style="opacity: 0.8;">Colors: Pink Combo</small>
+      </a>
+    </div>
+  </div>
+
+  <div class="test-card">
+    <h2>📋 Testing Checklist</h2>
+    <ul class="feature-list">
+      <li>Open product page and verify color swatches appear</li>
+      <li>Click different colors and watch images update</li>
+      <li>Click "Add to Cart" or "Buy Now"</li>
+      <li>Verify modal opens with black/pink theme</li>
+      <li>Select a color in the modal</li>
+      <li>Select a size from dropdown</li>
+      <li>Click "Confirm" button</li>
+      <li>Check cart to see color + size information</li>
+      <li>Test on mobile device (responsive design)</li>
+      <li>Try pressing Escape key to close modal</li>
+    </ul>
+  </div>
+
+  <div class="test-card">
+    <h2>💾 Cart Item Structure</h2>
+    <p>After adding to cart, items will have this structure:</p>
+    <div class="code-block">
+      <code>
+{<br>
+&nbsp;&nbsp;id: "1",<br>
+&nbsp;&nbsp;title: "Gabriella Ruched Mini Dress",<br>
+&nbsp;&nbsp;price: "$39.99",<br>
+&nbsp;&nbsp;size: "M",<br>
+&nbsp;&nbsp;color: "Gold", <span style="color: #10b981;">← NEW!</span><br>
+&nbsp;&nbsp;image: "gold-dress.jpg" <span style="color: #10b981;">← Color-specific!</span><br>
+}
+      </code>
+    </div>
+  </div>
+
+  <div class="test-card">
+    <h2>🎨 Design Features</h2>
+    <ul class="feature-list">
+      <li>Black background (#000000) with pink accents (#ec4899)</li>
+      <li>Gradient modal background (#0a0a0a → #1a0a14)</li>
+      <li>3px pink borders on all modals</li>
+      <li>Backdrop blur effect (10px)</li>
+      <li>Smooth animations (fadeIn, slideUp, pulse)</li>
+      <li>Hover effects with scale transforms</li>
+      <li>Selected state with checkmarks (✓)</li>
+      <li>Responsive breakpoint at 768px</li>
+    </ul>
+  </div>
+
+  <div class="test-card">
+    <h2>📱 Mobile Testing</h2>
+    <p>To test responsive design:</p>
+    <ol style="color: #ec4899; padding-left: 1.5rem;">
+      <li>Open browser DevTools (F12)</li>
+      <li>Toggle device toolbar (Ctrl+Shift+M)</li>
+      <li>Select a mobile device (iPhone, Galaxy, etc.)</li>
+      <li>Test all features on mobile view</li>
+      <li>Verify buttons stack vertically</li>
+      <li>Check that swatches are appropriately sized</li>
+    </ol>
+  </div>
+
+  <div class="test-card">
+    <h2>🚀 Quick Start</h2>
+    <p><strong>Step 1:</strong> Click any product link above</p>
+    <p><strong>Step 2:</strong> Select a color from the swatches</p>
+    <p><strong>Step 3:</strong> Click "Add to Cart" or "Buy Now"</p>
+    <p><strong>Step 4:</strong> Login if needed (use test credentials)</p>
+    <p><strong>Step 5:</strong> Select color and size in the modal</p>
+    <p><strong>Step 6:</strong> Click "Confirm"</p>
+    <p><strong>Step 7:</strong> Check cart to see your variant selection!</p>
+  </div>
+
+  <div class="test-card">
+    <h2>📚 Documentation</h2>
+    <p>For detailed information, see:</p>
+    <ul style="color: #ec4899; padding-left: 1.5rem;">
+      <li><strong>VARIANT_IMPLEMENTATION_SUMMARY.md</strong> - Complete technical overview</li>
+      <li><strong>VARIANT_FEATURES.md</strong> - Visual guide and design specs</li>
+      <li><strong>details.html</strong> - Main implementation file</li>
+    </ul>
+  </div>
+
+  <div style="text-align: center; margin: 2rem 0; padding: 2rem; background: rgba(236, 72, 153, 0.1); border-radius: 15px;">
+    <h2 style="color: #f472b6; margin-top: 0;">🎉 Ready to Test!</h2>
+    <p style="font-size: 1.1rem;">Click any product link above to start testing the new variant system.</p>
+    <a href="details.html?product_id=1" class="test-link" style="font-size: 1.2rem; padding: 1.25rem 2.5rem;">
+      🚀 Start Testing Now
+    </a>
+  </div>
+
+  <script>
+    // Check if localStorage has the products data
+    window.addEventListener('load', function() {
+      const products = localStorage.getItem('productsData');
+      if (products) {
+        console.log('✅ Product data found in localStorage');
+        console.log('Products:', JSON.parse(products));
+      } else {
+        console.log('⚠️ No product data in localStorage yet. Visit a product page first.');
+      }
+    });
+  </script>
+</body>
+</html>

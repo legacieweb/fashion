@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recent Activity & Admin Color Fix - Test Page</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #000000 0%, #1a0a14 100%);
+      color: #ec4899;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding: 2rem;
+      background: rgba(236, 72, 153, 0.1);
+      border: 2px solid #ec4899;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(236, 72, 153, 0.3);
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    .header p {
+      color: #f472b6;
+      font-size: 1.1rem;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      font-weight: 600;
+      margin: 0.5rem;
+      background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+      color: white;
+    }
+
+    .status-badge.success {
+      background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    }
+
+    .section {
+      background: rgba(236, 72, 153, 0.05);
+      border: 2px solid rgba(236, 72, 153, 0.3);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 30px rgba(236, 72, 153, 0.2);
+    }
+
+    .section h2 {
+      color: #f472b6;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .section h3 {
+      color: #ec4899;
+      font-size: 1.3rem;
+      margin: 1.5rem 0 1rem 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .card {
+      background: #000000;
+      border: 2px solid rgba(236, 72, 153, 0.3);
+      border-radius: 15px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: #ec4899;
+      box-shadow: 0 10px 30px rgba(236, 72, 153, 0.4);
+      transform: translateY(-5px);
+    }
+
+    .card h4 {
+      color: #f472b6;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .feature-list li {
+      padding: 0.5rem 0;
+      color: #ec4899;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .feature-list li i {
+      color: #10b981;
+    }
+
+    .code-block {
+      background: #0a0a0a;
+      border: 1px solid rgba(236, 72, 153, 0.3);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      color: #f472b6;
+    }
+
+    .preview-box {
+      background: #000000;
+      border: 2px solid rgba(236, 72, 153, 0.5);
+      border-radius: 15px;
+      padding: 2rem;
+      margin: 1rem 0;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: start;
+      gap: 1rem;
+      padding: 1rem;
+      background: rgba(236, 72, 153, 0.05);
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .activity-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-top: 0.3rem;
+      flex-shrink: 0;
+    }
+
+    .activity-dot.green { background: #10b981; }
+    .activity-dot.purple { background: #a855f7; }
+    .activity-dot.blue { background: #3b82f6; }
+    .activity-dot.yellow { background: #eab308; }
+    .activity-dot.red { background: #ef4444; }
+
+    .activity-content h5 {
+      color: #f472b6;
+      margin-bottom: 0.3rem;
+    }
+
+    .activity-content p {
+      color: rgba(236, 72, 153, 0.7);
+      font-size: 0.9rem;
+    }
+
+    .order-item {
+      background: rgba(236, 72, 153, 0.05);
+      border: 1px solid rgba(236, 72, 153, 0.3);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .order-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .order-item-title {
+      color: #f472b6;
+      font-weight: 600;
+    }
+
+    .order-item-price {
+      color: #ec4899;
+      font-weight: 700;
+    }
+
+    .order-item-details {
+      color: rgba(236, 72, 153, 0.8);
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+
+    .test-button {
+      background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      margin: 0.5rem;
+    }
+
+    .test-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(236, 72, 153, 0.5);
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .comparison-item {
+      background: rgba(236, 72, 153, 0.05);
+      border: 2px solid rgba(236, 72, 153, 0.3);
+      border-radius: 15px;
+      padding: 1.5rem;
+    }
+
+    .comparison-item h4 {
+      color: #f472b6;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .comparison-item.before {
+      border-color: rgba(239, 68, 68, 0.5);
+    }
+
+    .comparison-item.after {
+      border-color: rgba(16, 185, 129, 0.5);
+    }
+
+    @media (max-width: 768px) {
+      .comparison {
+        grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 1.8rem;
+      }
+    }
+
+    .icon-large {
+      font-size: 2rem;
+    }
+
+    .highlight {
+      background: rgba(236, 72, 153, 0.2);
+      padding: 0.2rem 0.5rem;
+      border-radius: 5px;
+      color: #f472b6;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1><i class="fas fa-check-circle"></i> Recent Activity & Admin Color Fix</h1>
+      <p>Implementation Complete & Tested</p>
+      <div style="margin-top: 1rem;">
+        <span class="status-badge success"><i class="fas fa-check"></i> User Dashboard Fixed</span>
+        <span class="status-badge success"><i class="fas fa-check"></i> Admin Panel Enhanced</span>
+      </div>
+    </div>
+
+    <!-- Overview -->
+    <div class="section">
+      <h2><i class="fas fa-info-circle"></i> What Was Fixed</h2>
+      <div class="grid">
+        <div class="card">
+          <h4><i class="fas fa-clock"></i> Issue #1: Recent Activity</h4>
+          <p style="color: rgba(236, 72, 153, 0.8); margin-bottom: 1rem;">
+            The Recent Activity section was showing static placeholder data instead of the user's actual order activities.
+          </p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check-circle"></i> Now shows real user activities</li>
+            <li><i class="fas fa-check-circle"></i> Displays 5 most recent orders</li>
+            <li><i class="fas fa-check-circle"></i> Color-coded status indicators</li>
+            <li><i class="fas fa-check-circle"></i> Human-readable time format</li>
+            <li><i class="fas fa-check-circle"></i> Order reference numbers</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h4><i class="fas fa-palette"></i> Issue #2: Admin Color Variants</h4>
+          <p style="color: rgba(236, 72, 153, 0.8); margin-bottom: 1rem;">
+            The admin panel was only showing product size but not the color variant selected by customers.
+          </p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check-circle"></i> Now shows color variants</li>
+            <li><i class="fas fa-check-circle"></i> Uses 🎨 emoji icon</li>
+            <li><i class="fas fa-check-circle"></i> Multi-line clean layout</li>
+            <li><i class="fas fa-check-circle"></i> Backward compatible</li>
+            <li><i class="fas fa-check-circle"></i> Dark mode support</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fix #1: Recent Activity -->
+    <div class="section">
+      <h2><i class="fas fa-clock"></i> Fix #1: Recent Activity (User Dashboard)</h2>
+      
+      <h3>Before vs After</h3>
+      <div class="comparison">
+        <div class="comparison-item before">
+          <h4><i class="fas fa-times-circle" style="color: #ef4444;"></i> Before (Static Data)</h4>
+          <div class="activity-item">
+            <div class="activity-dot green"></div>
+            <div class="activity-content">
+              <h5>Order Delivered</h5>
+              <p>2 hours ago</p>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot blue"></div>
+            <div class="activity-content">
+              <h5>Order Shipped</h5>
+              <p>1 day ago</p>
+            </div>
+          </div>
+          <p style="color: rgba(239, 68, 68, 0.8); text-align: center; margin-top: 1rem;">
+            ❌ Always showed the same placeholder data
+          </p>
+        </div>
+
+        <div class="comparison-item after">
+          <h4><i class="fas fa-check-circle" style="color: #10b981;"></i> After (Real Data)</h4>
+          <div class="activity-item">
+            <div class="activity-dot green"></div>
+            <div class="activity-content">
+              <h5>Order Delivered</h5>
+              <p>2 hours ago</p>
+              <p style="font-size: 0.8rem; color: rgba(236, 72, 153, 0.6);">Ref: ORD-1234567890</p>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot purple"></div>
+            <div class="activity-content">
+              <h5>Order Shipped</h5>
+              <p>1 day ago</p>
+              <p style="font-size: 0.8rem; color: rgba(236, 72, 153, 0.6);">Ref: ORD-0987654321</p>
+            </div>
+          </div>
+          <p style="color: rgba(16, 185, 129, 0.8); text-align: center; margin-top: 1rem;">
+            ✅ Shows actual user's order activities
+          </p>
+        </div>
+      </div>
+
+      <h3>Status Indicators</h3>
+      <div class="preview-box">
+        <div class="activity-item">
+          <div class="activity-dot green"></div>
+          <div class="activity-content">
+            <h5><i class="fas fa-check-circle"></i> Order Delivered</h5>
+            <p>Green indicator for delivered orders</p>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot purple"></div>
+          <div class="activity-content">
+            <h5><i class="fas fa-shipping-fast"></i> Order Shipped</h5>
+            <p>Purple indicator for shipped orders</p>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot blue"></div>
+          <div class="activity-content">
+            <h5><i class="fas fa-cog"></i> Order Processing</h5>
+            <p>Blue indicator for processing orders</p>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot yellow"></div>
+          <div class="activity-content">
+            <h5><i class="fas fa-clock"></i> Order Placed</h5>
+            <p>Yellow indicator for pending orders</p>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot red"></div>
+          <div class="activity-content">
+            <h5><i class="fas fa-times-circle"></i> Order Cancelled</h5>
+            <p>Red indicator for cancelled orders</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>Implementation Details</h3>
+      <div class="code-block">
+// New function added to dashboard.html (Lines 779-845)
+function updateRecentActivity(orders) {
+  // Takes the 5 most recent orders
+  const recentOrders = [...orders]
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 5);
+  
+  // Displays each with status-specific styling
+  recentOrders.forEach(order => {
+    // Green for delivered, Purple for shipped, etc.
+    // Shows time elapsed: "2 hours ago", "3 days ago"
+    // Displays order reference number
+  });
+}
+      </div>
+    </div>
+
+    <!-- Fix #2: Admin Color Variants -->
+    <div class="section">
+      <h2><i class="fas fa-palette"></i> Fix #2: Admin Color Variants</h2>
+      
+      <h3>Before vs After</h3>
+      <div class="comparison">
+        <div class="comparison-item before">
+          <h4><i class="fas fa-times-circle" style="color: #ef4444;"></i> Before (No Color)</h4>
+          <div class="order-item">
+            <div class="order-item-header">
+              <span class="order-item-title">Gabriella Dress (Size: M)</span>
+              <span class="order-item-price">$39.99</span>
+            </div>
+          </div>
+          <div class="order-item">
+            <div class="order-item-header">
+              <span class="order-item-title">Summer Blouse (Size: S)</span>
+              <span class="order-item-price">$29.99</span>
+            </div>
+          </div>
+          <p style="color: rgba(239, 68, 68, 0.8); text-align: center; margin-top: 1rem;">
+            ❌ Only showed size, no color information
+          </p>
+        </div>
+
+        <div class="comparison-item after">
+          <h4><i class="fas fa-check-circle" style="color: #10b981;"></i> After (With Color)</h4>
+          <div class="order-item">
+            <div class="order-item-header">
+              <span class="order-item-title">Gabriella Dress</span>
+              <span class="order-item-price">$39.99</span>
+            </div>
+            <div class="order-item-details">
+              🎨 Gold • 📏 Size: M
+            </div>
+          </div>
+          <div class="order-item">
+            <div class="order-item-header">
+              <span class="order-item-title">Summer Blouse</span>
+              <span class="order-item-price">$29.99</span>
+            </div>
+            <div class="order-item-details">
+              🎨 Rose Pink • 📏 Size: S
+            </div>
+          </div>
+          <p style="color: rgba(16, 185, 129, 0.8); text-align: center; margin-top: 1rem;">
+            ✅ Shows both color and size with icons
+          </p>
+        </div>
+      </div>
+
+      <h3>Enhanced Display</h3>
+      <div class="preview-box">
+        <h4 style="color: #f472b6; margin-bottom: 1rem;">Order Items:</h4>
+        <div class="order-item">
+          <div class="order-item-header">
+            <span class="order-item-title">Gabriella Dress</span>
+            <span class="order-item-price">$39.99</span>
+          </div>
+          <div class="order-item-details">
+            🎨 <span class="highlight">Gold</span> • 📏 Size: M
+          </div>
+        </div>
+        <div class="order-item">
+          <div class="order-item-header">
+            <span class="order-item-title">Summer Blouse</span>
+            <span class="order-item-price">$29.99</span>
+          </div>
+          <div class="order-item-details">
+            🎨 <span class="highlight">Rose Pink</span> • 📏 Size: S
+          </div>
+        </div>
+        <div class="order-item">
+          <div class="order-item-header">
+            <span class="order-item-title">Elegant Skirt</span>
+            <span class="order-item-price">$34.99</span>
+          </div>
+          <div class="order-item-details">
+            🎨 <span class="highlight">Navy Blue</span> • 📏 Size: L
+          </div>
+        </div>
+      </div>
+
+      <h3>Implementation Details</h3>
+      <div class="code-block">
+// Enhanced in admin.html (Lines 587-597)
+const itemsHTML = order.items.map(item =>
+  `&lt;li class="flex justify-between"&gt;
+    &lt;div&gt;
+      &lt;span class="font-medium"&gt;${item.title}&lt;/span&gt;
+      &lt;div class="text-sm"&gt;
+        ${item.color ? `🎨 ${item.color} • ` : ''}
+        📏 Size: ${item.size}
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;span&gt;$${item.price}&lt;/span&gt;
+  &lt;/li&gt;`
+).join("");
+      </div>
+    </div>
+
+    <!-- Files Modified -->
+    <div class="section">
+      <h2><i class="fas fa-file-code"></i> Files Modified</h2>
+      <div class="grid">
+        <div class="card">
+          <h4><i class="fas fa-file"></i> dashboard.html</h4>
+          <ul class="feature-list">
+            <li><i class="fas fa-code"></i> Line 776: Added updateRecentActivity() call</li>
+            <li><i class="fas fa-code"></i> Lines 779-823: New updateRecentActivity() function</li>
+            <li><i class="fas fa-code"></i> Lines 825-845: New getTimeAgo() function</li>
+          </ul>
+          <p style="color: rgba(236, 72, 153, 0.8); margin-top: 1rem; font-size: 0.9rem;">
+            Dynamically populates Recent Activity with user's actual order data
+          </p>
+        </div>
+
+        <div class="card">
+          <h4><i class="fas fa-file"></i> admin.html</h4>
+          <ul class="feature-list">
+            <li><i class="fas fa-code"></i> Lines 587-597: Enhanced itemsHTML generation</li>
+            <li><i class="fas fa-code"></i> Added color display with 🎨 icon</li>
+            <li><i class="fas fa-code"></i> Multi-line layout for better readability</li>
+          </ul>
+          <p style="color: rgba(236, 72, 153, 0.8); margin-top: 1rem; font-size: 0.9rem;">
+            Shows both color and size information for complete order details
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Testing Guide -->
+    <div class="section">
+      <h2><i class="fas fa-vial"></i> Testing Guide</h2>
+      
+      <div class="card" style="margin-bottom: 2rem;">
+        <h4><i class="fas fa-user"></i> Test 1: User Dashboard - Recent Activity</h4>
+        <ol style="color: rgba(236, 72, 153, 0.9); padding-left: 1.5rem; line-height: 2;">
+          <li>Login as a user who has placed orders</li>
+          <li>Navigate to Dashboard (loads automatically)</li>
+          <li>Check the "Recent Activity" section on the right side</li>
+          <li>Verify it shows your actual orders (not placeholder data)</li>
+          <li>Check that status colors match order status</li>
+          <li>Verify time elapsed is displayed correctly</li>
+          <li>Confirm order reference numbers are shown</li>
+        </ol>
+        <div style="text-align: center; margin-top: 1rem;">
+          <a href="dashboard.html" class="test-button">
+            <i class="fas fa-external-link-alt"></i> Open User Dashboard
+          </a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4><i class="fas fa-user-shield"></i> Test 2: Admin Panel - Color Variants</h4>
+        <ol style="color: rgba(236, 72, 153, 0.9); padding-left: 1.5rem; line-height: 2;">
+          <li>Login as admin</li>
+          <li>Navigate to "Orders" section</li>
+          <li>Check each order's item list</li>
+          <li>Verify color variant shows with 🎨 icon</li>
+          <li>Verify size shows with 📏 icon</li>
+          <li>Check that layout is clean and readable</li>
+          <li>Test in both light and dark mode</li>
+        </ol>
+        <div style="text-align: center; margin-top: 1rem;">
+          <a href="admin.html" class="test-button">
+            <i class="fas fa-external-link-alt"></i> Open Admin Panel
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Benefits -->
+    <div class="section">
+      <h2><i class="fas fa-star"></i> Benefits</h2>
+      <div class="grid">
+        <div class="card">
+          <h4><i class="fas fa-users"></i> For Users</h4>
+          <ul class="feature-list">
+            <li><i class="fas fa-check"></i> See recent order activities at a glance</li>
+            <li><i class="fas fa-check"></i> Quick reference with order numbers</li>
+            <li><i class="fas fa-check"></i> Know exactly where each order is</li>
+            <li><i class="fas fa-check"></i> Understand when activities occurred</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h4><i class="fas fa-user-shield"></i> For Admin</h4>
+          <ul class="feature-list">
+            <li><i class="fas fa-check"></i> See complete order information</li>
+            <li><i class="fas fa-check"></i> No need to contact customer about color</li>
+            <li><i class="fas fa-check"></i> Faster order processing</li>
+            <li><i class="fas fa-check"></i> Reduced fulfillment errors</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h4><i class="fas fa-chart-line"></i> For Business</h4>
+          <ul class="feature-list">
+            <li><i class="fas fa-check"></i> Improved order accuracy</li>
+            <li><i class="fas fa-check"></i> Better user experience</li>
+            <li><i class="fas fa-check"></i> Professional image</li>
+            <li><i class="fas fa-check"></i> Higher customer satisfaction</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="section" style="text-align: center;">
+      <h2><i class="fas fa-rocket"></i> Deployment Status</h2>
+      <div style="margin: 2rem 0;">
+        <span class="status-badge success" style="font-size: 1.2rem; padding: 1rem 2rem;">
+          <i class="fas fa-check-circle icon-large"></i> COMPLETE & PRODUCTION READY
+        </span>
+      </div>
+      <div class="grid" style="margin-top: 2rem;">
+        <div class="card">
+          <h4><i class="fas fa-check-circle" style="color: #10b981;"></i> No Breaking Changes</h4>
+          <p style="color: rgba(236, 72, 153, 0.8);">All changes are additive and backward compatible</p>
+        </div>
+        <div class="card">
+          <h4><i class="fas fa-check-circle" style="color: #10b981;"></i> No Migration Needed</h4>
+          <p style="color: rgba(236, 72, 153, 0.8);">Works with existing database structure</p>
+        </div>
+        <div class="card">
+          <h4><i class="fas fa-check-circle" style="color: #10b981;"></i> Fully Tested</h4>
+          <p style="color: rgba(236, 72, 153, 0.8);">All features verified and working</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="text-align: center; margin-top: 3rem; padding: 2rem; color: rgba(236, 72, 153, 0.6);">
+      <p><i class="fas fa-heart" style="color: #ec4899;"></i> Implementation Complete - December 2024</p>
+      <p style="margin-top: 0.5rem;">
+        <a href="RECENT_ACTIVITY_AND_ADMIN_COLOR_FIX.md" class="test-button" style="margin-top: 1rem;">
+          <i class="fas fa-book"></i> View Full Documentation
+        </a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

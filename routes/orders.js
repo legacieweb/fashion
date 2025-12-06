@@ -69,11 +69,26 @@ router.post('/', async (req, res) => {
       email,
       `Order Confirmation - ${reference}`,
       `
-        <p>Hi ${name},</p>
-        <p>Thank you for your order at <strong>Iyonic Fashion</strong>!</p>
-        <p><strong>Order Ref:</strong> ${reference}</p>
-        <p><strong>Total:</strong> $${sanitizedTotal.toFixed(2)}</p>
-        <p>We will notify you once your order status changes.</p>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #000000; color: #ec4899; padding: 20px; border: 2px solid #ec4899; border-radius: 15px;">
+          <h2 style="color: #f472b6; text-align: center;">Order Confirmation</h2>
+          <p>Hi <strong>${name}</strong>,</p>
+          <p>Thank you for your order at <strong style="color: #f472b6;">Iyonic Fashion</strong>!</p>
+          <p><strong>Order Reference:</strong> ${reference}</p>
+          <p><strong>Total:</strong> $${sanitizedTotal.toFixed(2)}</p>
+          <h3 style="color: #f472b6; margin-top: 20px;">Order Items:</h3>
+          <ul style="list-style: none; padding: 0;">
+            ${sanitizedItems.map(i => `
+              <li style="background: rgba(236, 72, 153, 0.1); padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid rgba(236, 72, 153, 0.3);">
+                <strong>${i.title}</strong><br/>
+                ${i.color ? `🎨 Color: <strong>${i.color}</strong><br/>` : ''}
+                📏 Size: <strong>${i.size}</strong><br/>
+                💰 Price: <strong>$${i.price}</strong>
+              </li>
+            `).join('')}
+          </ul>
+          <p style="margin-top: 20px;">We will notify you once your order status changes.</p>
+          <p style="text-align: center; margin-top: 30px; color: #f472b6;">Thank you for shopping with us! 💖</p>
+        </div>
       `
     );
 
@@ -82,15 +97,51 @@ router.post('/', async (req, res) => {
       process.env.ADMIN_EMAIL,
       `🛍 New Order Received - ${reference}`,
       `
-        <h3>New Order Details</h3>
-        <p><strong>Customer:</strong> ${name} (${email})</p>
-        <p><strong>Total:</strong> $${sanitizedTotal.toFixed(2)}</p>
-        <p><strong>Address:</strong> ${address}, ZIP: ${zip}</p>
-        <p><strong>Reference:</strong> ${reference}</p>
-        <p><strong>Items:</strong></p>
-        <ul>
-          ${sanitizedItems.map(i => `<li>${i.title} - Size: ${i.size} - $${i.price}</li>`).join('')}
-        </ul>
+        <div style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; background: #f9f9f9; padding: 25px; border: 3px solid #ec4899; border-radius: 15px;">
+          <h2 style="color: #ec4899; text-align: center; border-bottom: 2px solid #ec4899; padding-bottom: 15px;">🛍 New Order Received</h2>
+          
+          <div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0; border: 1px solid #ec4899;">
+            <h3 style="color: #f472b6; margin-top: 0;">Customer Information</h3>
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Address:</strong> ${address}</p>
+            <p><strong>ZIP Code:</strong> ${zip}</p>
+          </div>
+
+          <div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0; border: 1px solid #ec4899;">
+            <h3 style="color: #f472b6; margin-top: 0;">Order Details</h3>
+            <p><strong>Reference:</strong> ${reference}</p>
+            <p><strong>Total Amount:</strong> <span style="color: #ec4899; font-size: 1.3em; font-weight: bold;">$${sanitizedTotal.toFixed(2)}</span></p>
+          </div>
+
+          <div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0; border: 1px solid #ec4899;">
+            <h3 style="color: #f472b6; margin-top: 0;">Order Items</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="background: #ec4899; color: white;">
+                  <th style="padding: 10px; text-align: left; border: 1px solid #ec4899;">Product</th>
+                  <th style="padding: 10px; text-align: center; border: 1px solid #ec4899;">Color</th>
+                  <th style="padding: 10px; text-align: center; border: 1px solid #ec4899;">Size</th>
+                  <th style="padding: 10px; text-align: right; border: 1px solid #ec4899;">Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${sanitizedItems.map(i => `
+                  <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 10px; border: 1px solid #eee;"><strong>${i.title}</strong></td>
+                    <td style="padding: 10px; text-align: center; border: 1px solid #eee;">${i.color ? `🎨 ${i.color}` : '-'}</td>
+                    <td style="padding: 10px; text-align: center; border: 1px solid #eee;">📏 ${i.size}</td>
+                    <td style="padding: 10px; text-align: right; border: 1px solid #eee; font-weight: bold;">$${i.price}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+
+          <p style="text-align: center; color: #666; margin-top: 30px; font-size: 0.9em;">
+            Please process this order as soon as possible.
+          </p>
+        </div>
       `
     );
 
